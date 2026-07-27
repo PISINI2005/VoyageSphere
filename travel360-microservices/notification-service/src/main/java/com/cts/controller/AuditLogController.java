@@ -1,0 +1,98 @@
+package com.cts.controller;
+
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.cts.dto.AuditLogRequestDTO;
+import com.cts.dto.AuditLogResponseDTO;
+import com.cts.enums.AuditEntity;
+import com.cts.enums.LogType;
+import com.cts.service.AuditLogService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@RestController
+@RequestMapping("/api/v1/auditLogs")
+@AllArgsConstructor
+@Tag(name = "Audit Log Controller", description = "Read-only access to system audit logs filtered by entity, user, action, or severity")
+@Slf4j
+public class AuditLogController {
+
+	private AuditLogService auditservice;
+
+	@Operation(summary = "Record an audit log (internal)")
+	@PostMapping
+	public ResponseEntity<Void> record(@RequestBody AuditLogRequestDTO dto) {
+		auditservice.record(dto);
+		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+	}
+
+	@Operation(summary = "Get all audit logs")
+	@GetMapping("/all")
+	@PreAuthorize("hasAnyRole('COMPLIANCE_OFFICER','ADMIN')")
+	public ResponseEntity<?> getAll(){
+		List<AuditLogResponseDTO> list1 = auditservice.getAllLogs();
+		return new ResponseEntity<>(list1, HttpStatus.OK);
+
+	}
+
+	@Operation(summary = "Get audit logs by entity type and entity ID")
+	@GetMapping("/entity/{entityType}/{entityId}")
+	@PreAuthorize("hasAnyRole('COMPLIANCE_OFFICER','ADMIN')")
+	public ResponseEntity<List<AuditLogResponseDTO>> getByEntity(
+	        @PathVariable AuditEntity entityType,
+	        @PathVariable Long entityId) {
+
+	    List<AuditLogResponseDTO> list = auditservice.getByEntity(entityType, entityId);
+	    return new ResponseEntity<>(list, HttpStatus.OK);
+	}
+
+
+
+
+	    @Operation(summary = "Get audit logs for a specific user")
+	    @GetMapping("/user/{userId}")
+	    @PreAuthorize("hasAnyRole('COMPLIANCE_OFFICER','ADMIN')")
+	    public ResponseEntity<List<AuditLogResponseDTO>> getByUser(@PathVariable Long userId) {
+
+	        List<AuditLogResponseDTO> list = auditservice.getByUser(userId);
+	        return new ResponseEntity<>(list, HttpStatus.OK);
+	    }
+
+
+	    @Operation(summary = "Get audit logs filtered by action name (e.g. CREATE_BOOKING)")
+	    @GetMapping("/action/{action}")
+	    @PreAuthorize("hasAnyRole('COMPLIANCE_OFFICER','ADMIN')")
+	    public ResponseEntity<List<AuditLogResponseDTO>> getByAction(@PathVariable String action) {
+
+	        List<AuditLogResponseDTO> list = auditservice.getByAction(action);
+	        return new ResponseEntity<>(list, HttpStatus.OK);
+	    }
+
+
+	    @Operation(summary = "Get audit logs filtered by severity (INFO, WARN, ERROR)")
+	    @GetMapping("/type/{logType}")
+	    @PreAuthorize("hasAnyRole('COMPLIANCE_OFFICER','ADMIN')")
+	    public ResponseEntity<List<AuditLogResponseDTO>> getByLogType(@PathVariable LogType logType) {
+
+	        List<AuditLogResponseDTO> list = auditservice.getByLogType(logType);
+	        return new ResponseEntity<>(list, HttpStatus.OK);
+	    }
+
+
+
+
+}

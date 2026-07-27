@@ -1,0 +1,236 @@
+<div class="payment-gateway-container py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 col-md-8">
+
+        <!-- Secure Header -->
+        <div class="text-center mb-4">
+          <div class="secure-badge mb-3">
+            <i class="bi bi-shield-lock-fill text-success"></i>
+            <span class="ms-2 fw-semibold text-muted">Secure 256-bit Encrypted Payment Gateway</span>
+          </div>
+          <h2 class="fw-bold">Payment Checkout</h2>
+        </div>
+
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+          <!-- Payment Summary -->
+          <div class="card-header bg-primary text-white p-4 text-center">
+            <p class="mb-1 opacity-75">Amount to Pay</p>
+            <h1 class="display-5 fw-bold mb-0">{{ amount | currency:'INR' }}</h1>
+            <div class="mt-2 small">Invoice ID: #{{ invoiceId }} | Method: {{ method }}</div>
+          </div>
+
+          <div class="card-body p-4 position-relative">
+            <!-- Processing Overlay -->
+            @if (isLoading) {
+              <div class="position-absolute top-0 start-0 w-100 h-100 bg-white d-flex flex-column justify-content-center align-items-center"
+                   style="z-index: 10; border-radius: 0 0 1rem 1rem; opacity: 0.95;">
+                <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status"></div>
+                <h4 class="fw-bold text-primary">Processing Payment...</h4>
+                <p class="text-muted">Please do not refresh or close the page</p>
+                <div class="progress w-50" style="height: 6px;">
+                  <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%"></div>
+                </div>
+              </div>
+            }
+
+            @if (paymentSuccess) {
+              <div class="text-center py-5 animate-fade-in">
+                <div class="display-1 text-success mb-3">
+                  <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <h3 class="fw-bold">Payment Successful!</h3>
+                <p class="text-muted">Your transaction has been processed securely.</p>
+                <div class="alert alert-success d-inline-block px-4 py-2 rounded-pill mt-3">
+                  Transaction ID: #{{ transactionId }}
+                </div>
+                <div class="mt-4">
+                  <p class="small text-muted">Redirecting you to your booking details in 3 seconds...</p>
+                  <div class="spinner-border spinner-border-sm text-success" role="status"></div>
+                </div>
+              </div>
+            } @else {
+              <form [formGroup]="paymentForm" (ngSubmit)="processPayment()">
+
+                <!-- CREDIT/DEBIT CARD -->
+                @if (method === 'CREDIT_CARD' || method === 'DEBIT_CARD') {
+                  <div class="payment-method-section animate-slide-up">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                      <h5 class="fw-bold mb-0"><i class="bi bi-credit-card-fill me-2"></i>Card Details</h5>
+                      <div class="card-brands">
+                        <i class="bi bi-credit-card-2-front"></i>
+                      </div>
+                    </div>
+
+                    <!-- Visual Credit Card -->
+                    <div class="visual-card mb-4">
+                      <div class="card-chip"></div>
+                      <div class="card-number-display">{{ paymentForm.get('cardNumber')?.value || '**** **** **** ****' }}</div>
+                      <div class="d-flex justify-content-between mt-4">
+                        <div class="card-holder-display">
+                          <label class="small text-uppercase">Card Holder</label>
+                          <div>{{ paymentForm.get('cardHolder')?.value || 'FULL NAME' }}</div>
+                        </div>
+                        <div class="card-expiry-display">
+                          <label class="small text-uppercase">Expires</label>
+                          <div>{{ paymentForm.get('expiry')?.value || 'MM/YY' }}</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row g-3">
+                      <div class="col-12">
+                        <label class="form-label small fw-bold">Card Number</label>
+                        <input type="text" class="form-control form-control-lg"
+                               formControlName="cardNumber" placeholder="1234 5678 9101 1121"
+                               [class.is-invalid]="paymentForm.get('cardNumber')?.touched && paymentForm.get('cardNumber')?.invalid">
+                        <div class="invalid-feedback">Please enter a valid 16-digit card number.</div>
+                      </div>
+                      <div class="col-12">
+                        <label class="form-label small fw-bold">Card Holder Name</label>
+                        <input type="text" class="form-control"
+                               formControlName="cardHolder" placeholder="John Doe"
+                               [class.is-invalid]="paymentForm.get('cardHolder')?.touched && paymentForm.get('cardHolder')?.invalid">
+                        <div class="invalid-feedback">Card holder name is required.</div>
+                      </div>
+                      <div class="col-6">
+                        <label class="form-label small fw-bold">Expiry Date</label>
+                        <input type="text" class="form-control"
+                               formControlName="expiry" placeholder="MM/YY"
+                               [class.is-invalid]="paymentForm.get('expiry')?.touched && paymentForm.get('expiry')?.invalid">
+                        <div class="invalid-feedback">Use MM/YY format.</div>
+                      </div>
+                      <div class="col-6">
+                        <label class="form-label small fw-bold">CVV</label>
+                        <input type="password" class="form-control"
+                               formControlName="cvv" placeholder="123"
+                               [class.is-invalid]="paymentForm.get('cvv')?.touched && paymentForm.get('cvv')?.invalid">
+                        <div class="invalid-feedback">Enter 3-digit CVV.</div>
+                      </div>
+                    </div>
+                  </div>
+                }
+
+                <!-- UPI -->
+                @if (method === 'UPI') {
+                  <div class="payment-method-section animate-slide-up">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                      <h5 class="fw-bold mb-0"><i class="bi bi-qr-code-scan me-2"></i>UPI Payment</h5>
+                    </div>
+
+                    <div class="row align-items-center">
+                      <div class="col-md-6 text-center border-end">
+                        <div class="qr-container p-3 bg-white border rounded-4 shadow-sm d-inline-block">
+                          <img [src]="qrCodeUrl" class="img-fluid rounded" alt="Payment QR Code">
+                        </div>
+                        <p class="small text-muted mt-3">Scan this QR with any UPI App</p>
+                      </div>
+                      <div class="col-md-6 ps-md-4">
+                        <div class="mb-3">
+                          <label class="form-label small fw-bold">Enter UPI ID (VPA)</label>
+                          <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+                            <input type="text" class="form-control"
+                                   formControlName="upiId" placeholder="user@bank"
+                                   [class.is-invalid]="paymentForm.get('upiId')?.touched && paymentForm.get('upiId')?.invalid">
+                          </div>
+                          <div class="invalid-feedback">Please enter a valid UPI ID (e.g. name@okaxis)</div>
+                        </div>
+                        <div class="alert alert-light border small">
+                          <i class="bi bi-info-circle me-2"></i> Enter your UPI ID and click "Confirm" to proceed with the transaction.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                }
+
+                <!-- NET BANKING -->
+                @if (method === 'NET_BANKING') {
+                  <div class="payment-method-section animate-slide-up">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                      <h5 class="fw-bold mb-0"><i class="bi bi-bank me-2"></i>Net Banking</h5>
+                    </div>
+
+                    <div class="row g-3">
+                      <div class="col-12">
+                        <label class="form-label small fw-bold">Select Your Bank</label>
+                        <select class="form-select" formControlName="bankName" [class.is-invalid]="paymentForm.get('bankName')?.touched && paymentForm.get('bankName')?.invalid">
+                          <option value="">Choose Bank...</option>
+                          <option value="HDFC">HDFC Bank</option>
+                          <option value="ICICI">ICICI Bank</option>
+                          <option value="SBI">State Bank of India</option>
+                          <option value="Axis">Axis Bank</option>
+                          <option value="Kotak">Kotak Mahindra</option>
+                        </select>
+                        <div class="invalid-feedback">Please select a bank.</div>
+                      </div>
+                      <div class="col-12">
+                        <label class="form-label small fw-bold">Account Number</label>
+                        <input type="text" class="form-control" formControlName="accountNumber"
+                               placeholder="Enter account number" [class.is-invalid]="paymentForm.get('accountNumber')?.touched && paymentForm.get('accountNumber')?.invalid">
+                        <div class="invalid-feedback">Please enter a valid account number (9-18 digits).</div>
+                      </div>
+                      <div class="col-12">
+                        <label class="form-label small fw-bold">IFSC Code</label>
+                        <input type="text" class="form-control" formControlName="ifsc"
+                               placeholder="SBIN0001234" [class.is-invalid]="paymentForm.get('ifsc')?.touched && paymentForm.get('ifsc')?.invalid">
+                        <div class="invalid-feedback">Please enter a valid 11-digit IFSC code.</div>
+                      </div>
+                    </div>
+                  </div>
+                }
+
+                <!-- PAYPAL -->
+                @if (method === 'PAYPAL') {
+                  <div class="payment-method-section animate-slide-up">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                      <h5 class="fw-bold mb-0"><i class="bi bi-paypal me-2"></i>PayPal Express</h5>
+                    </div>
+
+                    <div class="row g-3">
+                      <div class="col-12">
+                        <label class="form-label small fw-bold">PayPal Email</label>
+                        <input type="email" class="form-control" formControlName="paypalEmail"
+                               placeholder="email@example.com" [class.is-invalid]="paymentForm.get('paypalEmail')?.touched && paymentForm.get('paypalEmail')?.invalid">
+                        <div class="invalid-feedback">Please enter a valid PayPal email address.</div>
+                      </div>
+                      <div class="col-12">
+                        <label class="form-label small fw-bold">PayPal Password</label>
+                        <input type="password" class="form-control" formControlName="paypalPassword"
+                               placeholder="••••••••" [class.is-invalid]="paymentForm.get('paypalPassword')?.touched && paymentForm.get('paypalPassword')?.invalid">
+                        <div class="invalid-feedback">PayPal password is required.</div>
+                      </div>
+                    </div>
+                  </div>
+                }
+
+                <div class="d-grid gap-2 mt-5">
+                  <button type="submit" class="btn btn-primary btn-lg py-3 fw-bold shadow-sm"
+                          [disabled]="isLoading || paymentForm.invalid">
+                    @if (isLoading) {
+                      <span class="spinner-border spinner-border-sm me-2"></span> Processing...
+                    } @else {
+                      <i class="bi bi-lock-fill me-2"></i> Confirm & Pay {{ amount | currency:'INR' }}
+                    }
+                  </button>
+                  <button type="button" class="btn btn-link text-muted small" (click)="router.navigate(['/payment', bookingId])">
+                    <i class="bi bi-arrow-left me-1"></i> Change Payment Method
+                  </button>
+                </div>
+              </form>
+            }
+          </div>
+        </div>
+
+        <!-- Footer Trust elements -->
+        <div class="text-center mt-4">
+          <div class="d-flex justify-content-center gap-4 opacity-50">
+            <div class="small text-muted"><i class="bi bi-shield-check me-1"></i> PCI-DSS Compliant</div>
+            <div class="small text-muted"><i class="bi bi-safe2 me-1"></i> Secure SSL</div>
+            <div class="small text-muted"><i class="bi bi-patch-check me-1"></i> Verified Merchant</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

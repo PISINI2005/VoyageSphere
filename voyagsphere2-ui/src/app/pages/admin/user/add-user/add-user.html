@@ -1,0 +1,271 @@
+<div class="container py-5"
+style="margin-left: 280px;
+width: calc(100% - 280px);">
+
+  <div class="row justify-content-center">
+
+    <div class="col-lg-8">
+
+      <div class="card shadow-lg border-0">
+
+        <!-- Header -->
+
+        <div class="card-header bg-primary text-white py-3">
+
+          <h3 class="mb-0">
+
+            <i class="bi bi-person-plus-fill me-2"></i>
+
+            Add User
+
+          </h3>
+
+        </div>
+
+        <div class="card-body p-4">
+
+          <form
+            #userForm="ngForm"
+            (ngSubmit)="addUser()">
+
+            <div class="row g-4">
+              <!-- First Name -->
+<div class="col-md-6">
+
+  <label
+    for="firstName"
+    class="form-label fw-semibold">
+
+    <i class="bi bi-person-fill text-primary me-1"></i>
+
+    First Name
+
+    <span class="text-danger">*</span>
+
+  </label>
+
+  <input
+    id="firstName"
+    type="text"
+    class="form-control form-control-lg"
+    name="firstName"
+    [(ngModel)]="user.firstName"
+    placeholder="Enter first name"
+    required>
+
+</div>
+
+<!-- Last Name -->
+<div class="col-md-6">
+
+  <label
+    for="lastName"
+    class="form-label fw-semibold">
+
+    <i class="bi bi-person-fill text-primary me-1"></i>
+
+    Last Name
+
+    <span class="text-danger">*</span>
+
+  </label>
+
+  <input
+    id="lastName"
+    type="text"
+    class="form-control form-control-lg"
+    name="lastName"
+    [(ngModel)]="user.lastName"
+    placeholder="Enter last name"
+    required>
+
+</div>
+
+              <!-- Email -->
+
+              <div class="col-md-6">
+
+                <label
+                  for="email"
+                  class="form-label fw-semibold">
+
+                  <i class="bi bi-envelope-fill text-primary me-1"></i>
+
+                  Email
+
+                  <span class="text-danger">*</span>
+
+                </label>
+
+                <input
+                  id="email"
+                  type="email"
+                  class="form-control form-control-lg"
+                  name="email"
+                  [(ngModel)]="user.email"
+                  placeholder="Enter email address"
+                  required>
+
+              </div>
+
+              <!-- Role -->
+
+              <div class="col-md-6">
+
+                <label
+                  for="role"
+                  class="form-label fw-semibold">
+
+                  <i class="bi bi-person-badge-fill text-primary me-1"></i>
+
+                  Role
+
+                  <span class="text-danger">*</span>
+
+                </label>
+
+                <select
+                  id="role"
+                  class="form-select form-select-lg"
+                  name="role"
+                  [(ngModel)]="user.role">
+
+                  @for (role of roles; track role) {
+
+                    <option [value]="role">
+
+                      {{ role }}
+
+                    </option>
+
+                  }
+
+                </select>
+
+              </div>
+
+              <!-- Phone -->
+
+              <div class="col-md-6">
+
+                <label
+                  for="phoneNo"
+                  class="form-label fw-semibold">
+
+                  <i class="bi bi-telephone-fill text-primary me-1"></i>
+
+                  Phone Number
+
+                  <span class="text-danger">*</span>
+
+                </label>
+
+                <input
+                  id="phoneNo"
+                  type="number"
+                  class="form-control form-control-lg"
+                  name="phoneNo"
+                  [(ngModel)]="user.phoneNo"
+                  placeholder="Enter phone number"
+                  required>
+
+              </div>
+
+            </div>
+
+            <!-- Buttons -->
+
+            <div class="d-flex justify-content-end gap-3 mt-4">
+
+              <button
+                type="reset"
+                class="btn btn-outline-secondary px-4"
+                [disabled]="loading">
+
+                <i class="bi bi-arrow-clockwise me-2"></i>
+
+                Reset
+
+              </button>
+
+              <button
+                type="submit"
+                class="btn btn-primary px-4"
+                [disabled]="loading || userForm.invalid">
+
+                <i class="bi bi-person-plus-fill me-2"></i>
+
+                {{
+                  loading
+                    ? 'Creating User...'
+                    : 'Create User'
+                }}
+
+              </button>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Popup -->
+
+@if (showPopup) {
+
+<div class="modal fade show d-block popup-backdrop">
+
+  <div class="modal-dialog modal-dialog-centered">
+
+    <div class="modal-content border-0 shadow">
+
+      <div class="modal-header bg-primary text-white">
+
+        <h5 class="modal-title">
+
+          <i class="bi bi-info-circle-fill me-2"></i>
+
+          {{ popupTitle }}
+
+        </h5>
+
+      </div>
+
+      <div class="modal-body text-center">
+
+        <p class="mb-0">
+
+          {{ popupMessage }}
+
+        </p>
+
+      </div>
+
+      <div class="modal-footer justify-content-center">
+
+        <button
+          class="btn btn-primary px-4"
+          type="button"
+          (click)="closePopup()">
+
+          OK
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+}

@@ -1,0 +1,44 @@
+body {
+    background: #f4f7fb;
+}
+
+.card {
+    transition: all .3s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 1rem 3rem rgba(0,0,0,.12) !important;
+}
+
+.form-control {
+    border-radius: 10px;
+    padding: .75rem 1rem;
+}
+
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 .2rem rgba(13,110,253,.15);
+}
+
+.input-group-text {
+    border-radius: 10px 0 0 10px;
+}
+
+.btn {
+    font-weight: 600;
+    transition: .25s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.card-header {
+    letter-spacing: .3px;
+}
+
+label {
+    color: #495057;
+    margin-bottom: 8px;
+}

@@ -1,0 +1,46 @@
+# =====================================================================
+# SHARED configuration applied to every Travel360 microservice.
+# Service-specific overrides live in <service-name>.yml next to this file.
+# =====================================================================
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    prefer-ip-address: true
+
+spring:
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+
+# JWT signing key (HMAC-SHA, >= 256 bits / 32+ chars). DEV-ONLY value; a JWT_SECRET_KEY env var overrides this.
+# Shared across services so tokens minted by user-service validate everywhere. Replace before production.
+# NOTE: the override env var must be named differently from this key (JWT_SECRET_KEY, not SECRET_KEY),
+# otherwise Spring 6.2 flags "${SECRET_KEY:...}" under key "SECRET_KEY" as a circular placeholder reference.
+SECRET_KEY: ${SECRET_KEY}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, refresh
+
+# Resilient Feign: fail fast rather than hang forever on a slow downstream service.
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 10000

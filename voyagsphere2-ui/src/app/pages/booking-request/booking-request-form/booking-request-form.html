@@ -1,0 +1,43 @@
+<app-navbar></app-navbar>
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">New Booking Request</h4>
+        </div>
+        <div class="card-body">
+          <form (ngSubmit)="submitRequest()">
+            <div class="mb-3">
+              <label class="form-label">Request Type</label>
+              <select class="form-select" [(ngModel)]="requestForm.type" name="type">
+                <option value="BOOKING">New Booking</option>
+                <option value="CANCELLATION">Cancellation</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Budget (USD)</label>
+              <input type="number" class="form-control" [(ngModel)]="requestForm.budget" name="budget" placeholder="Enter your budget">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Request Details</label>
+              <textarea class="form-control" [(ngModel)]="requestForm.requestDetails" name="requestDetails" rows="4" placeholder="Describe your requirements in detail..."></textarea>
+            </div>
+
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-send-fill me-2"></i>Submit Request
+              </button>
+              <button type="button" class="btn btn-outline-secondary" (click)="router.navigate(['/booking-request/my-requests'])">
+                View My Requests
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

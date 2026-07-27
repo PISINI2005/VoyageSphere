@@ -1,0 +1,289 @@
+<app-navbar></app-navbar>
+
+<div class="bg-light min-vh-100 py-4">
+
+  <div class="container">
+
+    @if(authService.isTravelAgent() && agentContext.selectedCustomerEmail) {
+
+    <div class="alert alert-info d-flex align-items-center shadow-sm border-0 mb-4">
+
+      <i class="bi bi-person-check-fill fs-4 me-3"></i>
+
+      <div>
+
+        Booking for
+
+        <strong>
+
+          {{ agentContext.selectedCustomerEmail }}
+
+        </strong>
+
+      </div>
+
+    </div>
+
+    }
+
+    <!-- Page Header -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+      <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+          <div>
+
+            <h2 class="fw-bold mb-1">
+
+              <i class="bi bi-search text-primary me-2"></i>
+
+              {{ type }} Results
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+              Browse and compare the available options.
+
+            </p>
+
+          </div>
+
+          <div class="text-end">
+
+            <span class="badge bg-primary fs-6 px-3 py-2">
+
+              {{ totalElements }} Result(s)
+
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="row g-4">
+
+      <!-- Filters -->
+
+      <div class="col-lg-3">
+
+        <div
+          class="card border-0 shadow-sm sticky-top"
+          style="top:90px;">
+
+          <div class="card-header bg-primary text-white">
+
+            <h5 class="mb-0">
+
+              <i class="bi bi-funnel-fill me-2"></i>
+
+              Filters
+
+            </h5>
+
+          </div>
+
+          <div class="card-body">
+
+            <app-search-filter
+              [type]="type"
+              (filterChanged)="onFilterChange($event)">
+            </app-search-filter>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Results -->
+
+      <div class="col-lg-9">
+
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+
+          <h5 class="fw-semibold mb-0">
+
+            Available Options
+
+          </h5>
+
+          <select class="form-select w-auto" [(ngModel)]="sortBy" (change)="onSortChange(sortBy)">
+            <option value="PRICE">
+              Sort by Price
+            </option>
+            <option value="RATING">
+              Sort by Rating
+            </option>
+          </select>
+
+        </div>
+
+        @for(item of results; track $index){
+
+        <div class="card border-0 shadow-sm mb-4">
+
+          <div class="card-body">
+
+            <div class="row align-items-center">
+
+              <!-- Left -->
+
+              <div class="col-md-8">
+
+                <h4 class="fw-bold text-primary mb-2">
+
+                  {{ getItemTitle(item) }}
+
+                </h4>
+
+                <p class="text-muted mb-3">
+
+                  <i class="bi bi-geo-alt-fill text-danger me-2"></i>
+
+                  {{ getItemSubtitle(item) }}
+
+                </p>
+
+                @if(type === 'HOTEL') {
+                  <span class="badge bg-warning text-dark px-3 py-2">
+                    <i class="bi bi-star-fill me-1"></i>
+                    {{ item.ratings || 'N/A' }}
+                  </span>
+                }
+
+              </div>
+
+              <!-- Right -->
+
+              <div class="col-md-4 text-md-end mt-4 mt-md-0">
+
+                <small class="text-muted">
+
+                  Starting From
+
+                </small>
+
+                <h2 class="fw-bold text-success my-2">
+
+                  ₹{{ getItemPrice(item) }}
+
+                </h2>
+
+                <button
+                  class="btn btn-primary"
+                  (click)="viewDetails(
+                    item.flightId ||
+                    item.hotelId ||
+                    item.transportId ||
+                    item.packageId
+                  )">
+
+                  <i class="bi bi-eye-fill me-2"></i>
+
+                  View Details
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        }
+
+        @if(results.length===0){
+
+        <div class="card border-0 shadow-sm">
+
+          <div class="card-body text-center py-5">
+
+            <i class="bi bi-search display-3 text-secondary"></i>
+
+            <h4 class="mt-3">
+
+              No Results Found
+
+            </h4>
+
+            <p class="text-muted mb-0">
+
+              Try changing your filters or search criteria.
+
+            </p>
+
+          </div>
+
+        </div>
+
+        }
+
+        <!-- Pagination -->
+
+        @if (totalPages > 1) {
+
+<div class="card border-0 shadow-sm mt-4">
+  <div class="card-body">
+
+    <div class="d-flex justify-content-center gap-2 flex-wrap">
+
+      <button
+        class="btn btn-outline-secondary"
+        [disabled]="isFirst"
+        (click)="previousPage()">
+        <i class="bi bi-chevron-left"></i>
+        Previous
+      </button>
+
+      @for (page of pages; track page) {
+
+        <button
+          class="btn"
+          [class.btn-primary]="page === currentPage"
+          [class.btn-outline-primary]="page !== currentPage"
+          (click)="goToPage(page)">
+          {{ page + 1 }}
+        </button>
+
+      }
+
+      <button
+        class="btn btn-outline-secondary"
+        [disabled]="isLast"
+        (click)="nextPage()">
+        Next
+        <i class="bi bi-chevron-right"></i>
+      </button>
+
+    </div>
+
+    <div class="text-center text-muted mt-3">
+      Showing page
+      <strong>{{ currentPage + 1 }}</strong>
+      of
+      <strong>{{ totalPages }}</strong>
+      ({{ totalElements }} results)
+    </div>
+
+  </div>
+</div>
+
+}
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

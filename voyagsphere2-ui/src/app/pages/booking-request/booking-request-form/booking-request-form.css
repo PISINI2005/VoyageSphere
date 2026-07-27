@@ -1,0 +1,13 @@
+.card {
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.card-header {
+  font-weight: 600;
+  text-align: center;
+}
+
+.form-label {
+  font-weight: 500;
+}

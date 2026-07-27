@@ -1,0 +1,495 @@
+<app-navbar></app-navbar>
+
+<div class="container py-5">
+  @if(item) {
+  <div class="row">
+    <!-- LEFT SIDE -->
+    <div class="col-lg-8">
+      <div class="details-card">
+        <!-- Header -->
+        <div class="mb-4">
+          <span class="badge bg-primary mb-3">
+            {{ type }}
+          </span>
+          <h2 class="fw-bold">
+            {{ getItemTitle(item) }}
+          </h2>
+          <p class="text-muted mb-0">
+            {{ getItemSubtitle(item) }}
+          </p>
+        </div>
+        <hr>
+
+        <!-- Price Selection Section -->
+        @if (type === 'FLIGHT' || type === 'TRANSPORT') {
+        <div class="price-selection-wrapper mb-4">
+          <h5 class="fw-bold mb-3">Select Date & Fare</h5>
+
+          <div class="category-selector mb-3">
+            <span class="text-muted me-2">Type:</span>
+            @for (seat of item?.seats; track seat.seatType || seat.transportClass) {
+              <button class="btn btn-sm btn-outline-primary category-btn"
+                [class.active]="selectedCategory === (seat.seatType || seat.transportClass)"
+                (click)="onCategoryChange(seat.seatType || seat.transportClass)">
+                {{ seat.seatType || seat.transportClass }}
+              </button>
+            }
+          </div>
+
+          <div class="calendar-trigger" (click)="toggleCalendar()">
+            <div class="trigger-content">
+              <span class="text-muted">Travel Date:</span>
+              <span class="fw-bold">{{ selectedDate ? (selectedDate | date:'fullDate') : 'Choose Date' }}</span>
+            </div>
+            <span class="calendar-icon">📅</span>
+          </div>
+
+          @if(isCalendarOpen) {
+            <div class="calendar-dropdown shadow-lg">
+              <div class="calendar-header d-flex justify-content-between align-items-center p-3">
+                <button class="btn btn-sm btn-outline-secondary" (click)="prevMonth()" [disabled]="isCurrentMonth()">
+                  ‹
+                </button>
+                <span class="fw-bold">{{ viewDate | date:'MMMM yyyy' }}</span>
+                <button class="btn btn-sm btn-outline-secondary" (click)="nextMonth()" [disabled]="isMaxMonth()">
+                  ›
+                </button>
+              </div>
+
+              <div class="calendar-days-header">
+                <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+              </div>
+
+              <div class="calendar-grid">
+                @for (day of calendarDays; track day.date) {
+                  <div class="calendar-day"
+                    [class.selected]="selectedDate === day.date"
+                    [class.disabled]="day.isEmpty || isDateDisabled(day.date)"
+                    (click)="!day.isEmpty && !isDateDisabled(day.date) && selectDate(day.date)">
+                    @if(!day.isEmpty) {
+                      <span class="day-number">{{ day.date | date:'dd' }}</span>
+                      <span class="price-tag" *ngIf="day.price">₹{{ day.price }}</span>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Seat/Class Selection -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <h5 class="fw-bold mb-4">{{ type === 'FLIGHT' ? 'Seat Categories' : 'Available Classes' }}</h5>
+            <div class="row g-4">
+              @for (seat of item?.seats; track seat.seatType || seat.transportClass) {
+              <div class="col-md-6">
+                <div class="card h-100 border-primary">
+                  <div class="card-header bg-primary text-white text-center">
+                    <h5 class="mb-0">{{ seat.seatType || seat.transportClass }}</h5>
+                  </div>
+                  <div class="card-body text-center">
+                    <h2 class="text-primary fw-bold">₹{{ seat.price }}</h2>
+                    <p class="text-muted">{{ type === 'FLIGHT' ? 'Starting Fare' : 'Per Passenger' }}</p>
+                    <span class="badge bg-secondary">
+                      {{ type === 'FLIGHT' ? 'Available Seats' : 'Seats Available' }}: {{ seat.availableSeats }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+        }
+
+        <!-- FLIGHT -->
+        @if (type === 'FLIGHT') {
+        <div class="row text-center mb-4">
+          <div class="col-md-4">
+            <h6 class="text-muted">Departure</h6>
+            <h4>{{ item?.departureTime }}</h4>
+          </div>
+          <div class="col-md-4">
+            <h6 class="text-muted">Route</h6>
+            <h5>{{ item?.source }} → {{ item?.destination }}</h5>
+          </div>
+          <div class="col-md-4">
+            <h6 class="text-muted">Arrival</h6>
+            <h4>{{ item?.arrivalTime }}</h4>
+          </div>
+        </div>
+
+        <!-- Included Benefits -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <h5 class="fw-bold mb-4">Included Benefits</h5>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="border rounded p-3 h-100">
+                  <span class="fs-4">🧳</span>
+                  <h6 class="mt-2">Cabin Baggage</h6>
+                  <small class="text-muted">Included in fare</small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="border rounded p-3 h-100">
+                  <span class="fs-4">🍽️</span>
+                  <h6 class="mt-2">Complimentary Meals</h6>
+                  <small class="text-muted">Served during travel</small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="border rounded p-3 h-100">
+                  <span class="fs-4">🎬</span>
+                  <h6 class="mt-2">Entertainment</h6>
+                  <small class="text-muted">In-flight entertainment</small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="border rounded p-3 h-100">
+                  <span class="fs-4">📶</span>
+                  <h6 class="mt-2">Wi-Fi</h6>
+                  <small class="text-muted">Available on select flights</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flight Details -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <h5 class="fw-bold mb-4">Flight Details</h5>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="bg-light rounded p-3">
+                  <small class="text-muted d-block">Flight Number</small>
+                  <strong>{{ item?.flightNumber }}</strong>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="bg-light rounded p-3">
+                  <small class="text-muted d-block">Airline</small>
+                  <strong>{{ item?.airlineName }}</strong>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="bg-light rounded p-3">
+                  <small class="text-muted d-block">Source</small>
+                  <strong>{{ item?.source }}</strong>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="bg-light rounded p-3">
+                  <small class="text-muted d-block">Destination</small>
+                  <strong>{{ item?.destination }}</strong>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="bg-light rounded p-3">
+                  <small class="text-muted d-block">Status</small>
+                  <span class="badge" [ngClass]="{'bg-success': item?.status === 'SCHEDULED', 'bg-warning text-dark': item?.status === 'DELAYED', 'bg-danger': item?.status === 'CANCELLED'}">
+                    {{ item?.status }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+
+        <!-- HOTEL -->
+        @else if (type === 'HOTEL') {
+        <div class="row text-center mb-4">
+          <div class="col-md-4">
+            <h6 class="text-muted">City</h6>
+            <h5>{{ item?.city }}</h5>
+          </div>
+          <div class="col-md-4">
+            <h6 class="text-muted">Rating</h6>
+            <h5>⭐ {{ item?.ratings }}/5</h5>
+          </div>
+          <div class="col-md-4">
+            <h6 class="text-muted">Status</h6>
+            <span class="badge bg-success">{{ item?.status }}</span>
+          </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <h5 class="fw-bold mb-4">Hotel Details</h5>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="bg-light rounded p-3">
+                  <small class="text-muted d-block">Hotel Name</small>
+                  <strong>{{ item?.hotelName }}</strong>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="bg-light rounded p-3">
+                  <small class="text-muted d-block">Contact Number</small>
+                  <strong>{{ item?.contactNo }}</strong>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="bg-light rounded p-3">
+                  <small class="text-muted d-block">Email</small>
+                  <strong>{{ item?.emailId }}</strong>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="bg-light rounded p-3">
+                  <small class="text-muted d-block">Address</small>
+                  <strong>{{ item?.address }}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <h5 class="fw-bold mb-4">Amenities</h5>
+            <div class="row g-3">
+              <div class="col-md-6">✅ Free Wi-Fi</div>
+              <div class="col-md-6">✅ Complimentary Breakfast</div>
+              <div class="col-md-6">✅ Swimming Pool</div>
+              <div class="col-md-6">✅ Fitness Center</div>
+              <div class="col-md-6">✅ 24x7 Room Service</div>
+              <div class="col-md-6">✅ Parking Facility</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <h5 class="fw-bold mb-4">Room Categories</h5>
+            <div class="row g-4">
+              @for (room of item?.rooms; track room.roomType) {
+              <div class="col-md-6">
+                <div class="card border-primary h-100">
+                  <div class="card-header bg-primary text-white text-center">
+                    <h5 class="mb-0">{{ room.roomType }}</h5>
+                  </div>
+                  <div class="card-body text-center">
+                    <h2 class="text-primary fw-bold">₹{{ room.price }}</h2>
+                    <p class="text-muted">Per Night</p>
+                    <span class="badge bg-secondary">Available Rooms: {{ room.availableRooms }}</span>
+                  </div>
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+        }
+
+        <!-- TRANSPORT -->
+        @else if (type === 'TRANSPORT') {
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h3 class="fw-bold mb-1">{{ item?.transportType }} #{{ item?.transportNumber }}</h3>
+                <p class="text-muted mb-0">{{ item?.source }} → {{ item?.destination }}</p>
+              </div>
+              <span class="badge bg-success fs-6">{{ item?.transportStatus }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-3">
+            <div class="card bg-light border-0">
+              <div class="card-body text-center">
+                <h6 class="text-muted">Source</h6>
+                <h5>{{ item?.source }}</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card bg-light border-0">
+              <div class="card-body text-center">
+                <h6 class="text-muted">Destination</h6>
+                <h5>{{ item?.destination }}</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card bg-light border-0">
+              <div class="card-body text-center">
+                <h6 class="text-muted">Departure</h6>
+                <h5>{{ item?.departureTime }}</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card bg-light border-0">
+              <div class="card-body text-center">
+                <h6 class="text-muted">Arrival</h6>
+                <h5>{{ item?.arrivalTime }}</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transport Benefits -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <h5 class="fw-bold mb-4">Included Benefits</h5>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="border rounded p-3 h-100">
+                  <span class="fs-4">🛋️</span>
+                  <h6 class="mt-2">Comfortable Seating</h6>
+                  <small class="text-muted">Spacious reclining seats for a relaxing journey</small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="border rounded p-3 h-100">
+                  <span class="fs-4">❄️</span>
+                  <h6 class="mt-2">Air Conditioned</h6>
+                  <small class="text-muted">Climate-controlled travel experience</small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="border rounded p-3 h-100">
+                  <span class="fs-4">🧳</span>
+                  <h6 class="mt-2">Luggage Assistance</h6>
+                  <small class="text-muted">Dedicated luggage storage area available</small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="border rounded p-3 h-100">
+                  <span class="fs-4">📍</span>
+                  <h6 class="mt-2">Live Tracking</h6>
+                  <small class="text-muted">Real-time location updates during travel</small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="border rounded p-3 h-100">
+                  <span class="fs-4">🔒</span>
+                  <h6 class="mt-2">Safe Journey</h6>
+                  <small class="text-muted">Trained drivers and safety-compliant vehicles</small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="border rounded p-3 h-100">
+                  <span class="fs-4">📞</span>
+                  <h6 class="mt-2">24×7 Support</h6>
+                  <small class="text-muted">Travel assistance available anytime</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+
+        <!-- PACKAGE -->
+        @else if (type === 'PACKAGE') {
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+              <div>
+                <h3 class="fw-bold mb-1">{{ item?.packageName }}</h3>
+                <p class="text-muted mb-0">{{ item?.source }} → {{ item?.destination }}</p>
+              </div>
+              <span class="badge fs-6 px-3 py-2" [ngClass]="{'bg-success': item?.status === 'AVAILABLE', 'bg-danger': item?.status !== 'AVAILABLE'}">
+                {{ item?.status }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-4">
+            <div class="card border-0 bg-light h-100">
+              <div class="card-body text-center">
+                <h6 class="text-muted">Destination</h6>
+                <h5 class="fw-bold">{{ item?.destination }}</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card border-0 bg-light h-100">
+              <div class="card-body text-center">
+                <h6 class="text-muted">Duration</h6>
+                <h5 class="fw-bold">{{ item?.durationDays }} Days</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card border-0 bg-light h-100">
+              <div class="card-body text-center">
+                <h6 class="text-muted">Category</h6>
+                <h5 class="fw-bold">{{ item?.category }}</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <h5 class="fw-bold mb-3">Package Details</h5>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="bg-light rounded p-3">
+                  <small class="text-muted d-block">Departure City</small>
+                  <strong>{{ item?.source }}</strong>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="bg-light rounded p-3">
+                  <small class="text-muted d-block">Available Slots</small>
+                  <strong>{{ item?.availableSlots }}</strong>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="bg-light rounded p-3">
+                  <small class="text-muted d-block mb-2">Description</small>
+                  <p class="mb-0">{{ item?.description }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        @if(item?.dayWisePlan){
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <h5 class="fw-bold mb-3">Day Wise Itinerary</h5>
+            <div class="timeline">
+              @for(day of itinerary; track day.day) {
+                <div class="mb-3 border-start ps-3">
+                  <h6 class="fw-bold text-primary">Day {{ day.day }} - {{ day.title }}</h6>
+                  <p class="mb-0">{{ day.activities }}</p>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+        }
+        }
+      </div>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="col-lg-4">
+      <div class="booking-card shadow-sm">
+        <h6 class="text-muted">Starting From</h6>
+        <h1 class="price text-primary">₹{{ getCurrentPrice() }}</h1>
+        <p class="text-muted">Taxes Included</p>
+        <button class="btn btn-primary btn-lg w-100 rounded-pill" (click)="bookNow()">Book Now</button>
+      </div>
+    </div>
+  </div>
+  }
+
+  @else {
+  <div class="text-center">
+    <h4 class="mt-5">No data found</h4>
+  </div>
+  }
+
+</div>

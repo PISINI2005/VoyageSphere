@@ -1,0 +1,358 @@
+<div class="container py-4" style="margin-left: 280px; width: calc(100% - 280px);">
+  <div class="card shadow border-0">
+    <div class="card-header bg-primary text-white">
+      <h3 class="mb-0">🚌 Update Transport</h3>
+    </div>
+
+    <div class="card-body p-4">
+      <!-- Load Section -->
+      <div class="row g-3 align-items-end mb-4">
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Transport ID</label>
+          <input type="number" class="form-control" [(ngModel)]="transportId">
+        </div>
+        <div class="col-md-auto">
+          <button type="button" class="btn btn-primary" (click)="loadTransport()">
+            🔍 Load Transport
+          </button>
+        </div>
+      </div>
+
+      <hr class="mb-4">
+
+      @if (transport) {
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Transport Number</label>
+            <input type="number" class="form-control" [(ngModel)]="transport.transportNumber">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Partner ID</label>
+            <input type="number" class="form-control" [(ngModel)]="transport.partnerId">
+          </div>
+          <div class="col-md-6">
+  <label class="form-label fw-semibold">
+    Source
+  </label>
+
+  <input
+    type="text"
+    class="form-control"
+    [(ngModel)]="transport.source"
+    name="source"
+    #source="ngModel"
+    required>
+
+  @if (
+    source.invalid &&
+    (source.dirty || source.touched)
+  ) {
+    <div class="text-danger small mt-1">
+      Source is required
+    </div>
+  }
+</div>
+         <div class="col-md-6">
+  <label class="form-label fw-semibold">
+    Destination
+  </label>
+
+  <input
+    type="text"
+    class="form-control"
+    [(ngModel)]="transport.destination"
+    name="destination"
+    #destination="ngModel"
+    required>
+
+  @if (
+    destination.invalid &&
+    (destination.dirty || destination.touched)
+  ) {
+    <div class="text-danger small mt-1">
+      Destination is required
+    </div>
+  }
+
+  @if (
+    transport.source &&
+    transport.destination &&
+    transport.source.trim().toLowerCase() ===
+    transport.destination.trim().toLowerCase() &&
+    (
+      source.dirty ||
+      source.touched ||
+      destination.dirty ||
+      destination.touched
+    )
+  ) {
+    <div class="text-danger small mt-1">
+      Source and Destination cannot be the same
+    </div>
+  }
+</div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Transport Type</label>
+            <select class="form-select" [(ngModel)]="transport.transportType">
+              <option value="BUS">BUS</option>
+              <option value="TRAIN">TRAIN</option>
+            </select>
+          </div>
+         <input
+  type="time"
+  class="form-control"
+  [(ngModel)]="transport.departureTime"
+  name="departureTime"
+  #departureTime="ngModel"
+  required>
+``
+          <input
+  type="time"
+  class="form-control"
+  [(ngModel)]="transport.arrivalTime"
+  name="arrivalTime"
+  #arrivalTime="ngModel"
+  required>
+          <div class="col-md-6">
+  <label class="form-label fw-semibold">
+    Arrival Day
+  </label>
+
+  <select
+    class="form-select"
+    [(ngModel)]="transport.arrivalDayOffset"
+    name="arrivalDayOffset"
+    #arrivalDayOffset="ngModel"
+    required>
+
+    <option [ngValue]="null">
+      Select Arrival Day
+    </option>
+
+    <option [ngValue]="0">
+      Same Day
+    </option>
+
+    <option [ngValue]="1">
+      Next Day
+    </option>
+
+  </select>
+  <div class="col-md-12">
+
+  @if (
+    transport.departureTime &&
+    transport.arrivalTime &&
+    transport.arrivalDayOffset !== null &&
+    !isTransportTimingValid() &&
+    (
+      departureTime.dirty ||
+      departureTime.touched ||
+      arrivalTime.dirty ||
+      arrivalTime.touched
+    )
+  ) {
+
+    <div class="text-danger small mt-1">
+      For Same Day arrival, Arrival Time must be after Departure Time.
+    </div>
+
+  }
+
+</div>
+
+  @if (
+    arrivalDayOffset.invalid &&
+    (
+      arrivalDayOffset.dirty ||
+      arrivalDayOffset.touched
+    )
+  ) {
+    <div class="text-danger small mt-1">
+      Arrival Day is required
+    </div>
+  }
+</div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Status</label>
+            <select class="form-select" [(ngModel)]="transport.transportStatus">
+              <option value="AVAILABLE">AVAILABLE</option>
+              <option value="FULLY_BOOKED">FULLY_BOOKED</option>
+              <option value="SCHEDULED">SCHEDULED</option>
+              <option value="DEPARTED">DEPARTED</option>
+              <option value="ARRIVED">ARRIVED</option>
+              <option value="DELAYED">DELAYED</option>
+              <option value="CANCELLED">CANCELLED</option>
+              <option value="OUT_OF_SERVICE">OUT_OF_SERVICE</option>
+            </select>
+          </div>
+        </div>
+
+        <hr class="mb-4">
+        <h4 class="mb-3">Seat Classes</h4>
+
+        @for (seat of transport.seats; track $index; let i = $index) {
+          <div class="card shadow-sm border mb-3">
+            <div class="card-header bg-light">
+              <strong class="text-primary">Seat Class {{ i + 1 }}</strong>
+            </div>
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <label class="form-label fw-semibold">Transport Class</label>
+                  <select class="form-select" [(ngModel)]="seat.transportClass">
+                    <option value="SEATER">SEATER</option>
+                    <option value="SLEEPER">SLEEPER</option>
+                    <option value="AC_SEATER">AC_SEATER</option>
+                    <option value="AC_SLEEPER">AC_SLEEPER</option>
+                  </select>
+                </div>
+               <div class="col-md-4">
+
+  <label class="form-label fw-semibold">
+    Price
+  </label>
+
+  <input
+    type="number"
+    class="form-control"
+    [(ngModel)]="seat.price"
+    name="price{{i}}"
+    #price="ngModel"
+    min="1"
+    required>
+
+  @if (
+    price.invalid &&
+    (price.dirty || price.touched)
+  ) {
+
+    <div class="text-danger small mt-1">
+      Price must be greater than 0
+    </div>
+
+  }
+
+</div>
+               <div class="col-md-4">
+
+  <label class="form-label fw-semibold">
+    Total Seats
+  </label>
+
+  <input
+    type="number"
+    class="form-control"
+    [(ngModel)]="seat.totalSeats"
+    name="totalSeats{{i}}"
+    #totalSeats="ngModel"
+    min="1"
+    required>
+
+  @if (
+    totalSeats.invalid &&
+    (totalSeats.dirty || totalSeats.touched)
+  ) {
+
+    <div class="text-danger small mt-1">
+      Total Seats must be greater than 0
+    </div>
+
+  }
+
+</div>
+              </div>
+            </div>
+          </div>
+        } @empty {
+          <p class="text-muted text-center py-3">No seat classes available.</p>
+        }
+
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <button type="button" class="btn btn-outline-primary" (click)="addSeat()">
+            ➕ Add Seat Class
+          </button>
+        <button
+  type="button"
+  class="btn btn-primary btn-lg px-5"
+  [disabled]="
+    loading ||
+    !isTransportTimingValid() ||
+    (
+      transport.source &&
+      transport.destination &&
+      transport.source.trim().toLowerCase() ===
+      transport.destination.trim().toLowerCase()
+    ) ||
+    transport.seats.some(
+      seat =>
+        seat.price <= 0 ||
+        seat.totalSeats <= 0
+    )
+  "
+  (click)="updateTransport()">
+
+  💾 Update Transport
+
+</button>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+  <!-- Popup -->
+@if (showPopup) {
+
+<div
+  style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999999;">
+
+  <div
+    class="card shadow-lg border-0"
+    style="
+      width: 500px;
+      max-width: 90%;
+      border-radius: 12px;
+      overflow: hidden;">
+
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">
+        {{ popupTitle }}
+      </h4>
+
+      <button
+        type="button"
+        class="btn-close btn-close-white"
+        (click)="closePopup()">
+      </button>
+    </div>
+
+    <div class="card-body text-center py-4">
+
+      <p class="mb-4">
+        {{ popupMessage }}
+      </p>
+
+      <button
+        type="button"
+        class="btn btn-primary px-4"
+        (click)="closePopup()">
+        OK
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+}

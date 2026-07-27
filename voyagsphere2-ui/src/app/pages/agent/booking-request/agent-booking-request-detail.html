@@ -1,0 +1,141 @@
+<app-agent-navbar></app-agent-navbar>
+
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Request Details #{{ request?.bookingRequestId }}</h2>
+    <button class="btn btn-outline-secondary" [routerLink]="['/agent/booking-request']">
+      <i class="bi bi-arrow-left me-2"></i>Back to List
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center my-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="!isLoading && request">
+    <!-- Request Information -->
+    <div class="col-md-6">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white">
+          <h5 class="mb-0">Request Specifications</h5>
+        </div>
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-sm-4 fw-bold">Type:</div>
+            <div class="col-sm-8">{{ request.type }}</div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-4 fw-bold">Budget:</div>
+            <div class="col-sm-8 text-primary fw-bold">${{ request.budget }}</div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-4 fw-bold">Status:</div>
+            <div class="col-sm-8">
+              <span class="badge rounded-pill bg-info text-dark">{{ request.status }}</span>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-4 fw-bold">Details:</div>
+            <div class="col-sm-8">{{ request.requestDetails }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Area -->
+    <div class="col-md-6">
+      <!-- PENDING: Claim -->
+      <div class="card shadow-sm mb-4" *ngIf="request.status === 'PENDING'">
+        <div class="card-header bg-warning text-dark">
+          <h5 class="mb-0">Claim Request</h5>
+        </div>
+        <div class="card-body">
+          <p class="text-muted">This request is currently open. Claim it to start processing.</p>
+          <button class="btn btn-primary w-100" (click)="claimRequest()">
+            <i class="bi bi-hand-index-thumb me-2"></i>Claim Now
+          </button>
+        </div>
+      </div>
+
+      <!-- ASSIGNED: Decision -->
+      <div class="card shadow-sm mb-4" *ngIf="request.status === 'ASSIGNED'">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Decision</h5>
+        </div>
+        <div class="card-body">
+          <p class="text-muted">This request has been assigned to you. Please decide if you can fulfill it.</p>
+          <div class="d-flex gap-2">
+            <button class="btn btn-success flex-grow-1" (click)="acceptRequest()">
+              <i class="bi bi-check-circle me-2"></i>Accept
+            </button>
+            <button class="btn btn-danger flex-grow-1" (click)="showRejectModal = true">
+              <i class="bi bi-x-circle me-2"></i>Reject
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACCEPTED: Submit Fulfillment -->
+      <div class="card shadow-sm mb-4" *ngIf="request.status === 'ACCEPTED'">
+        <div class="card-header bg-success text-white">
+          <h5 class="mb-0">Fulfill Request</h5>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label fw-bold">Agent Remarks</label>
+            <textarea class="form-control" [(ngModel)]="submitForm.agentRemarks" rows="3" placeholder="Provide a brief summary of the fulfillment..."></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Linked Booking IDs</label>
+            <div class="input-group mb-2">
+              <input type="number" class="form-control" [(ngModel)]="bookingIdInput" placeholder="Enter Booking ID">
+              <button class="btn btn-outline-primary" type="button" (click)="addBookingId()">Add</button>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+              <span *ngFor="let bId of submitForm.linkedBookingIds; let i = index" class="badge bg-secondary d-flex align-items-center py-2 px-3">
+                #{{ bId }} <i class="bi bi-x ms-2" style="cursor:pointer" (click)="removeBookingId(i)"></i>
+              </span>
+            </div>
+          </div>
+          <button class="btn btn-primary w-100" (click)="submitFulfillment()">
+            <i class="bi bi-send me-2"></i>Submit Fulfillment
+          </button>
+        </div>
+      </div>
+
+      <!-- READ-ONLY: Other Statuses -->
+      <div class="card shadow-sm mb-4" *ngIf="request.status !== 'PENDING' && request.status !== 'ASSIGNED' && request.status !== 'ACCEPTED'">
+        <div class="card-header bg-secondary text-white">
+          <h5 class="mb-0">Status: {{ request.status }}</h5>
+        </div>
+        <div class="card-body text-center py-4">
+          <p class="text-muted mb-0">This request is in a final or awaiting state. No further actions are available.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rejection Modal -->
+  <div class="modal fade show" [style.display]="showRejectModal ? 'block' : 'none'" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title">Reject Request #{{ request?.bookingRequestId }}</h5>
+          <button type="button" class="btn-close btn-close-white" (click)="showRejectModal = false"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label fw-bold">Rejection Reason</label>
+            <textarea class="form-control" [(ngModel)]="rejectionRemarks" rows="4" placeholder="Explain why this request cannot be fulfilled..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="showRejectModal = false">Cancel</button>
+          <button type="button" class="btn btn-danger" (click)="rejectRequest()">Confirm Rejection</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

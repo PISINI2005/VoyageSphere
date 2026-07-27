@@ -1,0 +1,436 @@
+<div class="container py-4" style="margin-left: 280px; width: calc(100% - 280px);">
+  <div class="card shadow border-0">
+    <div class="card-header bg-primary text-white">
+      <h3 class="mb-0">✈️ Update Flight</h3>
+    </div>
+
+    <div class="card-body p-4">
+      <!-- Load Section -->
+      <div class="row g-3 align-items-end mb-4">
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Flight ID</label>
+          <input type="number" class="form-control" [(ngModel)]="flightId">
+        </div>
+        <div class="col-md-auto">
+          <button type="button" class="btn btn-primary" (click)="loadFlight()">
+            🔍 Load Flight
+          </button>
+        </div>
+      </div>
+
+      <hr class="mb-4">
+
+      @if (flight) {
+        <div class="row g-3 mb-4">
+
+  <!-- Flight Number -->
+  <div class="col-md-6">
+    <label class="form-label fw-semibold">Flight Number</label>
+    <input
+      type="text"
+      class="form-control"
+      [(ngModel)]="flight.flightNumber"
+      name="flightNumber"
+      #flightNumber="ngModel"
+      required>
+
+    @if (flightNumber.invalid && (flightNumber.dirty || flightNumber.touched)) {
+      <div class="text-danger small mt-1">
+        Flight Number is required
+      </div>
+    }
+  </div>
+
+  <!-- Partner ID -->
+  <div class="col-md-6">
+    <label class="form-label fw-semibold">Partner ID</label>
+    <input
+      type="number"
+      class="form-control"
+      [(ngModel)]="flight.partnerId"
+      name="partnerId"
+      #partnerId="ngModel"
+      required
+      min="1">
+
+    @if (partnerId.invalid && (partnerId.dirty || partnerId.touched)) {
+      <div class="text-danger small mt-1">
+        Valid Partner ID is required
+      </div>
+    }
+  </div>
+
+  <!-- Source -->
+  <div class="col-md-6">
+    <label class="form-label fw-semibold">Source</label>
+
+    <input
+      type="text"
+      class="form-control"
+      [(ngModel)]="flight.source"
+      name="source"
+      #source="ngModel"
+      required>
+
+    @if (source.invalid && (source.dirty || source.touched)) {
+      <div class="text-danger small mt-1">
+        Source is required
+      </div>
+    }
+  </div>
+
+  <!-- Destination -->
+  <div class="col-md-6">
+    <label class="form-label fw-semibold">Destination</label>
+
+    <input
+      type="text"
+      class="form-control"
+      [(ngModel)]="flight.destination"
+      name="destination"
+      #destination="ngModel"
+      required>
+
+    @if (destination.invalid && (destination.dirty || destination.touched)) {
+      <div class="text-danger small mt-1">
+        Destination is required
+      </div>
+    }
+
+    @if (
+      flight.source &&
+      flight.destination &&
+      flight.source.trim().toLowerCase()
+        === flight.destination.trim().toLowerCase() &&
+      (
+        source.dirty ||
+        source.touched ||
+        destination.dirty ||
+        destination.touched
+      )
+    ) {
+      <div class="text-danger small mt-1">
+        Source and Destination cannot be the same
+      </div>
+    }
+  </div>
+
+  <!-- Departure Time -->
+  <div class="col-md-6">
+    <label class="form-label fw-semibold">
+      Departure Time
+    </label>
+
+    <input
+      type="time"
+      class="form-control"
+      [(ngModel)]="flight.departureTime"
+      name="departureTime"
+      #departureTime="ngModel"
+      required>
+
+    @if (
+      departureTime.invalid &&
+      (departureTime.dirty || departureTime.touched)
+    ) {
+      <div class="text-danger small mt-1">
+        Departure Time is required
+      </div>
+    }
+  </div>
+
+  <!-- Arrival Time -->
+  <div class="col-md-6">
+    <label class="form-label fw-semibold">
+      Arrival Time
+    </label>
+
+    <input
+      type="time"
+      class="form-control"
+      [(ngModel)]="flight.arrivalTime"
+      name="arrivalTime"
+      #arrivalTime="ngModel"
+      required>
+
+    @if (
+      arrivalTime.invalid &&
+      (arrivalTime.dirty || arrivalTime.touched)
+    ) {
+      <div class="text-danger small mt-1">
+        Arrival Time is required
+      </div>
+    }
+  </div>
+
+  <!-- Arrival Day -->
+  <div class="col-md-6">
+    <label class="form-label fw-semibold">
+      Arrival Day
+    </label>
+
+    <select
+      class="form-select"
+      [(ngModel)]="flight.arrivalDayOffset"
+      name="arrivalDayOffset"
+      #arrivalDayOffset="ngModel"
+      required>
+
+      <option [ngValue]="null">
+        Select Arrival Day
+      </option>
+
+      <option [ngValue]="0">
+        Same Day
+      </option>
+
+      <option [ngValue]="1">
+        Next Day
+      </option>
+
+    </select>
+
+    @if (
+      arrivalDayOffset.invalid &&
+      (
+        arrivalDayOffset.dirty ||
+        arrivalDayOffset.touched
+      )
+    ) {
+      <div class="text-danger small mt-1">
+        Arrival Day is required
+      </div>
+    }
+  </div>
+
+  <!-- Flight Timing Validation -->
+  <div class="col-md-12">
+
+    @if (
+      flight.departureTime &&
+      flight.arrivalTime &&
+      flight.arrivalDayOffset !== null &&
+      !isFlightTimingValid() &&
+      (
+        departureTime.dirty ||
+        departureTime.touched ||
+        arrivalTime.dirty ||
+        arrivalTime.touched
+      )
+    ) {
+      <div class="text-danger small mt-1">
+        {{ getFlightTimingValidationMessage() }}
+      </div>
+    }
+
+  </div>
+
+  <!-- Status -->
+  <div class="col-md-12">
+    <label class="form-label fw-semibold">
+      Status
+    </label>
+
+    <select
+      class="form-select"
+      [(ngModel)]="flight.status">
+
+      <option value="SCHEDULED">
+        SCHEDULED
+      </option>
+
+      <option value="CANCELLED">
+        CANCELLED
+      </option>
+
+    </select>
+  </div>
+
+</div>
+
+ <hr class="mb-4">
+<h4 class="mb-3">Seat Details</h4>
+
+@for (seat of flight.seats; track $index; let i = $index) {
+
+  <div class="card shadow-sm border mb-3">
+
+    <div class="card-header bg-light">
+      <strong class="text-primary">
+        Seat Category {{ i + 1 }}
+      </strong>
+    </div>
+
+    <div class="card-body">
+
+      <div class="row g-3">
+
+        <!-- Seat Type -->
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">
+            Seat Type
+          </label>
+
+          <select
+            class="form-select"
+            [(ngModel)]="seat.seatType"
+            name="seatType{{i}}">
+
+            <option value="ECONOMY">ECONOMY</option>
+            <option value="PREMIUM">PREMIUM</option>
+            <option value="BUSINESS">BUSINESS</option>
+            <option value="FIRST">FIRST</option>
+
+          </select>
+        </div>
+
+        <!-- Price -->
+        <div class="col-md-4">
+
+          <label class="form-label fw-semibold">
+            Price
+          </label>
+
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="seat.price"
+            name="price{{i}}"
+            #price="ngModel"
+            min="1"
+            required>
+
+          @if (
+            price.invalid &&
+            (price.dirty || price.touched)
+          ) {
+            <div class="text-danger small mt-1">
+              Price must be greater than 0
+            </div>
+          }
+
+        </div>
+
+        <!-- Total Seats -->
+        <div class="col-md-4">
+
+          <label class="form-label fw-semibold">
+            Total Seats
+          </label>
+
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="seat.totalSeats"
+            name="totalSeats{{i}}"
+            #totalSeats="ngModel"
+            min="1"
+            required>
+
+          @if (
+            totalSeats.invalid &&
+            (totalSeats.dirty || totalSeats.touched)
+          ) {
+            <div class="text-danger small mt-1">
+              Total Seats must be greater than 0
+            </div>
+          }
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+} @empty {
+
+  <p class="text-muted text-center py-3">
+    No seat categories available.
+  </p>
+
+}
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <button type="button" class="btn btn-outline-primary" (click)="addSeat()">
+            ➕ Add Seat
+          </button>
+          
+          <button
+  type="button"
+  class="btn btn-primary btn-lg px-5"
+  [disabled]="
+    loading ||
+    !isFlightTimingValid() ||
+    (
+      flight.source &&
+      flight.destination &&
+      flight.source.trim().toLowerCase() ===
+      flight.destination.trim().toLowerCase()
+    )
+  "
+  (click)="updateFlight()">
+
+  💾 Update Flight
+
+</button>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Popup -->
+  
+</div>
+@if (showPopup) {
+  <div
+    class="popup-overlay"
+    style="
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999999;">
+
+    <div
+      class="popup card shadow-lg border-0"
+      style="width: 500px; max-width: 90%;">
+
+      <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+
+        <h4 class="mb-0">
+          {{ popupTitle }}
+        </h4>
+
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          (click)="closePopup()">
+        </button>
+
+      </div>
+
+      <div class="card-body text-center py-4">
+
+        <p class="mb-4">
+          {{ popupMessage }}
+        </p>
+
+        <button
+          type="button"
+          class="btn btn-primary px-4"
+          (click)="closePopup()">
+          OK
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+}

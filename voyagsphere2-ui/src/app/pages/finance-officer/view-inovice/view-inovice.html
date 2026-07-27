@@ -1,0 +1,159 @@
+<div class="container-fluid py-4 px-md-5">
+
+      <!-- Dashboard Heading & Actions Controls Row -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h1 class="h3 mb-1 text-dark fw-bold">Invoice Dashboard</h1>
+          <p class="text-muted small mb-0">Overview of global revenue operations and settlement lifecycle metrics.</p>
+        </div>
+        <button type="button" class="btn btn-outline-secondary btn-sm px-3 rounded-pill shadow-sm" (click)="showAll()">
+          Reset Views
+        </button>
+      </div>
+
+      <!-- Core Operational Metrics Card Grid -->
+      <div class="row g-4 mb-4">
+        <div class="col-12 col-md-4">
+          <div class="card border-0 shadow-sm p-3 bg-primary text-white position-relative overflow-hidden">
+            <div class="card-body d-flex align-items-center justify-content-between">
+              <div>
+                <h6 class="text-uppercase small mb-2 fw-semibold">Total Revenue</h6>
+                <h2 class="display-6 fw-bold mb-0">₹{{ totalRevenue | number:'1.2-2' }}</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+          <div class="card border-0 shadow-sm p-3 bg-white">
+            <div class="card-body d-flex align-items-center justify-content-between">
+              <div>
+                <h6 class="text-uppercase text-muted small mb-2 fw-semibold">Total Bookings</h6>
+                <h2 class="display-6 fw-bold mb-0 text-dark">{{ totalBookings }} <span class="fs-6 fw-normal text-muted">Bookings</span></h2>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+          <div class="card border-0 shadow-sm p-3 bg-white">
+            <div class="card-body d-flex align-items-center justify-content-between">
+              <div>
+                <h6 class="text-uppercase text-muted small mb-2 fw-semibold">Total Cancellations</h6>
+                <h2 class="display-6 fw-bold mb-0 text-danger">{{ totalCancellations }}</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Relational Data Matrix Filter Options -->
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+          <div class="row g-3 align-items-end">
+
+            <div class="col-12 col-md-6 col-xl-3">
+              <label class="form-label small fw-bold text-secondary">Status Filter</label>
+              <div class="input-group">
+                <select class="form-select bg-white text-dark shadow-none" [(ngModel)]="selectedStatus" (ngModelChange)="filterByStatus()">
+                  <option value="ALL">ALL</option>
+                  <option value="PENDING">PENDING</option>
+                  <option value="SUCCESS">SUCCESS</option>
+                  <option value="FAILED">FAILED</option>
+                  <option value="CANCELLED">CANCEL cancelled</option>
+                  <option value="REFUNDED">REFUNDED</option>
+                  <option value="PARTIALLY_REFUNDED">PARTIALLY_REFUNDED</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-3">
+              <label class="form-label small fw-bold text-secondary">Invoice Id</label>
+              <div class="input-group">
+                <input type="number" class="form-control shadow-none" [(ngModel)]="searchInvoiceId" placeholder="Input unique invoice ID...">
+                <button class="btn btn-primary px-3 shadow-none" type="button" (click)="searchByInvoiceId($event)">
+                  Find
+                </button>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-3">
+              <label class="form-label small fw-bold text-secondary">Booking Id</label>
+              <div class="input-group">
+                <input type="number" class="form-control shadow-none" [(ngModel)]="searchBookingId" placeholder="Input relative booking ID...">
+                <button class="btn btn-dark px-3 shadow-none" type="button" (click)="searchByBookingId($event)">
+                  Find
+                </button>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-3">
+              <label class="form-label small fw-bold text-secondary">User Id</label>
+              <div class="input-group">
+                <input type="number" class="form-control shadow-none" [(ngModel)]="searchUserId" placeholder="Input relative user ID...">
+                <button class="btn btn-secondary px-3 shadow-none" type="button" (click)="searchByUserId($event)">
+                  Find
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Central Ledger Data Output Table -->
+      <div class="card border-0 shadow-sm overflow-hidden">
+        <div class="card-header bg-white border-0 py-3 px-4 d-flex align-items-center justify-content-between">
+          <h5 class="mb-0 fw-bold text-dark">
+            <span class="badge bg-secondary text-white me-2">{{ filteredInvoices.length }}</span> Ledger Results
+          </h5>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light text-secondary">
+              <tr>
+                <th class="ps-4 text-center">Invoice ID</th>
+                <th>Billing Amount</th>
+                <th class="text-center">Status</th>
+                <th class="text-center">Booking ID</th>
+                <th class="text-center">Customer Ref</th>
+                
+              </tr>
+            </thead>
+            <tbody>
+              @for(item of filteredInvoices; track item.invoiceId){
+              <tr>
+                <td class="ps-4 text-center fw-semibold text-primary">#{{ item.invoiceId }}</td>
+                <td class="fw-bold text-dark fs-5">₹{{ item.amount | number:'1.2-2' }}</td>
+                <td class="text-center">
+                  <span class="badge rounded-pill" [ngClass]="{
+                      'bg-success': item.status === 'SUCCESS',
+                      'bg-warning text-dark': item.status === 'PENDING',
+                      'bg-danger': item.status === 'FAILED',
+                      'bg-secondary': item.status === 'CANCELLED',
+                      'bg-info text-dark': item.status === 'REFUNDED',
+                      'bg-dark': item.status === 'PARTIALLY_REFUNDED'
+                    }">
+                    {{ item.status }}
+                  </span>
+                </td>
+                <td class="text-center"><span class="badge bg-light text-dark border px-3">{{ item.bookingId }}</span></td>
+                <td class="text-center text-muted small">USR-{{ item.userId }}</td>
+                
+              </tr>
+              } @empty {
+              <tr>
+                <td colspan="6" class="text-center py-5 text-muted">
+                  <div class="py-4">
+                    <p class="mb-1 fw-semibold fs- laS-5">No matching data profiles found</p>
+                    <p class="small text-secondary mb-0">Try clearing filtering flags or input fields to reset index views.</p>
+                  </div>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>

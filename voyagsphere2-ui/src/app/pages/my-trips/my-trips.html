@@ -1,0 +1,240 @@
+<app-navbar></app-navbar>
+
+<div class="min-vh-100 py-5 bg-body-tertiary">
+  <div class="container">
+    <!-- Page Header -->
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center border-bottom pb-4 mb-5 gap-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+          <i class="bi bi-collection fs-4"></i>
+        </div>
+        <div>
+          <h2 class="fw-bold tracking-tight text-body mb-0">My Trips</h2>
+          <p class="text-muted mb-0 small">
+            Manage and monitor your active and historical travel itineraries.
+          </p>
+        </div>
+      </div>
+
+      <!-- Tab Switcher -->
+      <div class="nav nav-pills gap-2">
+        <button class="nav-link" [class.active]="activeTab === 'ALL'" (click)="setTab('ALL')">All Trips</button>
+        <button class="nav-link" [class.active]="activeTab === 'ACTIVE'" (click)="setTab('ACTIVE')">Active</button>
+        <button class="nav-link" [class.active]="activeTab === 'CANCELLED'" (click)="setTab('CANCELLED')">Cancelled</button>
+      </div>
+    </div>
+
+    @if (!selectedBookingForPassengers) {
+      <div class="row g-4">
+        @for (booking of filteredBookings; track booking.bookingId) {
+          <div class="col-12">
+            <div class="trip-ticket shadow-sm">
+              <div class="ticket-content">
+                <div class="row g-4 align-items-center">
+                  <!-- Left: Booking Info -->
+                  <div class="col-lg-7">
+                    <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+                      <span class="badge-soft bg-primary-subtle text-primary px-2 py-1 fw-semibold uppercase tracking-wider small">
+                        {{ booking.bookingType }}
+                      </span>
+                      <div class="trip-divider-horizontal d-none d-sm-block"></div>
+                      <span class="text-secondary font-monospace small">
+                        Booking ID: <span class="text-body fw-medium">#{{ booking.bookingId }}</span>
+                      </span>
+                    </div>
+
+                    <h4 class="text-body fw-bold mb-2">
+                      <i class="bi" [ngClass]="{
+                        'bi-airplane': booking.bookingType === 'FLIGHT',
+                        'bi-building': booking.bookingType === 'HOTEL',
+                        'bi-car-front': booking.bookingType === 'TRANSPORT',
+                        'bi-box-seam': booking.bookingType === 'PACKAGE'
+                      }" class="me-2 text-primary"></i>
+                      {{ booking.flightNumber || booking.hotelName || booking.packageName || booking.transportType }}
+                    </h4>
+
+                    <div class="d-flex align-items-center gap-3 text-muted small">
+                      <div class="d-flex align-items-center">
+                        <i class="bi bi-people me-1"></i>
+                        <span>{{ booking.units }} Travellers</span>
+                      </div>
+                      <div class="d-flex align-items-center">
+                        <i class="bi bi-calendar-event me-1"></i>
+                        <span>{{ booking.bookingDate | date:'d MMM yyyy' }}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Right: Price & Action -->
+                  <div class="col-lg-5 text-lg-end">
+                    <div class="mb-3">
+                      <div class="text-muted small mb-1">Total Investment</div>
+                      <h3 class="trip-price-premium mb-0">
+                       {{ booking.amount | currency: 'INR'}}
+                      </h3>
+                    </div>
+
+                    <div class="d-flex flex-wrap justify-content-lg-end align-items-center gap-3">
+                      <span class="badge-soft" [ngClass]="{
+                        'badge-soft-success': booking.status === 'CONFIRMED',
+                        'badge-soft-warning': booking.status === 'PENDING',
+                        'badge-soft-danger': booking.status === 'CANCELLED',
+                        'badge-soft-secondary': booking.status === 'OTHER'
+                      }">
+                        {{ booking.status }}
+                      </span>
+
+                      <div class="d-flex gap-2">
+                        @if ((booking.bookingType === 'FLIGHT' || booking.bookingType === 'TRANSPORT') && booking.status !== 'CANCELLED') {
+                          <button class="btn btn-sm btn-primary rounded-pill px-3 fw-medium"
+                                  (click)="managePassengers(booking)">
+                            <i class="bi bi-person-gear me-1"></i> Manage
+                          </button>
+                        }
+
+                        @if (booking.status !== 'CANCELLED') {
+                          <button class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-medium"
+                                  (click)="cancelBooking(booking.bookingId)">
+                            <i class="bi bi-x-circle me-1"></i> Cancel
+                          </button>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="ticket-divider"></div>
+
+                <div class="row align-items-center">
+                    <div class="col-md-12 text-muted small italic">
+                        <i class="bi bi-info-circle me-1"></i> This is a confirmed travel itinerary. Please carry a valid ID.
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        } @empty {
+          <div class="col-12">
+            <div class="card border-0 shadow-sm p-5 text-center bg-white rounded-4">
+              <div class="bg-body-secondary d-inline-flex align-items-center justify-content-center rounded-circle p-4 mb-4 mx-auto" style="width: 80px; height: 80px;">
+                <i class="bi bi-airplane text-muted fs-2"></i>
+              </div>
+              <h4 class="fw-bold text-body mb-2">No itineraries found</h4>
+              <p class="text-muted mx-auto mb-0" style="max-width: 400px;">
+                Your trips for the selected category will appear here.
+              </p>
+            </div>
+          </div>
+        }
+      </div>
+
+      @if (totalPages > 1) {
+        <div class="d-flex flex-column align-items-center gap-3 mt-5">
+          <div class="d-flex justify-content-center align-items-center gap-2">
+            <button class="btn btn-sm btn-outline-primary rounded-pill px-3"
+              [disabled]="isFirst"
+              (click)="previousPage()">
+              <i class="bi bi-chevron-left"></i> Previous
+            </button>
+
+            @for (page of pages; track page) {
+              <button class="btn btn-sm rounded-circle"
+                [class.btn-primary]="page === currentPage"
+                [class.btn-outline-primary]="page !== currentPage"
+                (click)="goToPage(page)"
+                style="width: 32px; height: 32px;">
+                {{ page + 1 }}
+              </button>
+            }
+
+            <button class="btn btn-sm btn-outline-primary rounded-pill px-3"
+              [disabled]="isLast"
+              (click)="nextPage()">
+              Next <i class="bi bi-chevron-right"></i>
+            </button>
+          </div>
+          <div class="text-center text-muted small">
+            Showing page <strong class="text-body">{{ currentPage + 1 }}</strong> of <strong class="text-body">{{ totalPages }}</strong>
+            ({{ totalElements }} bookings)
+          </div>
+        </div>
+      }
+    } @else {
+      <!-- Passenger Workspace -->
+      <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-header bg-body-tertiary p-4 border-bottom d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
+          <div class="d-flex align-items-center gap-3">
+            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-size: 14px;">
+              <i class="bi bi-person-badge"></i>
+            </div>
+            <div>
+              <span class="text-muted small uppercase font-monospace tracking-wider d-block mb-1">Booking Workspace</span>
+              <h4 class="fw-bold text-body mb-0">Passengers — #{{ selectedBookingForPassengers!.bookingId }}</h4>
+            </div>
+          </div>
+          <button class="btn btn-sm btn-white border text-secondary fw-medium px-3 rounded-pill"
+                  (click)="closePassengerManagement()">
+            <i class="bi bi-arrow-left me-1"></i> Back to Trips
+          </button>
+        </div>
+
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table-premium table table-hover align-middle mb-0">
+              <thead>
+                <tr>
+                  <th class="py-3 px-4">Passenger Name</th>
+                  <th class="py-3">Email</th>
+                  <th class="py-3">Status</th>
+                  <th class="py-3 px-4 text-end">Operations</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (passenger of selectedBookingForPassengers!.passengers; track passenger.passengerId) {
+                  <tr>
+                    <td class="py-3 px-4">
+                      <div class="d-flex align-items-center gap-3">
+                        <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 36px; height: 36px; font-size: 14px;">
+                          {{ passenger.passengerName.charAt(0) }}
+                        </div>
+                        <span class="fw-semibold text-body">{{ passenger.passengerName }}</span>
+                      </div>
+                    </td>
+                    <td class="py-3 text-secondary small">
+                      {{ passenger.emailAddress }}
+                    </td>
+                    <td class="py-3">
+                      <span class="badge bg-info-subtle text-info px-2 py-1 rounded-pill fw-medium text-uppercase small">
+                        {{ passenger.status }}
+                      </span>
+                    </td>
+                    <td class="py-3 px-4 text-end">
+                      <button class="btn btn-sm btn-link text-danger text-decoration-none fw-medium p-0"
+                              (click)="cancelPassenger(selectedBookingForPassengers!.bookingId, passenger.passengerId, passenger.passengerName)">
+                        Remove
+                      </button>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="4" class="text-center py-5 text-muted">
+                      No passengers found for this booking.
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<app-confirmation-modal
+  [show]="showConfirmModal"
+  [title]="confirmModalTitle"
+  [message]="confirmModalMessage"
+  (confirmed)="onConfirm()"
+  (cancelled)="onCancelConfirm()">
+</app-confirmation-modal>

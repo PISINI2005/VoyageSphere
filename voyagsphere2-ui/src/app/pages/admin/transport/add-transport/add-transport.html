@@ -1,0 +1,472 @@
+<div class="container py-4" style="margin-left: 280px; width: calc(100% - 280px);">
+  <div class="card shadow border-0">
+    <div class="card-header bg-primary text-white">
+      <h3 class="mb-0">🚌 Add Transport</h3>
+    </div>
+
+    <div class="card-body p-4">
+  <form #transportForm="ngForm" (ngSubmit)="addTransport()">
+
+  <div class="row g-3">
+
+    <!-- Transport Number -->
+    <div class="col-md-6">
+      <label class="form-label fw-semibold">Transport Number</label>
+      <input
+        type="number"
+        class="form-control"
+        [(ngModel)]="transport.transportNumber"
+        name="transportNumber"
+        #transportNumber="ngModel"
+        required
+        min="1">
+
+      @if (transportNumber.invalid && (transportNumber.dirty || transportNumber.touched)) {
+        <div class="text-danger small mt-1">
+          @if (transportNumber.errors?.['required']) {
+            <div>Transport Number is required.</div>
+          }
+          @if (transportNumber.errors?.['min']) {
+            <div>Transport Number must be greater than 0.</div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Partner ID -->
+    <div class="col-md-6">
+      <label class="form-label fw-semibold">Partner ID</label>
+      <input
+        type="number"
+        class="form-control"
+        [(ngModel)]="transport.partnerId"
+        name="partnerId"
+        #partnerId="ngModel"
+        required>
+
+      @if (partnerId.invalid && (partnerId.dirty || partnerId.touched)) {
+        <div class="text-danger small mt-1">
+          Partner ID is required.
+        </div>
+      }
+    </div>
+
+    <!-- Source -->
+    <div class="col-md-6">
+      <label class="form-label fw-semibold">Source</label>
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="transport.source"
+        name="source"
+        #source="ngModel"
+        required
+        minlength="3">
+
+      @if (source.invalid && (source.dirty || source.touched)) {
+        <div class="text-danger small mt-1">
+          @if (source.errors?.['required']) {
+            <div>Source is required.</div>
+          }
+          @if (source.errors?.['minlength']) {
+            <div>Source must be at least 3 characters.</div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Destination -->
+<div class="col-md-6">
+  <label class="form-label fw-semibold">Destination</label>
+
+  <input
+    type="text"
+    class="form-control"
+    [(ngModel)]="transport.destination"
+    name="destination"
+    #destination="ngModel"
+    required
+    minlength="3">
+
+  @if (destination.invalid && (destination.dirty || destination.touched)) {
+
+    <div class="text-danger small mt-1">
+
+      @if (destination.errors?.['required']) {
+        <div>Destination is required.</div>
+      }
+
+      @if (destination.errors?.['minlength']) {
+        <div>Destination must be at least 3 characters.</div>
+      }
+
+    </div>
+
+  }
+
+  @if (
+    transport.source &&
+    transport.destination &&
+    transport.source.trim().toLowerCase() ===
+    transport.destination.trim().toLowerCase() &&
+    (
+      source.dirty ||
+      source.touched ||
+      destination.dirty ||
+      destination.touched
+    )
+  ) {
+    <div class="text-danger small mt-1">
+      Source and Destination cannot be the same.
+    </div>
+  }
+
+</div>
+    <!-- Transport Type -->
+    <div class="col-md-6">
+      <label class="form-label fw-semibold">Transport Type</label>
+      <select
+        class="form-select"
+        [(ngModel)]="transport.transportType"
+        name="transportType"
+        #transportType="ngModel"
+        readonly>
+        <option value="BUS" selected >BUS</option>
+      </select>
+
+      @if (transportType.invalid && (transportType.dirty || transportType.touched)) {
+        <div class="text-danger small mt-1">
+          Transport Type is required.
+        </div>
+      }
+    </div>
+
+    <!-- Transport Status -->
+    <div class="col-md-6">
+      <label class="form-label fw-semibold">Transport Status</label>
+      <select
+        class="form-select"
+        [(ngModel)]="transport.transportStatus"
+        name="transportStatus"
+        #transportStatus="ngModel"
+        required>
+        <option value="">Select Status</option>
+        <option value="AVAILABLE">AVAILABLE</option>
+        <option value="CANCELLED">CANCELLED</option>
+      </select>
+
+      @if (transportStatus.invalid && (transportStatus.dirty || transportStatus.touched)) {
+        <div class="text-danger small mt-1">
+          Transport Status is required.
+        </div>
+      }
+    </div>
+
+    <!-- Departure Time -->
+    <div class="col-md-6">
+      <label class="form-label fw-semibold">Departure Time</label>
+      <input
+        type="time"
+        class="form-control"
+        [(ngModel)]="transport.departureTime"
+        name="departureTime"
+        #departureTime="ngModel"
+        required>
+
+      @if (departureTime.invalid && (departureTime.dirty || departureTime.touched)) {
+        <div class="text-danger small mt-1">
+          Departure Time is required.
+        </div>
+      }
+    </div>
+
+   <!-- Arrival Time -->
+<div class="col-md-6">
+
+  <label class="form-label fw-semibold">
+    Arrival Time
+  </label>
+
+  <input
+    type="time"
+    class="form-control"
+    [(ngModel)]="transport.arrivalTime"
+    name="arrivalTime"
+    #arrivalTime="ngModel"
+    required>
+
+  @if (
+    arrivalTime.invalid &&
+    (arrivalTime.dirty || arrivalTime.touched)
+  ) {
+    <div class="text-danger small mt-1">
+      Arrival Time is required.
+    </div>
+  }
+
+</div>
+
+
+
+<!-- Arrival Day -->
+<div class="col-md-6">
+
+  <label class="form-label fw-semibold">
+    Arrival Day
+  </label>
+
+  <select
+    class="form-select"
+    [(ngModel)]="transport.arrivalDayOffset"
+    name="arrivalDayOffset"
+    #arrivalDayOffset="ngModel"
+    required>
+
+    <option [ngValue]="null">
+      Select Arrival Day
+    </option>
+
+    <option [ngValue]="0">
+      Same Day
+    </option>
+
+    <option [ngValue]="1">
+      Next Day
+    </option>
+
+  </select>
+
+  <div class="col-md-12">
+
+  @if (
+    transport.departureTime &&
+    transport.arrivalTime &&
+    transport.arrivalDayOffset !== null &&
+    !isTransportTimingValid() &&
+    (
+      departureTime.dirty ||
+      departureTime.touched ||
+      arrivalTime.dirty ||
+      arrivalTime.touched
+    )
+  ) {
+
+    <div class="text-danger small mt-1">
+
+      {{ getTransportTimingValidationMessage() }}
+
+    </div>
+
+  }
+
+  @if (
+    arrivalDayOffset.invalid &&
+    (
+      arrivalDayOffset.dirty ||
+      arrivalDayOffset.touched
+    )
+  ) {
+    <div class="text-danger small mt-1">
+      Arrival Day is required.
+    </div>
+  }
+
+</div>
+
+</div>
+  </div>
+
+  <button
+  type="button"
+  class="btn btn-primary px-4"
+  (click)="proceedToSeatConfiguration()"
+  [disabled]="
+    transportForm.invalid ||
+    (
+      transport.source &&
+      transport.destination &&
+      transport.source.trim().toLowerCase() ===
+      transport.destination.trim().toLowerCase()
+    ) ||
+    !isTransportTimingValid()
+  ">
+
+  ➡️ Proceed To Seat Configuration
+
+</button>
+
+        @if (showSeatConfiguration) {
+          <div class="mb-4">
+            <h4 class="mb-3">🪑 Seat Configuration</h4>
+
+            @for (seat of transport.seats; track $index; let i = $index) {
+              <div class="card shadow-sm border mb-3">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                  <strong class="text-primary">Seat Class {{ i + 1 }}</strong>
+                  <button class="btn btn-outline-danger btn-sm" type="button" (click)="removeSeat(i)">
+                    <i class="bi bi-trash-fill me-1"></i>Remove Seat Class
+                  </button>
+                </div>
+                <div class="card-body">
+                  <div class="row g-3">
+                    <div class="col-md-4">
+                      <label class="form-label fw-semibold">Transport Class</label>
+                      <select class="form-select" [(ngModel)]="seat.transportClass" [name]="'transportClass' + i">
+                        <option value="SEATER">SEATER</option>
+                        <option value="SLEEPER">SLEEPER</option>
+                        <option value="AC_SEATER">AC_SEATER</option>
+                        <option value="AC_SLEEPER">AC_SLEEPER</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4">
+
+  <label class="form-label fw-semibold">
+    Price
+  </label>
+
+  <input
+    type="number"
+    class="form-control"
+    [(ngModel)]="seat.price"
+    [name]="'price' + i"
+    #price="ngModel"
+    min="1"
+    required>
+
+  @if (
+    price.invalid &&
+    (price.dirty || price.touched)
+  ) {
+    <div class="text-danger small mt-1">
+      Price must be greater than 0.
+    </div>
+  }
+
+</div>
+                  <div class="col-md-4">
+
+  <label class="form-label fw-semibold">
+    Total Seats
+  </label>
+
+  <input
+    type="number"
+    class="form-control"
+    [(ngModel)]="seat.totalSeats"
+    [name]="'totalSeats' + i"
+    #totalSeats="ngModel"
+    min="1"
+    required>
+
+  @if (
+    totalSeats.invalid &&
+    (totalSeats.dirty || totalSeats.touched)
+  ) {
+    <div class="text-danger small mt-1">
+      Total Seats must be greater than 0.
+    </div>
+  }
+
+</div>
+                  </div>
+                </div>
+              </div>
+            } @empty {
+              <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>No seat classes configured yet.
+              </div>
+            }
+
+            <div class="d-flex justify-content-between mt-4">
+              <button class="btn btn-outline-primary" type="button" (click)="showSeatConfiguration = false">
+                <i class="bi bi-arrow-left me-1"></i>Back To Details
+              </button>
+              <button class="btn btn-primary" type="button" (click)="addSeat()">
+                <i class="bi bi-plus-circle-fill me-1"></i>Add Seat Class
+              </button>
+            </div>
+
+           <button
+  type="submit"
+  class="btn btn-primary btn-lg px-5"
+  [disabled]="
+    loading ||
+    !isTransportTimingValid() ||
+    (
+      transport.source &&
+      transport.destination &&
+      transport.source.trim().toLowerCase() ===
+      transport.destination.trim().toLowerCase()
+    ) ||
+    transport.seats.some(
+      seat =>
+        seat.price <= 0 ||
+        seat.totalSeats <= 0
+    )
+  ">
+
+  {{ loading ? 'Saving...' : '💾 Save Transport' }}
+
+</button>
+          </div>
+        }
+      </form>
+    </div>
+  </div>
+</div>
+  <!-- Popup -->
+@if (showPopup) {
+
+<div
+  style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999999;">
+
+  <div
+    class="card shadow-lg border-0"
+    style="
+      width: 500px;
+      max-width: 90%;
+      border-radius: 12px;
+      overflow: hidden;">
+
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">
+        {{ popupTitle }}
+      </h4>
+
+      <button
+        type="button"
+        class="btn-close btn-close-white"
+        (click)="closePopup()">
+      </button>
+    </div>
+
+    <div class="card-body text-center py-4">
+
+      <p class="mb-4">
+        {{ popupMessage }}
+      </p>
+
+      <button
+        type="button"
+        class="btn btn-primary px-4"
+        (click)="closePopup()">
+        OK
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+}

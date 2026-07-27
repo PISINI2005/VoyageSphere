@@ -1,0 +1,63 @@
+<div class="details-container container py-4">
+
+
+  <a class="btn btn-link mb-3 p-0" routerLink="/compliance/complaints">← Back to Complaint Queue</a>
+
+  <div *ngIf="isLoading" class="alert alert-info">Loading complaint details...</div>
+
+  <div *ngIf="error" class="error-message alert alert-danger">{{ error }}</div>
+
+  <div *ngIf="complaint" class="details-card card p-4">
+
+    <h2 class="h5">Complaint Details</h2>
+
+    <div class="detail-row d-flex align-items-start py-2 border-bottom">
+      <strong class="me-3 fw-bold">Complaint ID:</strong>
+      <div>{{ complaint.complaintId }}</div>
+    </div>
+
+    <div class="detail-row d-flex align-items-start py-2 border-bottom">
+      <strong class="me-3 fw-bold">Subject:</strong>
+      <div>{{ complaint.subject }}</div>
+    </div>
+
+    <div class="detail-row d-flex align-items-start py-2 border-bottom">
+      <strong class="me-3 fw-bold">Customer Id:</strong>
+      <div>{{ complaint.userId }}</div>
+    </div>
+
+    <div class="detail-row d-flex align-items-start py-2 border-bottom">
+      <strong class="me-3 fw-bold">Booking Reference:</strong>
+      <div>{{ complaint.targetId }}</div>
+    </div>
+
+    <div class="detail-row d-flex align-items-start py-2 border-bottom">
+      <strong class="me-3 fw-bold">Status:</strong>
+      <div>{{ complaint.status }}</div>
+    </div>
+
+    <div class="detail-row d-flex align-items-start py-2 border-bottom">
+      <strong class="me-3 fw-bold">Created Date:</strong>
+      <div>{{ complaint.createdDate | date : 'medium' }}</div>
+    </div>
+
+    <div class="detail-row d-flex align-items-start py-2 border-bottom">
+      <strong class="me-3 fw-bold">Description:</strong>
+      <p class="mb-0">{{ complaint.description }}</p>
+    </div>
+
+    <div class="detail-row d-flex align-items-start py-2">
+      <strong class="me-3 fw-bold">Resolution Note:</strong>
+      <p class="mb-0">{{ complaint.resolutionNote || 'No resolution provided yet.' }}</p>
+    </div>
+
+    <hr>
+
+    <app-complaint-update-status
+      [complaint]="complaint"
+      (statusUpdated)="onStatusUpdated($event)">
+    </app-complaint-update-status>
+
+  </div>
+
+</div>

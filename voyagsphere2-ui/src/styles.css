@@ -1,0 +1,414 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Theme Color Variables */
+:root,
+body[data-theme='light'],
+[data-theme='light'] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #e9ecef;
+  --text-primary: #212529;
+  --text-secondary: #6c757d;
+  --text-muted: #adb5bd;
+  --border-color: #dee2e6;
+  --card-bg: #ffffff;
+  --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --input-bg: #ffffff;
+  --input-border: #ced4da;
+  --hover-bg: #f8f9fa;
+}
+
+body[data-theme='dark'],
+[data-theme='dark'],
+body.dark-theme,
+html[data-theme='dark'] {
+  --bg-primary: #0f0f0f;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #2d2d2d;
+  --text-primary: #e9ecef;
+  --text-secondary: #adb5bd;
+  --text-muted: #6c757d;
+  --border-color: #495057;
+  --card-bg: #1a1a1a;
+  --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.3);
+  --input-bg: #2d2d2d;
+  --input-border: #495057;
+  --hover-bg: #2d2d2d;
+}
+
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body[data-theme='dark'],
+body.dark-theme {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Compliance toolbar */
+.compliance-toolbar {
+  gap: 0.5rem;
+}
+
+.compliance-toolbar .btn {
+  min-width: 120px;
+}
+
+/* Base styles */
+:root {
+  --vs-primary: #0d6efd;
+  --vs-secondary: #5b6b7a;
+  --vs-bg: #f4f8fc;
+  --vs-card: #ffffff;
+}
+
+body {
+  background: var(--bg-primary);
+  font-family: Inter, "Segoe UI", sans-serif;
+  color: var(--text-primary);
+}
+
+/* Cards */
+.card {
+  border: none;
+  border-radius: 20px;
+  box-shadow: var(--shadow-sm);
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.card-header {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.card-body {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+}
+
+/* Forms */
+.form-control,
+.form-select,
+.form-input {
+  background-color: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text-primary);
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--input-bg);
+  border-color: #0d6efd;
+  color: var(--text-primary);
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.form-control::placeholder {
+  color: var(--text-secondary);
+}
+
+.input-group-text {
+  background-color: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text-primary);
+}
+
+/* Tables */
+.table {
+  color: var(--text-primary);
+  border-color: var(--border-color);
+  background-color: var(--card-bg);
+}
+
+.table thead {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.table thead th {
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.table tbody tr {
+  border-color: var(--border-color);
+}
+
+.table tbody tr:hover {
+  background-color: var(--bg-tertiary);
+}
+
+.table-light {
+  background-color: var(--bg-secondary);
+}
+
+.table-dark {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* Alerts */
+.alert {
+  color: var(--text-primary);
+  border-color: var(--border-color);
+  background-color: var(--bg-secondary);
+}
+
+.alert-info {
+  background-color: rgba(23, 162, 184, 0.15);
+  border-color: rgba(23, 162, 184, 0.3);
+  color: var(--text-primary);
+}
+
+.alert-danger {
+  background-color: rgba(220, 53, 69, 0.15);
+  border-color: rgba(220, 53, 69, 0.3);
+  color: var(--text-primary);
+}
+
+.alert-warning {
+  background-color: rgba(255, 193, 7, 0.15);
+  border-color: rgba(255, 193, 7, 0.3);
+  color: var(--text-primary);
+}
+
+.alert-success {
+  background-color: rgba(40, 167, 69, 0.15);
+  border-color: rgba(40, 167, 69, 0.3);
+  color: var(--text-primary);
+}
+
+/* Buttons */
+.btn {
+  color: inherit;
+}
+
+.btn-outline-primary {
+  color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.btn-outline-primary:hover {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  color: #ffffff;
+}
+
+.btn-outline-secondary {
+  color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: #ffffff;
+}
+
+.btn-link {
+  color: #0d6efd;
+}
+
+.btn-link:hover {
+  color: #0a58ca;
+}
+
+/* Text utilities */
+.text-muted {
+  color: var(--text-secondary) !important;
+}
+
+.text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.text-primary {
+  color: #0d6efd !important;
+}
+
+/* Background utilities */
+.bg-light {
+  background-color: var(--bg-secondary) !important;
+}
+
+.bg-white {
+  background-color: var(--card-bg) !important;
+}
+
+.bg-primary {
+  background-color: #0d6efd !important;
+}
+
+.bg-success {
+  background-color: #28a745 !important;
+}
+
+.bg-danger {
+  background-color: #dc3545 !important;
+}
+
+.bg-warning {
+  background-color: #ffc107 !important;
+}
+
+.bg-info {
+  background-color: #17a2b8 !important;
+}
+
+.bg-danger-subtle {
+  background-color: rgba(220, 53, 69, 0.15) !important;
+  color: var(--text-primary) !important;
+}
+
+.bg-success-subtle {
+  background-color: rgba(40, 167, 69, 0.15) !important;
+  color: var(--text-primary) !important;
+}
+
+.bg-info-subtle {
+  background-color: rgba(23, 162, 184, 0.15) !important;
+  color: var(--text-primary) !important;
+}
+
+.bg-primary-subtle {
+  background-color: rgba(13, 110, 253, 0.15) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Borders */
+.border {
+  border-color: var(--border-color) !important;
+}
+
+.border-top {
+  border-top-color: var(--border-color) !important;
+}
+
+.border-bottom {
+  border-bottom-color: var(--border-color) !important;
+}
+
+.border-start {
+  border-left-color: var(--border-color) !important;
+}
+
+.border-end {
+  border-right-color: var(--border-color) !important;
+}
+
+/* Modals */
+.modal-content {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.modal-header {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+.modal-title {
+  color: var(--text-primary);
+}
+
+/* Badges */
+.badge {
+  color: #ffffff;
+  background-color: #0d6efd;
+}
+
+.badge.bg-primary-subtle,
+.badge.bg-success-subtle,
+.badge.bg-info-subtle,
+.badge.bg-danger-subtle {
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Nav tabs */
+.nav-tabs {
+  border-color: var(--border-color);
+  background-color: var(--bg-secondary);
+}
+
+.nav-tabs .nav-link {
+  color: var(--text-secondary);
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+.nav-tabs .nav-link.active {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+  border-bottom-color: var(--card-bg);
+}
+
+/* Dropdown */
+.dropdown-menu {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+.dropdown-item {
+  color: var(--text-primary);
+  background-color: var(--card-bg);
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* Pagination */
+.page-link {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+  color: #0d6efd;
+}
+
+.page-link:hover {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: #0a58ca;
+}
+
+.page-item.active .page-link {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+/* Spinners */
+.spinner-border {
+  color: #0d6efd;
+}
+
+/* Scrollbar for dark theme */
+body[data-theme='dark']::-webkit-scrollbar,
+body.dark-theme::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+body[data-theme='dark']::-webkit-scrollbar-track,
+body.dark-theme::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+body[data-theme='dark']::-webkit-scrollbar-thumb,
+body.dark-theme::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+body[data-theme='dark']::-webkit-scrollbar-thumb:hover,
+body.dark-theme::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}

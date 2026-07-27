@@ -1,0 +1,337 @@
+<div class="container py-4" style="margin-left: 280px; width: calc(100% - 280px);">
+  <div class="card shadow border-0">
+    <div class="card-header bg-primary text-white py-3">
+      <h3 class="mb-0">🎒 Add Travel Package</h3>
+    </div>
+
+    <div class="card-body p-4">
+   <form #packageForm="ngForm" (ngSubmit)="addPackage()">
+
+  <div class="row g-3">
+
+    <!-- Package Name -->
+    <div class="col-md-6">
+      <label class="form-label fw-semibold">Package Name</label>
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="travelPackage.packageName"
+        name="packageName"
+        #packageName="ngModel"
+        required
+        minlength="3">
+
+      @if (packageName.invalid && (packageName.dirty || packageName.touched)) {
+        <div class="text-danger small mt-1">
+          @if (packageName.errors?.['required']) {
+            <div>Package Name is required.</div>
+          }
+          @if (packageName.errors?.['minlength']) {
+            <div>Package Name must be at least 3 characters.</div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Partner ID -->
+    <div class="col-md-6">
+      <label class="form-label fw-semibold">Partner ID</label>
+      <input
+        type="number"
+        class="form-control"
+        [(ngModel)]="travelPackage.partnerId"
+        name="partnerId"
+        #partnerId="ngModel"
+        required
+        min="1">
+
+      @if (partnerId.invalid && (partnerId.dirty || partnerId.touched)) {
+        <div class="text-danger small mt-1">
+          @if (partnerId.errors?.['required']) {
+            <div>Partner ID is required.</div>
+          }
+          @if (partnerId.errors?.['min']) {
+            <div>Partner ID must be greater than 0.</div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Source -->
+    <div class="col-md-6">
+      <label class="form-label fw-semibold">Source</label>
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="travelPackage.source"
+        name="source"
+        #source="ngModel"
+        required>
+
+      @if (source.invalid && (source.dirty || source.touched)) {
+        <div class="text-danger small mt-1">
+          Source is required.
+        </div>
+      }
+    </div>
+
+    <!-- Destination -->
+    <div class="col-md-6">
+      <label class="form-label fw-semibold">Destination</label>
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="travelPackage.destination"
+        name="destination"
+        #destination="ngModel"
+        required>
+
+      @if (destination.invalid && (destination.dirty || destination.touched)) {
+        <div class="text-danger small mt-1">
+          Destination is required.
+        </div>
+      }
+    </div>
+
+    <!-- Price -->
+    <div class="col-md-4">
+      <label class="form-label fw-semibold">Price</label>
+      <input
+        type="number"
+        class="form-control"
+        [(ngModel)]="travelPackage.price"
+        name="price"
+        #price="ngModel"
+        required
+        min="1">
+
+      @if (price.invalid && (price.dirty || price.touched)) {
+        <div class="text-danger small mt-1">
+          @if (price.errors?.['required']) {
+            <div>Price is required.</div>
+          }
+          @if (price.errors?.['min']) {
+            <div>Price must be greater than 0.</div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Duration -->
+    <div class="col-md-4">
+      <label class="form-label fw-semibold">Duration (Days)</label>
+      <input
+        type="number"
+        class="form-control"
+        [(ngModel)]="travelPackage.durationDays"
+        name="durationDays"
+        #durationDays="ngModel"
+        required
+        min="1">
+
+      @if (durationDays.invalid && (durationDays.dirty || durationDays.touched)) {
+        <div class="text-danger small mt-1">
+          @if (durationDays.errors?.['required']) {
+            <div>Duration is required.</div>
+          }
+          @if (durationDays.errors?.['min']) {
+            <div>Duration must be at least 1 day.</div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Total Slots -->
+    <div class="col-md-4">
+      <label class="form-label fw-semibold">Total Slots</label>
+      <input
+        type="number"
+        class="form-control"
+        [(ngModel)]="travelPackage.totalSlots"
+        name="totalSlots"
+        #totalSlots="ngModel"
+        required
+        min="1">
+
+      @if (totalSlots.invalid && (totalSlots.dirty || totalSlots.touched)) {
+        <div class="text-danger small mt-1">
+          @if (totalSlots.errors?.['required']) {
+            <div>Total Slots is required.</div>
+          }
+          @if (totalSlots.errors?.['min']) {
+            <div>Total Slots must be greater than 0.</div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Category -->
+    <div class="col-md-6">
+      <label class="form-label fw-semibold">Category</label>
+      <select
+        class="form-select"
+        [(ngModel)]="travelPackage.category"
+        name="category"
+        #category="ngModel"
+        required>
+        <option value="">Select Category</option>
+        <option value="ADVENTURE">ADVENTURE</option>
+        <option value="FAMILY">FAMILY</option>
+        <option value="HONEYMOON">HONEYMOON</option>
+        <option value="LUXURY">LUXURY</option>
+        <option value="BUDGET">BUDGET</option>
+        <option value="WEEKEND_GETAWAY">WEEKEND GETAWAY</option>
+      </select>
+
+      @if (category.invalid && (category.dirty || category.touched)) {
+        <div class="text-danger small mt-1">
+          Category is required.
+        </div>
+      }
+    </div>
+
+    <!-- Status -->
+    <div class="col-md-6">
+      <label class="form-label fw-semibold">Status</label>
+      <select
+        class="form-select"
+        [(ngModel)]="travelPackage.status"
+        name="status"
+        #status="ngModel"
+        required>
+        <option value="">Select Status</option>
+        <option value="AVAILABLE">AVAILABLE</option>
+        <option value="FULLY_BOOKED">FULLY BOOKED</option>
+        <option value="CANCELLED">CANCELLED</option>
+        <option value="INACTIVE">INACTIVE</option>
+      </select>
+
+      @if (status.invalid && (status.dirty || status.touched)) {
+        <div class="text-danger small mt-1">
+          Status is required.
+        </div>
+      }
+    </div>
+
+    <!-- Description -->
+    <div class="col-12">
+      <label class="form-label fw-semibold">Description</label>
+      <textarea
+        rows="4"
+        class="form-control"
+        [(ngModel)]="travelPackage.description"
+        name="description"
+        #description="ngModel"
+        required
+        minlength="10"></textarea>
+
+      @if (description.invalid && (description.dirty || description.touched)) {
+        <div class="text-danger small mt-1">
+          @if (description.errors?.['required']) {
+            <div>Description is required.</div>
+          }
+          @if (description.errors?.['minlength']) {
+            <div>Description must be at least 10 characters.</div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Day Wise Plan -->
+    <div class="col-12">
+      <label class="form-label fw-semibold">Day Wise Plan</label>
+      <textarea
+        rows="8"
+        class="form-control"
+        [(ngModel)]="travelPackage.dayWisePlan"
+        name="dayWisePlan"
+        #dayWisePlan="ngModel"
+        required
+        minlength="20"></textarea>
+
+      @if (dayWisePlan.invalid && (dayWisePlan.dirty || dayWisePlan.touched)) {
+        <div class="text-danger small mt-1">
+          @if (dayWisePlan.errors?.['required']) {
+            <div>Day Wise Plan is required.</div>
+          }
+          @if (dayWisePlan.errors?.['minlength']) {
+            <div>Day Wise Plan must be at least 20 characters.</div>
+          }
+        </div>
+      }
+    </div>
+
+  </div>
+
+  <div class="text-end mt-4">
+    <button
+      class="btn btn-primary btn-lg px-5"
+      type="submit"
+      [disabled]="loading || packageForm.invalid">
+
+      {{ loading ? 'Saving...' : '💾 Save Package' }}
+    </button>
+  </div>
+
+</form>
+    </div>
+  </div>
+</div>
+ <!-- Popup -->
+@if (showPopup) {
+
+<div
+  style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999999;">
+
+  <div
+    class="card shadow-lg border-0"
+    style="
+      width: 500px;
+      max-width: 90%;
+      border-radius: 12px;
+      overflow: hidden;">
+
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">
+        {{ popupTitle }}
+      </h4>
+
+      <button
+        type="button"
+        class="btn-close btn-close-white"
+        (click)="closePopup()">
+      </button>
+    </div>
+
+    <div class="card-body text-center py-4">
+
+      <p class="mb-4">
+        {{ popupMessage }}
+      </p>
+
+      <button
+        type="button"
+        class="btn btn-primary px-4"
+        (click)="closePopup()">
+        OK
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+}
+
+

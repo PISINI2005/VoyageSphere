@@ -1,0 +1,155 @@
+<div class="container-fluid p-4 dashboard">
+
+        <div class="mb-4">
+            <form #kpiForm="ngForm" (ngSubmit)="generate(kpiForm)" class="row g-3 align-items-center">
+                <div class="col-auto">
+                    <select name="month" [ngModel]="isYearOnlyView ? 0 : currentMonth" class="form-select border-secondary-subtle py-2 px-3">
+                        <option [value]="0" selected> Year Only (All Months) </option>
+                        <option [value]="1">January</option>
+                        <option [value]="2">February</option>
+                        <option [value]="3">March</option>
+                        <option [value]="4">April</option>
+                        <option [value]="5">May</option>
+                        <option [value]="6">June</option>
+                        <option [value]="7">July</option>
+                        <option [value]="8">August</option>
+                        <option [value]="9">September</option>
+                        <option [value]="10">October</option>
+                        <option [value]="11">November</option>
+                        <option [value]="12">December</option>
+                    </select>
+                </div>
+
+                <div class="col-auto">
+                    <select name="year" [ngModel]="currentYear" class="form-select border-secondary-subtle py-2 px-3">
+                        <option [value]="2024">2024</option>
+                        <option [value]="2025">2025</option>
+                        <option [value]="2026">2026</option>
+                        <option [value]="2027">2027</option>
+                    </select>
+                </div>
+
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary px-4 fw-semibold py-2">
+                        Apply Filter
+                    </button>
+                </div>
+
+                <div class="col-auto ms-auto">
+                    <button type="button" class="btn btn-outline-secondary px-4 fw-semibold py-2" (click)="downloadPDF()">
+                        📥 Export
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div id="dashboard-pdf-content" class="bg-white rounded-4 shadow-sm p-4">
+
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+                <div>
+                    <h1 class="h3 mb-1 fw-bold text-dark">KPI Dashboard</h1>
+                    <span class="badge bg-secondary-subtle text-secondary px-3 py-2 rounded-pill fw-semibold">
+                        {{ isYearOnlyView ? 'Yearly Summary Context - ' + currentYear : (kpidto?.reportLabel) }}
+                    </span>
+                </div>
+                <div class="text-muted small fw-medium" *ngIf="kpidto">
+                    <span class="d-inline-block bg-success rounded-circle me-1" style="width:8px; height:8px;"></span>
+                    Generated: {{ currentDisplayDate() | date:'medium' }}
+                </div>
+            </div>
+
+            @if (kpidto) {
+                <div class="row g-4 mb-4">
+                    <div class="col-12 col-md-4 col-lg">
+                        <div class="card border-0 p-4 shadow-sm text-white h-100" style="background: linear-gradient(135deg, #4f46e5, #6366f1); border-radius: 16px;">
+                            <small class="text-uppercase tracking-wider opacity-75 fw-bold">Total Revenue</small>
+                            <h2 class="mt-2 mb-0 fw-bold">₹{{ kpidto.totalRevenue | number }}</h2>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-4 col-lg">
+                        <div class="card border-0 p-4 shadow-sm text-white h-100" style="background: linear-gradient(135deg, #7c3aed, #8b5cf6); border-radius: 16px;">
+                            <small class="text-uppercase tracking-wider opacity-75 fw-bold">Total Bookings</small>
+                            <h2 class="mt-2 mb-0 fw-bold">{{ kpidto.totalBookings }}</h2>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-4 col-lg">
+                        <div class="card border-0 p-4 shadow-sm text-white h-100" style="background: linear-gradient(135deg, #db2777, #ec4899); border-radius: 16px;">
+                            <small class="text-uppercase tracking-wider opacity-75 fw-bold">Cancellation Rate</small>
+                            <h2 class="mt-2 mb-0 fw-bold">{{ kpidto.cancellationRate | number:'1.1-2' }}%</h2>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg">
+                        <div class="card border-0 p-4 shadow-sm text-white h-100" style="background: linear-gradient(135deg, #e11d48, #f43f5e); border-radius: 16px;">
+                            <small class="text-uppercase tracking-wider opacity-75 fw-bold">Refund Amount</small>
+                            <h2 class="mt-2 mb-0 fw-bold">₹{{ kpidto.refundedAmount | number }}</h2>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg">
+                        <div class="card border-0 p-4 shadow-sm text-white h-100" style="background: linear-gradient(135deg, #334155, #475569); border-radius: 16px;">
+                            <small class="text-uppercase tracking-wider opacity-75 fw-bold">Avg Booking Value</small>
+                            <h2 class="mt-2 mb-0 fw-bold">₹{{ kpidto.averageBookingValue | number:'1.1-2' }}</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-12 col-lg-6">
+                        <div class="card shadow-sm border-0 p-4" style="border-radius: 16px;">
+                            <div class="h6 fw-bold text-dark mb-4">Revenue Distribution</div>
+                            @if(revenueChart){
+                            <apx-chart
+                                [series]="revenueChart.series"
+                                [chart]="revenueChart.chart"
+                                [plotOptions]="revenueChart.plotOptions"
+                                [colors]="revenueChart.colors"
+                                [dataLabels]="revenueChart.dataLabels"
+                                [xaxis]="revenueChart.xaxis"
+                                [yaxis]="revenueChart.yaxis"
+                                [grid]="revenueChart.grid">
+                            </apx-chart>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6">
+                        <div class="card shadow-sm border-0 p-4" style="border-radius: 16px;">
+                            <div class="h6 fw-bold text-dark mb-4">Bookings vs Cancellations</div>
+                            @if(bookingChart){
+                            <apx-chart
+                                [series]="bookingChart.series"
+                                [chart]="bookingChart.chart"
+                                [labels]="bookingChart.labels"
+                                [colors]="bookingChart.colors"
+                                [dataLabels]="bookingChart.dataLabels"
+                                [legend]="bookingChart.legend">
+                            </apx-chart>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if(isYearOnlyView && yearlyRevenueChart){
+                <div class="card shadow-sm border-0 p-4 border-top border-primary border-3" style="border-radius: 16px;">
+                    <div class="h6 fw-bold text-dark mb-4">
+                        Yearly Revenue Trend Line Graph ({{ currentYear }})
+                    </div>
+                    <apx-chart
+                        [series]="yearlyRevenueChart.series"
+                        [chart]="yearlyRevenueChart.chart"
+                        [xaxis]="yearlyRevenueChart.xaxis"
+                        [stroke]="yearlyRevenueChart.stroke"
+                        [markers]="yearlyRevenueChart.markers"
+                        [colors]="yearlyRevenueChart.colors"
+                        [fill]="yearlyRevenueChart.fill"
+                        [grid]="yearlyRevenueChart.grid"
+                        [dataLabels]="yearlyRevenueChart.dataLabels">
+                    </apx-chart>
+                </div>
+            }
+        </div>
+    </div>

@@ -1,0 +1,13 @@
+.card {
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.table thead {
+  background-color: #f8f9fa;
+}
+
+.badge {
+  font-weight: 500;
+  min-width: 100px;
+}

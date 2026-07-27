@@ -1,0 +1,376 @@
+<div class="container py-4" style="margin-left: 280px; width: calc(100% - 280px);">
+  <div class="card shadow border-0">
+    <div class="card-header bg-primary text-white">
+      <h3 class="mb-0">
+        <i class="bi bi-airplane-fill me-2"></i>Add Flight
+      </h3>
+    </div>
+
+    <div class="card-body p-4">
+     @if (!showSeatSection) {
+
+<div class="row g-3">
+
+  <!-- Flight Number -->
+  <div class="col-md-6">
+    <label class="form-label fw-semibold">
+      <i class="bi bi-hash me-1"></i>Flight Number
+    </label>
+
+    <input
+      type="text"
+      class="form-control"
+      [(ngModel)]="flight.flightNumber"
+      name="flightNumber"
+      #flightNumber="ngModel"
+      required>
+
+    @if (flightNumber.invalid && (flightNumber.dirty || flightNumber.touched)) {
+      <div class="text-danger small mt-1">
+        Flight Number is required
+      </div>
+    }
+  </div>
+
+  <!-- Partner ID -->
+  <div class="col-md-6">
+    <label class="form-label fw-semibold">
+      <i class="bi bi-building me-1"></i>Partner ID
+    </label>
+
+    <input
+      type="number"
+      class="form-control"
+      [(ngModel)]="flight.partnerId"
+      name="partnerId"
+      #partnerId="ngModel"
+      required
+      min="1">
+
+    @if (partnerId.invalid && (partnerId.dirty || partnerId.touched)) {
+
+      @if (partnerId.errors?.['required']) {
+        <div class="text-danger small mt-1">
+          Partner ID is required
+        </div>
+      }
+
+      @if (partnerId.errors?.['min']) {
+        <div class="text-danger small mt-1">
+          Partner ID must be greater than 0
+        </div>
+      }
+
+    }
+  </div>
+
+  <!-- Source -->
+<div class="col-md-6">
+  <label class="form-label fw-semibold">
+    <i class="bi bi-geo-alt-fill me-1"></i>Source
+  </label>
+
+  <input
+    type="text"
+    class="form-control"
+    [(ngModel)]="flight.source"
+    name="source"
+    #source="ngModel"
+    required>
+
+  @if (source.invalid && (source.dirty || source.touched)) {
+    <div class="text-danger small mt-1">
+      Source is required
+    </div>
+  }
+</div>
+
+<!-- Destination -->
+<div class="col-md-6">
+  <label class="form-label fw-semibold">
+    <i class="bi bi-geo-fill me-1"></i>Destination
+  </label>
+
+  <input
+    type="text"
+    class="form-control"
+    [(ngModel)]="flight.destination"
+    name="destination"
+    #destination="ngModel"
+    required>
+
+  @if (destination.invalid && (destination.dirty || destination.touched)) {
+    <div class="text-danger small mt-1">
+      Destination is required
+    </div>
+  }
+
+  @if (
+      flight.source &&
+      flight.destination &&
+      flight.source.trim().toLowerCase() ===
+      flight.destination.trim().toLowerCase() &&
+      (source.dirty || source.touched) &&
+      (destination.dirty || destination.touched)
+  ) {
+    <div class="text-danger small mt-1">
+      Source and Destination cannot be the same
+    </div>
+  }
+</div>
+
+  <!-- Departure Time -->
+  <div class="col-md-6">
+    <label class="form-label fw-semibold">
+      <i class="bi bi-clock-fill me-1"></i>Departure Time
+    </label>
+
+    <input
+      type="time"
+      class="form-control"
+      [(ngModel)]="flight.departureTime"
+      name="departureTime"
+      #departureTime="ngModel"
+      required>
+
+    @if (departureTime.invalid && (departureTime.dirty || departureTime.touched)) {
+      <div class="text-danger small mt-1">
+        Departure Time is required
+      </div>
+    }
+  </div>
+
+ <!-- Arrival Time -->
+<div class="col-md-6">
+  <label class="form-label fw-semibold">
+    <i class="bi bi-clock-history me-1"></i>Arrival Time
+  </label>
+
+  <input
+    type="time"
+    class="form-control"
+    [(ngModel)]="flight.arrivalTime"
+    name="arrivalTime"
+    #arrivalTime="ngModel"
+    required>
+
+  @if (arrivalTime.invalid && (arrivalTime.dirty || arrivalTime.touched)) {
+    <div class="text-danger small mt-1">
+      Arrival Time is required
+    </div>
+  }
+
+  @if (
+    flight.departureTime &&
+    flight.arrivalTime &&
+    flight.arrivalDayOffset !== null &&
+    !isFlightTimingValid() &&
+    (
+      departureTime.dirty ||
+      departureTime.touched ||
+      arrivalTime.dirty ||
+      arrivalTime.touched
+    )
+  ) {
+    <div class="text-danger small mt-1">
+      {{ getFlightTimingValidationMessage() }}
+    </div>
+  }
+</div>
+
+<!-- Arrival Day -->
+<div class="col-md-6">
+  <label class="form-label fw-semibold">
+    <i class="bi bi-calendar-event me-1"></i>Arrival Day
+  </label>
+
+  <select
+    class="form-select"
+    [(ngModel)]="flight.arrivalDayOffset"
+    name="arrivalDayOffset"
+    #arrivalDayOffset="ngModel"
+    required>
+
+    <option [ngValue]="null">
+      Select Arrival Day
+    </option>
+
+    <option [ngValue]="0">
+      Same Day
+    </option>
+
+    <option [ngValue]="1">
+      Next Day
+    </option>
+
+  </select>
+
+  @if (
+    arrivalDayOffset.invalid &&
+    (arrivalDayOffset.dirty || arrivalDayOffset.touched)
+  ) {
+    <div class="text-danger small mt-1">
+      Arrival Day is required
+    </div>
+  }
+</div>
+
+  <!-- Status -->
+  <div class="col-md-12">
+    <label class="form-label fw-semibold">
+      <i class="bi bi-info-circle-fill me-1"></i>Status
+    </label>
+
+    <select
+      class="form-select"
+      [(ngModel)]="flight.status"
+      name="status">
+
+      <option value="SCHEDULED">
+        SCHEDULED
+      </option>
+
+    </select>
+  </div>
+
+</div>
+
+<div class="text-end mt-4">
+  <button
+    class="btn btn-primary px-4"
+    type="button"
+    [disabled]="
+      !flight.flightNumber ||
+      !flight.partnerId ||
+      flight.partnerId < 1 ||
+      !flight.source ||
+      !flight.destination ||
+      !flight.departureTime ||
+      !flight.arrivalTime 
+    "
+    (click)="proceedToSeats()">
+    Continue
+    <i class="bi bi-arrow-right ms-2"></i>
+  </button>
+</div>
+
+}
+      @if (showSeatSection) {
+        <div class="mb-4">
+          <h4 class="mb-3"><i class="bi bi-grid-3x3-gap-fill me-2"></i>Seat Configuration</h4>
+
+          @for (seat of flight.seats; track $index; let i = $index) {
+            <div class="card shadow-sm border mb-3">
+              <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                <strong class="text-primary">
+                  <i class="bi bi-ticket-perforated-fill me-2"></i>Seat Type {{ i + 1 }}
+                </strong>
+                <button class="btn btn-outline-danger btn-sm" type="button" (click)="removeSeat(i)">
+                  <i class="bi bi-trash-fill me-1"></i>Remove
+                </button>
+              </div>
+              <div class="card-body">
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <label class="form-label fw-semibold">Seat Type</label>
+                    <select class="form-select" [(ngModel)]="seat.seatType" [name]="'seatType'+i">
+                      <option value="ECONOMY">ECONOMY</option>
+                      <option value="BUSINESS">BUSINESS</option>
+                      <option value="FIRST_CLASS">FIRST CLASS</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label fw-semibold">Price</label>
+                    <input type="number" class="form-control" [(ngModel)]="seat.price" [name]="'price'+i">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label fw-semibold">Total Seats</label>
+                    <input type="number" class="form-control" [(ngModel)]="seat.totalSeats" [name]="'totalSeats'+i">
+                  </div>
+                </div>
+              </div>
+            </div>
+          } @empty {
+            <div class="alert alert-warning">
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>No seat types added.
+            </div>
+          }
+
+          <div class="d-flex justify-content-between mt-4">
+            <button class="btn btn-outline-primary" type="button" (click)="showSeatSection=false">
+              <i class="bi bi-arrow-left me-1"></i>Back
+            </button>
+            <button class="btn btn-primary" type="button" (click)="addSeat()">
+              <i class="bi bi-plus-circle-fill me-1"></i>Add Seat Type
+            </button>
+          </div>
+
+          <div class="text-end mt-4">
+            <button class="btn btn-primary btn-lg px-5" type="button" [disabled]="loading" (click)="addFlight()">
+              <i class="bi bi-airplane-fill me-2"></i>
+              {{ loading ? 'Adding Flight...' : 'Create Flight' }}
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  </div>
+
+  <!-- Popup -->
+@if (showPopup) {
+
+<div
+  style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999999;">
+
+  <div
+    class="card shadow-lg border-0"
+    style="
+      width: 500px;
+      max-width: 90%;
+      border-radius: 12px;
+      overflow: hidden;">
+
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">
+        {{ popupTitle }}
+      </h4>
+
+      <button
+        type="button"
+        class="btn-close btn-close-white"
+        (click)="closePopup()">
+      </button>
+    </div>
+
+    <div class="card-body text-center py-4">
+
+      <p class="mb-4">
+        {{ popupMessage }}
+      </p>
+
+      <button
+        type="button"
+        class="btn btn-primary px-4"
+        (click)="closePopup()">
+        OK
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+}

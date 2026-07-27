@@ -1,0 +1,149 @@
+<div class="container py-4" style="margin-left: 280px; width: calc(100% - 280px);">
+  <div class="card shadow border-0">
+    <div class="card-header bg-primary text-white">
+      <h3 class="mb-0">🎒 Update Package</h3>
+    </div>
+
+    <div class="card-body p-4">
+      <!-- Load Section -->
+      <div class="row g-3 align-items-end mb-4">
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Package ID</label>
+          <input type="number" class="form-control" [(ngModel)]="packageId">
+        </div>
+        <div class="col-md-auto">
+          <button type="button" class="btn btn-primary" (click)="loadPackage()">
+            🔍 Load Package
+          </button>
+        </div>
+      </div>
+
+      <hr class="mb-4">
+
+      @if (packageData) {
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Package Name</label>
+            <input type="text" class="form-control" [(ngModel)]="packageData.packageName">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Partner ID</label>
+            <input type="number" class="form-control" [(ngModel)]="packageData.partnerId">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Source</label>
+            <input type="text" class="form-control" [(ngModel)]="packageData.source">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Destination</label>
+            <input type="text" class="form-control" [(ngModel)]="packageData.destination">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Price</label>
+            <input type="number" class="form-control" [(ngModel)]="packageData.price">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Duration Days</label>
+            <input type="number" class="form-control" [(ngModel)]="packageData.durationDays">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Total Slots</label>
+            <input type="number" class="form-control" [(ngModel)]="packageData.totalSlots">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Category</label>
+            <select class="form-select" [(ngModel)]="packageData.category">
+              <option value="ADVENTURE">ADVENTURE</option>
+              <option value="FAMILY">FAMILY</option>
+              <option value="HONEYMOON">HONEYMOON</option>
+              <option value="LUXURY">LUXURY</option>
+              <option value="BUDGET">BUDGET</option>
+              <option value="WEEKEND_GETAWAY">WEEKEND_GETAWAY</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Status</label>
+            <select class="form-select" [(ngModel)]="packageData.status">
+              <option value="AVAILABLE">AVAILABLE</option>
+              <option value="FULLY_BOOKED">FULLY_BOOKED</option>
+              <option value="CANCELLED">CANCELLED</option>
+              <option value="INACTIVE">INACTIVE</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold">Description</label>
+            <textarea rows="4" class="form-control" [(ngModel)]="packageData.description"></textarea>
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold">Day Wise Plan</label>
+            <textarea rows="8" class="form-control" [(ngModel)]="packageData.dayWisePlan"
+              placeholder="Day 1: Arrival and Check-in&#10;Day 2: Sightseeing&#10;Day 3: Activities&#10;Day 4: Departure"></textarea>
+          </div>
+        </div>
+
+        <div class="text-end mt-4">
+          <button type="button" class="btn btn-primary btn-lg px-5" [disabled]="loading" (click)="updatePackage()">
+            {{ loading ? 'Updating...' : '💾 Update Package' }}
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+ <!-- Popup -->
+@if (showPopup) {
+
+<div
+  style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999999;">
+
+  <div
+    class="card shadow-lg border-0"
+    style="
+      width: 500px;
+      max-width: 90%;
+      border-radius: 12px;
+      overflow: hidden;">
+
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">
+        {{ popupTitle }}
+      </h4>
+
+      <button
+        type="button"
+        class="btn-close btn-close-white"
+        (click)="closePopup()">
+      </button>
+    </div>
+
+    <div class="card-body text-center py-4">
+
+      <p class="mb-4">
+        {{ popupMessage }}
+      </p>
+
+      <button
+        type="button"
+        class="btn btn-primary px-4"
+        (click)="closePopup()">
+        OK
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+}
+

@@ -1,0 +1,61 @@
+<app-agent-navbar></app-agent-navbar>
+
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">Customer Itineraries</h2>
+    <div class="d-flex gap-2">
+      <a routerLink="/agent/itinerary-create" class="btn btn-primary rounded-pill">
+        Add Itinerary
+      </a>
+      <a routerLink="/agent/customer-details" class="btn btn-outline-primary rounded-pill">
+        Back to Workspace
+      </a>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="p-5 text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-3 text-muted">Fetching itineraries...</p>
+  </div>
+
+  <div *ngIf="!isLoading && itineraries.length === 0" class="p-5 text-center">
+    <h4 class="text-muted">No itineraries found for this customer.</h4>
+    <p>The customer hasn't created any travel plans yet.</p>
+  </div>
+
+  <div class="row g-4" *ngIf="!isLoading && itineraries.length > 0">
+    <div class="col-md-6 col-lg-4" *ngFor="let itinerary of itineraries">
+      <div class="card h-100 shadow-sm border-0 overflow-hidden">
+        <div class="card-header bg-primary text-white py-3">
+          <h5 class="mb-0 fw-bold">{{ itinerary.tripName }}</h5>
+        </div>
+        <div class="card-body p-4">
+          <div class="mb-3">
+            <label class="text-muted small d-block">Description</label>
+            <p class="mb-0">{{ itinerary.description || 'No description provided.' }}</p>
+          </div>
+          <div class="row mb-4">
+            <div class="col-6">
+              <label class="text-muted small d-block">Start Date</label>
+              <span class="fw-medium">{{ itinerary.startDate | date:'mediumDate' }}</span>
+            </div>
+            <div class="col-6">
+              <label class="text-muted small d-block">End Date</label>
+              <span class="fw-medium">{{ itinerary.endDate | date:'mediumDate' }}</span>
+            </div>
+          </div>
+          <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+            <span class="text-muted small">
+              {{ itinerary.bookings.length }} Booking(s)
+            </span>
+            <button (click)="viewDetails(itinerary.itineraryId)" class="btn btn-sm btn-outline-primary rounded-pill">
+              View Details
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

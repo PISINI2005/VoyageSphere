@@ -1,0 +1,69 @@
+<app-agent-navbar></app-agent-navbar>
+
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">Create New Itinerary</h2>
+    <button (click)="goBack()" class="btn btn-outline-primary rounded-pill">
+      <i class="bi bi-arrow-left me-1"></i> Back
+    </button>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <form (ngSubmit)="saveItinerary()" #itineraryForm="ngForm">
+            <div class="mb-3">
+              <label class="form-label text-muted small">Trip Name *</label>
+              <input
+                type="text"
+                class="form-control rounded-pill"
+                [(ngModel)]="itinerary.tripName"
+                name="tripName"
+                placeholder="e.g. Summer Vacation 2026"
+                required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label text-muted small">Description</label>
+              <textarea
+                class="form-control"
+                style="border-radius: 15px;"
+                [(ngModel)]="itinerary.description"
+                name="description"
+                rows="3"
+                placeholder="Enter trip details..."></textarea>
+            </div>
+
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <label class="form-label text-muted small">Start Date *</label>
+                <input
+                  type="date"
+                  class="form-control rounded-pill"
+                  [(ngModel)]="itinerary.startDate"
+                  name="startDate"
+                  required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label text-muted small">End Date *</label>
+                <input
+                  type="date"
+                  class="form-control rounded-pill"
+                  [(ngModel)]="itinerary.endDate"
+                  name="endDate"
+                  required>
+              </div>
+            </div>
+
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary rounded-pill py-2 fw-bold">
+                Create Itinerary
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

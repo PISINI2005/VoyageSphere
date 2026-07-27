@@ -1,0 +1,21 @@
+<div class="d-flex min-vh-100" id="wrapper">
+
+  <!-- Sidebar Menu Column -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Page Dynamic Rendering Area Content Viewport -->
+  <div id="page-content-wrapper" class="w-100 bg-light min-vh-100 overflow-auto">
+    <!-- Top Minimal Navbar for spacing -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom px-4 py-3 shadow-sm">
+      <span class="navbar-text fw-medium text-secondary">
+        Finance Officer Workspace Instance
+      </span>
+    </nav>
+
+    <!-- Angular Component Output Target Injection Portal -->
+    <div class="container-fluid py-4">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,82 @@
+/* Core Structural Tokens */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%) !important;
+}
+
+.bg-primary-soft { background-color: rgba(59, 130, 246, 0.1) !important; }
+.bg-danger-soft { background-color: rgba(239, 68, 68, 0.1) !important; }
+.bg-dark-soft { background-color: rgba(33, 37, 41, 0.08) !important; }
+.bg-table-head { background-color: #f8fafc !important; }
+
+.tracking-wider { letter-spacing: 0.05em; }
+.uppercase-thead th {
+  font-size: 0.75rem !important;
+  text-transform: uppercase !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px;
+  color: #64748b;
+  border-bottom: 2px solid #e2e8f0;
+  padding: 14px 10px;
+}
+
+/* Rounded Layout Enhancements */
+.rounded-4 { border-radius: 1rem !important; }
+.bg-white-10 { background-color: rgba(255, 255, 255, 0.15); }
+
+/* Dashboard Decorative Visual Effects */
+.decorative-circle-1 {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  bottom: -30px;
+  right: -20px;
+}
+
+/* Custom Table Interactions */
+.custom-invoice-table tbody tr {
+  transition: all 0.2s ease-in-out;
+}
+.custom-invoice-table tbody tr:hover {
+  background-color: #f1f5f9 !important;
+  transform: translateY(-1px);
+}
+.custom-invoice-table td {
+  padding: 16px 10px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+/* --- THE FRESH NEW BADGE SYSTEM --- */
+.badge-success-custom, .badge-pending-custom, .badge-failed-custom,
+.badge-cancelled-custom, .badge-refunded-custom, .badge-partial-custom {
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: inline-block;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Color Presets mapping cleanly over metrics context */
+.badge-success-custom  { background-color: #dcfce7; color: #15803d; }
+.badge-pending-custom  { background-color: #fef9c3; color: #a16207; }
+.badge-failed-custom   { background-color: #fee2e2; color: #b91c1c; }
+.badge-cancelled-custom { background-color: #f1f5f9; color: #475569; }
+.badge-refunded-custom  { background-color: #f3e8ff; color: #7e22ce; }
+.badge-partial-custom   { background-color: #e0f2fe; color: #0369a1; }
+
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 260px;
+  height: 100vh;
+  z-index: 1000;
+}
+
+#page-content-wrapper {
+  margin-left: 260px;
+  min-height: 100vh;
+}

@@ -1,0 +1,170 @@
+<div class="container py-4" style="margin-left: 280px; width: calc(100% - 280px);">
+  <div class="card shadow border-0">
+    <div class="card-header bg-primary text-white">
+      <h3 class="mb-0">Transports</h3>
+    </div>
+
+    <div class="card-body">
+      <!-- Search and Actions Section -->
+      <div class="row g-3 align-items-end mb-4">
+        <div class="col-md-3">
+          <label class="form-label fw-semibold">Source</label>
+          <input type="text" class="form-control" placeholder="Source" [(ngModel)]="source">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label fw-semibold">Destination</label>
+          <input type="text" class="form-control" placeholder="Destination" [(ngModel)]="destination">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label fw-semibold">Status</label>
+          <select class="form-select" [(ngModel)]="status">
+            <option value="">All Status</option>
+            <option value="AVAILABLE">AVAILABLE</option>
+            <option value="FULLY_BOOKED">FULLY_BOOKED</option>
+            <option value="SCHEDULED">SCHEDULED</option>
+            <option value="DEPARTED">DEPARTED</option>
+            <option value="ARRIVED">ARRIVED</option>
+            <option value="DELAYED">DELAYED</option>
+            <option value="CANCELLED">CANCELLED</option>
+            <option value="OUT_OF_SERVICE">OUT_OF_SERVICE</option>
+          </select>
+        </div>
+        <div class="col-md-auto">
+          <button type="button" class="btn btn-primary me-2" (click)="searchTransports()">
+            <i class="bi bi-search"></i> Search
+          </button>
+          <button type="button" class="btn btn-outline-primary" (click)="resetSearch()">
+            <i class="bi bi-arrow-clockwise"></i> Reset
+          </button>
+        </div>
+        <div class="col-md-auto">
+          <button type="button" class="btn btn-primary me-2" routerLink="/admin/transport/add">
+            🚌 Add Transport
+          </button>
+          <button type="button" class="btn btn-outline-primary" routerLink="/admin/transport/update">
+            🔧 Update Transport
+          </button>
+        </div>
+      </div>
+
+      <hr class="mb-4">
+
+      @if (loading) {
+        <div class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="mt-2 text-muted">Loading Transports...</p>
+        </div>
+      } @else {
+        @if (transports.length > 0) {
+          <div class="table-responsive">
+            <table class="table table-hover table-bordered align-middle">
+              <thead class="table-primary">
+                <tr>
+                  <th>ID</th>
+                  <th>Number</th>
+                  <th>Source</th>
+                  <th>Destination</th>
+                  <th>Departure</th>
+                  <th>Arrival</th>
+                  <th>Status</th>
+                  <th>Seat Classes</th>
+                  <th>Update Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (transport of transports; track transport.transportId) {
+                  <tr>
+                    <td class="fw-semibold">{{ transport.transportId }}</td>
+                    <td>{{ transport.transportNumber }}</td>
+                    <td>{{ transport.source }}</td>
+                    <td>{{ transport.destination }}</td>
+                    <td>{{ transport.departureTime }}</td>
+                    <td>{{ transport.arrivalTime }}</td>
+                    <td>
+                      <span class="badge" [ngClass]="{
+                        'bg-success': transport.transportStatus === 'AVAILABLE' || transport.transportStatus === 'SCHEDULED',
+                        'bg-warning text-dark': transport.transportStatus === 'FULLY_BOOKED' || transport.transportStatus === 'DELAYED',
+                        'bg-danger': transport.transportStatus === 'CANCELLED' || transport.transportStatus === 'OUT_OF_SERVICE',
+                        'bg-info': transport.transportStatus === 'DEPARTED' || transport.transportStatus === 'ARRIVED'
+                      }">
+                        {{ transport.transportStatus }}
+                      </span>
+                    </td>
+                    <td>
+                      <table class="table table-sm table-bordered mb-0">
+                        <thead class="table-light">
+                          <tr>
+                            <th>Class</th>
+                            <th>Price</th>
+                            <th>Seats</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          @for (seat of transport.seats; track $index) {
+                            <tr>
+                              <td>{{ seat.transportClass }}</td>
+                              <td>₹{{ seat.price }}</td>
+                              <td>{{ seat.totalSeats }}</td>
+                            </tr>
+                          } @empty {
+                            <tr>
+                              <td colspan="3" class="text-center text-muted">No seat classes available.</td>
+                            </tr>
+                          }
+                        </tbody>
+                      </table>
+                    </td>
+                    <td>
+                      <div class="d-flex align-items-center gap-2">
+                        <select #statusSelect class="form-select form-select-sm">
+                          <option value="AVAILABLE" [selected]="transport.transportStatus === 'AVAILABLE'">AVAILABLE</option>
+                          <option value="FULLY_BOOKED" [selected]="transport.transportStatus === 'FULLY_BOOKED'">FULLY_BOOKED</option>
+                          <option value="SCHEDULED" [selected]="transport.transportStatus === 'SCHEDULED'">SCHEDULED</option>
+                          <option value="DEPARTED" [selected]="transport.transportStatus === 'DEPARTED'">DEPARTED</option>
+                          <option value="ARRIVED" [selected]="transport.transportStatus === 'ARRIVED'">ARRIVED</option>
+                          <option value="DELAYED" [selected]="transport.transportStatus === 'DELAYED'">DELAYED</option>
+                          <option value="CANCELLED" [selected]="transport.transportStatus === 'CANCELLED'">CANCELLED</option>
+                          <option value="OUT_OF_SERVICE" [selected]="transport.transportStatus === 'OUT_OF_SERVICE'">OUT_OF_SERVICE</option>
+                        </select>
+                        <button type="button" class="btn btn-sm btn-primary" (click)="updateStatus(transport, statusSelect.value)">
+                          ✅ Update
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="9" class="text-center text-muted py-4">No transports found.</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <div class="text-center py-5 text-muted">
+            <i class="bi bi-bus-front fs-1"></i>
+            <p>No transports found.</p>
+          </div>
+        }
+      }
+    </div>
+  </div>
+
+  <!-- Popup -->
+  @if (showPopup) {
+    <div class="popup-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 999999;">
+      <div class="popup card shadow-lg border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">{{ popupTitle }}</h4>
+          <button type="button" class="btn-close btn-close-white" (click)="closePopup()"></button>
+        </div>
+        <div class="card-body text-center py-4">
+          <p class="mb-4">{{ popupMessage }}</p>
+          <button type="button" class="btn btn-primary px-4" (click)="closePopup()">OK</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

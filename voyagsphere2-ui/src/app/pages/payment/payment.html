@@ -1,0 +1,249 @@
+<app-navbar></app-navbar>
+
+@if(authService.isTravelAgent()) {
+<div class="container mt-4">
+  <div class="alert alert-info d-flex align-items-center" role="alert">
+    <i class="bi bi-info-circle-fill me-2"></i>
+    Invoice generated for
+    <strong class="ms-1">{{ agentContext.selectedCustomerEmail }}</strong>
+  </div>
+</div>
+}
+
+<div class="container py-5">
+
+  <div class="row justify-content-center">
+
+    <div class="col-lg-7 col-xl-6">
+
+      <div class="card shadow border-0">
+
+        <!-- Header -->
+        <div class="card-body text-center p-4">
+
+          <div class="display-4 text-primary">
+            <i class="bi bi-credit-card-2-front-fill"></i>
+          </div>
+
+          <h2 class="fw-bold mt-3 mb-2">
+            {{ authService.isTravelAgent()
+                ? 'Customer Invoice'
+                : 'Secure Payment' }}
+          </h2>
+
+          <p class="text-muted mb-0">
+            {{ authService.isTravelAgent()
+                ? 'Review and share the invoice with the customer.'
+                : 'Complete your travel booking securely.' }}
+          </p>
+
+        </div>
+
+        <hr class="m-0">
+
+        <!-- Invoice Details -->
+        <div class="card-body">
+
+          @if (isLoading) {
+
+          <div class="text-center py-5">
+            <div class="spinner-border text-primary"></div>
+            <p class="mt-3 mb-0">Loading Invoice...</p>
+          </div>
+
+          }
+
+          @else if (invoice) {
+
+          <ul class="list-group list-group-flush">
+
+            <li class="list-group-item d-flex justify-content-between">
+              <span class="text-muted">Invoice ID</span>
+              <strong>#{{ invoice.invoiceId }}</strong>
+            </li>
+
+            <li class="list-group-item d-flex justify-content-between">
+              <span class="text-muted">Booking ID</span>
+              <strong>#{{ invoice.bookingId }}</strong>
+            </li>
+
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span class="text-muted">Status</span>
+
+              <span
+                class="badge rounded-pill"
+                [ngClass]="{
+                  'text-bg-success': invoice.status==='SUCCESS',
+                  'text-bg-warning': invoice.status==='PENDING',
+                  'text-bg-danger': invoice.status==='FAILED',
+                  'text-bg-secondary': invoice.status==='CANCELLED' || invoice.status==='REFUNDED'
+                }">
+
+                {{ invoice.status }}
+
+              </span>
+
+            </li>
+
+          </ul>
+
+          <div class="text-center mt-4">
+
+            <p class="text-muted mb-1">Amount Payable</p>
+
+            <h1 class="fw-bold text-primary">
+              {{ invoice.amount | currency:'INR' }}
+            </h1>
+
+          </div>
+
+          }
+
+          @else {
+
+          <div class="text-center py-5">
+
+            <i class="bi bi-exclamation-triangle-fill text-danger display-5"></i>
+
+            <p class="text-danger mt-3 mb-0">
+              Invoice not found. Please contact support.
+            </p>
+
+          </div>
+
+          }
+
+        </div>
+
+        <hr class="m-0">
+
+        <!-- Payment Method -->
+        <div class="card-body">
+
+          <h5 class="fw-semibold mb-3">
+            Payment Method
+          </h5>
+
+          <div class="list-group">
+
+            <label class="list-group-item">
+              <input class="form-check-input me-2"
+                     type="radio"
+                     name="payment"
+                     value="UPI"
+                     [(ngModel)]="paymentForm.paymentMethod">
+              UPI
+            </label>
+
+            <label class="list-group-item">
+              <input class="form-check-input me-2"
+                     type="radio"
+                     name="payment"
+                     value="CREDIT_CARD"
+                     [(ngModel)]="paymentForm.paymentMethod">
+              Credit Card
+            </label>
+
+            <label class="list-group-item">
+              <input class="form-check-input me-2"
+                     type="radio"
+                     name="payment"
+                     value="DEBIT_CARD"
+                     [(ngModel)]="paymentForm.paymentMethod">
+              Debit Card
+            </label>
+
+            <label class="list-group-item">
+              <input class="form-check-input me-2"
+                     type="radio"
+                     name="payment"
+                     value="NET_BANKING"
+                     [(ngModel)]="paymentForm.paymentMethod">
+              Net Banking
+            </label>
+
+            <label class="list-group-item">
+              <input class="form-check-input me-2"
+                     type="radio"
+                     name="payment"
+                     value="PAYPAL"
+                     [(ngModel)]="paymentForm.paymentMethod">
+              PayPal
+            </label>
+
+          </div>
+
+          @if (!authService.isTravelAgent()) {
+
+          <div class="d-grid gap-2 mt-4">
+
+            <button
+              class="btn btn-primary btn-lg"
+              [disabled]="isLoading || !invoice"
+              (click)="makePayment()">
+
+              <i class="bi bi-lock-fill me-2"></i>
+
+              {{ isLoading
+                  ? 'Loading...'
+                  : 'Pay ' + (invoice?.amount | currency:'INR') }}
+
+            </button>
+
+            <button
+              class="btn btn-outline-secondary btn-lg"
+              routerLink="/trips">
+
+              Pay Later
+
+            </button>
+
+          </div>
+
+          }
+
+          @else {
+
+          <div class="d-grid gap-2 mt-4">
+
+            <button
+              class="btn btn-success btn-lg"
+              [disabled]="!invoice"
+              (click)="sendInvoiceToCustomer()">
+
+              <i class="bi bi-send-fill me-2"></i>
+              Send Invoice To Customer
+
+            </button>
+
+            <button
+              class="btn btn-outline-primary btn-lg"
+              [disabled]="!invoice"
+              (click)="downloadInvoice()">
+
+              <i class="bi bi-download me-2"></i>
+              Download Invoice
+
+            </button>
+
+            <button
+              class="btn btn-secondary btn-lg"
+              routerLink="/agent/customer-bookings">
+
+              Back To Customer Bookings
+
+            </button>
+
+          </div>
+
+          }
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

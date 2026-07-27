@@ -1,0 +1,33 @@
+.filter-card {
+  border: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+}
+
+.price-label {
+  font-size: 0.85rem;
+  color: #495057;
+  font-weight: 500;
+}
+
+.price-value {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0d6efd;
+}
+
+.form-range {
+  cursor: pointer;
+}
+
+/* Custom styling for the range input to make it look a bit more modern */
+.form-range::-webkit-slider-thumb {
+  background: #0d6efd;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px #0d6efd;
+}
+
+.form-range::-moz-range-thumb {
+  background: #0d6efd;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px #0d6efd;
+}

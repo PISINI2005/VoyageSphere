@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.cts</groupId>
+	<artifactId>travel360-microservices</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>travel360-microservices</name>
+	<description>Travel360 - Microservices workspace (aggregator)</description>
+
+	<!--
+	  Parent aggregator for the Travel360 microservices platform.
+	  Every service inherits Spring Boot + Spring Cloud BOM versions from here so
+	  the whole estate stays on a single, consistent dependency set.
+	-->
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.5.14</version>
+		<relativePath />
+	</parent>
+
+	<properties>
+		<java.version>17</java.version>
+		<spring-cloud.version>2025.0.2</spring-cloud.version>
+	</properties>
+
+	<modules>
+		<module>config-server</module>
+		<module>discovery-server</module>
+		<module>api-gateway</module>
+		<module>user-service</module>
+		<module>catalog-service</module>
+		<module>booking-service</module>
+		<module>notification-service</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+</project>

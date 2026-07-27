@@ -1,0 +1,16 @@
+.xsmall {
+  font-size: 0.72rem;
+}
+
+.border-dashed {
+  border-style: dashed !important;
+}
+
+.table th {
+  font-weight: 600;
+  color: #6c757d;
+}
+
+.card {
+  border-radius: 6px;
+}

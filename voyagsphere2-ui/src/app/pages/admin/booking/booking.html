@@ -1,0 +1,366 @@
+<div class="container py-4"
+style="margin-left: 280px;
+width: calc(100% - 280px);" >
+
+  <div class="card shadow border-0">
+
+    <div class="card-header bg-primary text-white">
+      <h3 class="mb-0">View Bookings</h3>
+    </div>
+
+    <div class="card-body">
+
+      <!-- Search Section -->
+      <div class="row g-3 align-items-end mb-4">
+
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">
+            User ID
+          </label>
+
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="userId"
+            placeholder="Enter User ID">
+        </div>
+
+        <div class="col-md-auto">
+          <button
+            class="btn btn-primary me-2"
+            (click)="searchByUser()">
+            <i class="bi bi-search"></i> Search
+          </button>
+
+          <button
+            class="btn btn-outline-primary"
+            (click)="loadAllBookings()">
+            <i class="bi bi-list"></i> Show All
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Table -->
+      <div class="table-responsive">
+
+  <table class="table table-hover table-bordered align-middle">
+
+    <thead class="table-primary">
+      <tr>
+        <th>Booking ID</th>
+        <th>Booking Date</th>
+        <th>Type</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>User ID</th>
+        <th>Units</th>
+        <th>Reference Details</th>
+        <th>Passengers</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      @for (booking of bookings; track booking.bookingId) {
+
+      <tr>
+
+        <td class="fw-semibold">
+          {{ booking.bookingId }}
+        </td>
+
+        <td>
+          {{ booking.bookingDate }}
+        </td>
+
+        <td>
+          {{ booking.bookingType }}
+        </td>
+
+        <td class="text-success fw-bold">
+          ₹{{ booking.amount }}
+        </td>
+
+        <td>
+          <span
+            class="badge"
+            [ngClass]="{
+              'bg-success': booking.status === 'CONFIRMED',
+              'bg-warning text-dark': booking.status === 'PENDING',
+              'bg-danger': booking.status === 'CANCELLED'
+            }">
+            {{ booking.status }}
+          </span>
+        </td>
+
+        <td>
+          {{ booking.userId }}
+        </td>
+
+
+        <td>
+          {{ booking.units }}
+        </td>
+
+        <!-- Reference Details -->
+
+        <td>
+
+          @if (booking.flightId) {
+
+            <span class="badge bg-info mb-1">
+              Flight
+            </span>
+
+            <div>
+              {{ booking.flightNumber }}
+              <br>
+              <small>ID: {{ booking.flightId }}</small>
+            </div>
+
+          } @else if (booking.hotelId) {
+
+            <span class="badge bg-success mb-1">
+              Hotel
+            </span>
+
+            <div>
+              {{ booking.hotelName }}
+              <br>
+              <small>ID: {{ booking.hotelId }}</small>
+            </div>
+
+          } @else if (booking.transportId) {
+
+            <span class="badge bg-warning text-dark mb-1">
+              Transport
+            </span>
+
+            <div>
+              {{ booking.transportType }}
+              <br>
+              <small>ID: {{ booking.transportId }}</small>
+            </div>
+
+          } @else if (booking.packageId) {
+
+            <span class="badge bg-primary mb-1">
+              Package
+            </span>
+
+            <div>
+              {{ booking.packageName }}
+              <br>
+              <small>ID: {{ booking.packageId }}</small>
+            </div>
+
+          } @else {
+
+            <span class="text-muted">
+              N/A
+            </span>
+
+          }
+
+        </td>
+
+        <td>
+
+          @if (booking.passengers?.length) {
+
+            <div class="mb-2">
+              {{ booking.passengers.length }} Passenger(s)
+            </div>
+
+            <button
+              class="btn btn-sm btn-outline-primary"
+              (click)="viewPassengers(booking)">
+              Show Passengers
+            </button>
+
+          } @else {
+
+            <span class="text-muted">
+              No Passengers
+            </span>
+
+          }
+
+        </td>
+
+      </tr>
+
+      } @empty {
+
+      <tr>
+        <td colspan="11" class="text-center text-muted py-4">
+          No bookings found
+        </td>
+      </tr>
+
+      }
+
+    </tbody>
+
+  </table>
+
+</div>
+<!-- Passenger Popup -->
+
+@if (showPassengerPopup) {
+
+<div class="popup-overlay">
+
+  <div class="popup card shadow-lg border-0">
+
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+
+      <h4 class="mb-0">
+        Passenger Details
+      </h4>
+
+      <button
+        class="btn-close btn-close-white"
+        (click)="closePassengerPopup()">
+      </button>
+
+    </div>
+
+    <div class="card-body">
+
+      <div class="table-responsive">
+
+        <table class="table table-bordered table-hover align-middle">
+
+          <thead class="table-primary">
+
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Gender</th>
+              <th>Nationality</th>
+              <th>Contact</th>
+              <th>Email</th>
+              <th>ID Type</th>
+              <th>ID Number</th>
+              <th>Status</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            @for (passenger of selectedPassengers; track passenger.passengerId) {
+
+            <tr>
+
+              <td>{{ passenger.passengerId }}</td>
+              <td>{{ passenger.passengerName }}</td>
+              <td>{{ passenger.gender }}</td>
+              <td>{{ passenger.nationality }}</td>
+              <td>{{ passenger.contactNo }}</td>
+              <td>{{ passenger.emailAddress }}</td>
+              <td>{{ passenger.identificationType }}</td>
+              <td>{{ passenger.identificationNumber }}</td>
+
+              <td>
+
+                <span
+                  class="badge bg-success">
+
+                  {{ passenger.status }}
+
+                </span>
+
+              </td>
+
+            </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+      <div class="text-end">
+
+        <button
+          class="btn btn-primary"
+          (click)="closePassengerPopup()">
+
+          Close
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+}
+@if (totalPages > 1) {
+
+<div class="d-flex flex-column align-items-center gap-3 mt-5">
+
+  <div class="d-flex justify-content-center align-items-center gap-2">
+
+    <button
+      class="btn btn-sm btn-outline-primary rounded-pill px-3"
+      [disabled]="isFirst"
+      (click)="previousPage()">
+
+      <i class="bi bi-chevron-left"></i>
+      Previous
+
+    </button>
+
+    @for (page of pages; track page) {
+
+      <button
+        class="btn btn-sm rounded-circle"
+        [class.btn-primary]="page === currentPage"
+        [class.btn-outline-primary]="page !== currentPage"
+        (click)="goToPage(page)"
+        style="width:32px;height:32px;">
+
+        {{ page + 1 }}
+
+      </button>
+
+    }
+
+    <button
+      class="btn btn-sm btn-outline-primary rounded-pill px-3"
+      [disabled]="isLast"
+      (click)="nextPage()">
+
+      Next
+      <i class="bi bi-chevron-right"></i>
+
+    </button>
+
+  </div>
+
+  <div class="text-center text-muted small">
+
+    Showing page
+
+    <strong>{{ currentPage + 1 }}</strong>
+
+    of
+
+    <strong>{{ totalPages }}</strong>
+
+    ({{ totalElements }} bookings)
+
+  </div>
+
+</div>
+
+}

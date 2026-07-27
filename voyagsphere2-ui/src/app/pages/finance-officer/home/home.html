@@ -1,0 +1,164 @@
+<div class="container py-4">
+
+  <!-- Welcome Strip Panel Header -->
+  <div class="card border-0 bg-dark text-white shadow-sm mb-4">
+    <div class="card-body p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+      <div>
+        <span class="badge bg-primary text-uppercase px-2 py-1 mb-2 fw-semibold">Command Console</span>
+        <h1 class="h3 mb-1 fw-bold">Financial Dashboard</h1>
+        <p class="text-white-50 small mb-0">Officer Profile: {{ officerName }} • Unified Ledger Sync</p>
+      </div>
+      <button class="btn btn-outline-light btn-sm d-flex align-items-center gap-2" (click)="refreshDashboardData()">
+        <i class="bi bi-arrow-clockwise"></i> Sync All Modules
+      </button>
+    </div>
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger shadow-sm border-start border-4 border-danger mb-4" role="alert">
+      {{ errorMessage }}
+    </div>
+  }
+
+  <!-- ROW BLOCK 1: Consolidated Revenue Summary Metrics (Direct From Server KPI) -->
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-md-4">
+      <div class="card shadow-sm border-0 border-start border-primary border-4 h-100 bg-white">
+        <div class="card-body">
+          <div class="small fw-bold text-primary text-uppercase tracking-wide mb-1">Gross Revenue</div>
+          <div class="h2 mb-0 fw-bold text-dark">{{ grossRevenue | currency:'INR':'symbol':'1.0-0' }}</div>
+          <div class="small text-muted mt-1">Global calculated corporate volume</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-4">
+      <div class="card shadow-sm border-0 border-start border-danger border-4 h-100 bg-white">
+        <div class="card-body">
+          <div class="small fw-bold text-danger text-uppercase tracking-wide mb-1">Total Refund</div>
+          <div class="h2 mb-0 fw-bold text-dark">{{ refundedAmount | currency:'INR':'symbol':'1.0-0' }}</div>
+          <div class="small text-muted mt-1">Returned capital accounts payload</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-4">
+      <div class="card shadow-sm border-0 border-start border-success border-4 h-100 bg-white">
+        <div class="card-body">
+          <div class="small fw-bold text-success text-uppercase tracking-wide mb-1">Net Revenue</div>
+          <div class="h2 mb-0 fw-bold text-dark">{{ netRevenue | currency:'INR':'symbol':'1.0-0' }}</div>
+          <div class="small text-muted mt-1">Actual remaining processing balance</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW BLOCK 2: KPI Performance Highlights & Active Invoices Tracker -->
+  <div class="row g-4 mb-4">
+    <!-- Component 1: KPI Dashboard Performance Summary Card -->
+    <div class="col-12 col-lg-5">
+      <div class="card shadow-sm border-0 h-100 bg-white">
+        <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+          <h6 class="m-0 fw-bold text-secondary text-uppercase tracking-wider small"><i class="bi bi-bar-chart-line me-2 text-primary"></i>Operational Indicators</h6>
+          <a routerLink="/finance/kpi" class="text-primary text-decoration-none small fw-semibold">View Analytics Engine →</a>
+        </div>
+        <div class="card-body p-4 d-flex flex-column justify-content-between">
+          <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
+            <div>
+              <div class="h4 mb-0 fw-bold">{{ totalBookings }}</div>
+              <span class="text-muted small">Total Bookings Logs</span>
+            </div>
+            <div class="bg-primary bg-opacity-10 text-primary rounded p-2"><i class="bi bi-journal-check fs-4"></i></div>
+          </div>
+
+          <div class="d-flex align-items-center justify-content-between pb-2">
+            <div>
+              <div class="h4 mb-0 fw-bold text-danger"> {{ cancellationRate | number:'1.2-2' }}%</div>
+              <span class="text-muted small">Cancellation Rate</span>
+            </div>
+            <div class="bg-danger bg-opacity-10 text-danger rounded p-2"><i class="bi bi-x-circle fs-4"></i></div>
+          </div>
+
+          <div class="bg-light rounded p-3 mt-3 border border-dashed text-center">
+            <span class="small text-muted d-block">System Audit Compliance Status</span>
+            <span class="small text-success fw-bold"><i class="bi bi-check-circle-fill me-1"></i>Data feeds passing automated validation rules</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Component 2: Accounts Payable Invoice Hub Status Quick View -->
+    <div class="col-12 col-lg-7">
+      <div class="card shadow-sm border-0 h-100 bg-white">
+        <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+          <h6 class="m-0 fw-bold text-secondary text-uppercase tracking-wider small"><i class="bi bi-receipt me-2 text-info-emphasis"></i>Invoice Summary</h6>
+          <a routerLink="/finance/invoice" class="text-info-emphasis text-decoration-none small fw-semibold">Open Invoice Manager →</a>
+        </div>
+        <div class="card-body p-4">
+          <div class="row g-3 text-center mb-3">
+            <div class="col-6">
+              <div class="bg-light p-3 rounded border">
+                <span class="xsmall text-uppercase tracking-wider text-muted fw-bold d-block mb-1">Awaiting Review</span>
+                <span class="h4 fw-bold text-warning-emphasis">12 Invoices</span>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="bg-light p-3 rounded border">
+                <span class="xsmall text-uppercase tracking-wider text-muted fw-bold d-block mb-1">Approved Processing</span>
+                <span class="h4 fw-bold text-success">48 Transmitted</span>
+              </div>
+            </div>
+          </div>
+          <div class="alert alert-warning d-flex align-items-center gap-3 border-0 bg-warning-subtle text-warning-emphasis mb-0 small" role="alert">
+            <i class="bi bi-clock-history fs-5"></i>
+            <div>
+              <strong>Action Needed:</strong> Batch approval deadline processing starts in <strong>4 hours</strong>.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW BLOCK 3: Integrated Live Feed Payments Monitoring Feed Table -->
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+      <h6 class="m-0 fw-bold text-secondary text-uppercase tracking-wider small"><i class="bi bi-credit-card me-2 text-success"></i>Recent Payments</h6>
+      <a routerLink="/finance/payment" class="text-success text-decoration-none small fw-semibold">View Payment Portal →</a>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light text-uppercase fs-7 tracking-wider">
+            <tr>
+              <th class="ps-4">Payment ID</th>
+              <th>Transaction Amount</th>
+              <th>Status </th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (payment of recentPayments; track payment.paymentId) {
+              <tr>
+                <td class="ps-4 fw-mono text-secondary small">#{{ payment.paymentId }}</td>
+                <td class="fw-semibold text-dark">{{ payment.amount | currency:'INR':'symbol':'1.0-0' }}</td>
+                <td>
+                  <span class="badge rounded-pill px-2.5 py-1.5 fw-medium" [class]="getStatusClass(payment.status)">
+                    {{ payment.status }}
+                  </span>
+                </td>
+                <td>
+                  {{payment.date | date:'medium'}}
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="3" class="text-center py-4 text-muted small bg-light-subtle">No active stream transactions identified.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

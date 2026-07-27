@@ -1,0 +1,33 @@
+package com.cts.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+
+import com.cts.enums.PaymentStatus;
+
+@Entity
+@Table(name = "payment")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Payment {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long paymentId;
+
+    private LocalDateTime paymentDate;
+    private double amount;
+
+    private String paymentMethod;
+    private String transactionId;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus status;
+
+    @ManyToOne
+    @JoinColumn(name = "invoice_id", nullable = false)
+    private Invoice invoice;
+}

@@ -1,0 +1,208 @@
+<div class="container py-4"
+style="margin-left: 280px;
+width: calc(100% - 280px);">
+
+  <div class="card shadow border-0">
+
+    <!-- Header -->
+    <div class="card-header bg-primary text-white">
+
+      <h3 class="mb-0">
+        <i class="bi bi-person-plus-fill me-2"></i>
+        Add New Partner
+      </h3>
+
+    </div>
+
+    <div class="card-body">
+
+      <form
+        #partnerForm="ngForm"
+        (ngSubmit)="onSubmit()">
+
+        <div class="row g-4">
+
+          <!-- Partner Name -->
+
+          <div class="col-md-4">
+
+            <label class="form-label fw-semibold">
+
+              Partner Name
+
+            </label>
+
+            <div class="input-group">
+
+              <span class="input-group-text bg-white">
+
+                <i class="bi bi-person-fill"></i>
+
+              </span>
+
+              <input
+                type="text"
+                class="form-control"
+                name="name"
+                [(ngModel)]="partner.name"
+                placeholder="Enter partner name"
+                required>
+
+            </div>
+
+          </div>
+
+          <!-- Partner Type -->
+
+          <div class="col-md-4">
+
+            <label class="form-label fw-semibold">
+
+              Partner Type
+
+            </label>
+
+            <select
+              class="form-select"
+              name="type"
+              [(ngModel)]="partner.type"
+              required>
+
+             @for (type of partnerTypes; track type) {
+  <option [value]="type">
+    {{ type }}
+  </option>
+}
+              
+
+            </select>
+
+          </div>
+
+          <!-- Status -->
+
+          <div class="col-md-4">
+
+            <label class="form-label fw-semibold">
+
+              Status
+
+            </label>
+
+            <select
+              class="form-select"
+              name="status"
+              [(ngModel)]="partner.status"
+              required>
+
+              @for (status of partnerStatuses; track status) {
+
+                <option [ngValue]="status">
+
+                  {{ status }}
+
+                </option>
+
+              }
+
+            </select>
+
+          </div>
+
+        </div>
+
+        <!-- Buttons -->
+
+        <div class="mt-4 d-flex gap-3">
+
+          <button
+            class="btn btn-primary"
+            type="submit"
+            [disabled]="isLoading || partnerForm.invalid">
+
+            <i class="bi bi-plus-circle me-2"></i>
+
+            {{
+              isLoading
+                ? 'Adding Partner...'
+                : 'Add Partner'
+            }}
+
+          </button>
+
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            [disabled]="isLoading"
+            (click)="resetForm()">
+
+            <i class="bi bi-arrow-clockwise me-2"></i>
+
+            Reset
+
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Popup -->
+
+@if (showPopup) {
+
+<div class="modal fade show d-block popup-backdrop">
+
+  <div class="modal-dialog modal-dialog-centered">
+
+    <div class="modal-content border-0 shadow">
+
+      <div class="modal-header bg-primary text-white">
+
+        <h5 class="modal-title">
+
+          <i class="bi bi-info-circle-fill me-2"></i>
+
+          {{ popupTitle }}
+
+        </h5>
+
+      </div>
+
+      <div class="modal-body text-center">
+
+        <i class="bi bi-check-circle-fill text-success display-4 mb-3"></i>
+
+        <p class="mb-0">
+
+          {{ popupMessage }}
+
+        </p>
+
+      </div>
+
+      <div class="modal-footer justify-content-center">
+
+        <button
+          class="btn btn-primary px-4"
+          type="button"
+          (click)="closePopup()">
+
+          OK
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+}

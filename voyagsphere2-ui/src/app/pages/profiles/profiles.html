@@ -1,0 +1,420 @@
+<app-navbar></app-navbar>
+
+@if (agentContext.selectedCustomerEmail) {
+
+<div class="container mt-4">
+
+  <div class="alert alert-info d-flex align-items-center shadow-sm">
+
+    <i class="bi bi-person-badge-fill fs-4 me-3"></i>
+
+    <div>
+
+      Managing passenger profiles for
+
+      <strong>
+
+        {{ agentContext.selectedCustomerEmail }}
+
+      </strong>
+
+    </div>
+
+  </div>
+
+</div>
+
+}
+
+<div class="container py-4">
+
+  <!-- Header -->
+
+  <div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body">
+
+      <h2 class="fw-bold mb-2">
+
+        <i class="bi bi-people-fill text-primary me-2"></i>
+
+        Passenger Profile Management
+
+      </h2>
+
+      <p class="text-muted mb-0">
+
+        Save and manage passenger profiles for faster future bookings.
+
+      </p>
+
+    </div>
+
+  </div>
+
+  <div class="row g-4">
+
+    <!-- Saved Passenger Profiles -->
+
+    <div class="col-lg-7">
+
+      <div class="card border-0 shadow-sm">
+
+        <div class="card-header bg-primary text-white">
+
+          <h5 class="mb-0">
+
+            <i class="bi bi-person-lines-fill me-2"></i>
+
+            Saved Passengers
+
+          </h5>
+
+        </div>
+
+        <div class="card-body">
+
+          @for (profile of profiles; track profile.passengerProfileId) {
+
+          <div class="card border mb-3">
+
+            <div class="card-body">
+
+              <div class="d-flex justify-content-between align-items-start">
+
+                <div>
+
+                  <h5 class="fw-bold text-primary">
+
+                    <i class="bi bi-person-circle me-2"></i>
+
+                    {{ profile.passengerName }}
+
+                  </h5>
+
+                  <div class="row">
+
+                    <div class="col-md-6 mb-2">
+
+                      <strong>Date of Birth:</strong><br>
+
+                      {{ profile.dateOfBirth }}
+
+                    </div>
+
+                    <div class="col-md-6 mb-2">
+
+                      <strong>Gender:</strong><br>
+
+                      {{ profile.gender }}
+
+                    </div>
+
+                    <div class="col-md-6 mb-2">
+
+                      <strong>Contact:</strong><br>
+
+                      {{ profile.contactNo }}
+
+                    </div>
+
+                    <div class="col-md-6 mb-2">
+
+                      <strong>Email:</strong><br>
+
+                      {{ profile.emailAddress }}
+
+                    </div>
+
+                    <div class="col-md-6 mb-2">
+
+                      <strong>Nationality:</strong><br>
+
+                      {{ profile.nationality }}
+
+                    </div>
+
+                    <div class="col-md-6 mb-2">
+
+                      <strong>ID Type:</strong><br>
+
+                      {{ profile.identificationType }}
+
+                    </div>
+
+                    <div class="col-12">
+
+                      <strong>ID Number:</strong><br>
+
+                      {{ profile.identificationNumber }}
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <button
+                  class="btn btn-outline-danger btn-sm"
+                  (click)="deleteProfile(profile.passengerProfileId)">
+
+                  <i class="bi bi-trash me-1"></i>
+
+                  Delete
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          } @empty {
+
+          <div class="text-center py-5">
+
+            <i class="bi bi-person-x display-4 text-secondary"></i>
+
+            <h5 class="mt-3">
+
+              No Passenger Profiles
+
+            </h5>
+
+            <p class="text-muted mb-0">
+
+              Add your first passenger profile using the form.
+
+            </p>
+
+          </div>
+
+          }
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Add Passenger -->
+
+    <div class="col-lg-5">
+
+      <div class="card border-0 shadow-sm">
+
+        <div class="card-header bg-primary text-white">
+
+          <h5 class="mb-0">
+
+            <i class="bi bi-person-plus-fill me-2"></i>
+
+            Add Passenger
+
+          </h5>
+
+        </div>
+
+        <div class="card-body">
+
+          <div class="mb-3">
+
+            <label class="form-label fw-semibold">
+
+              Full Name
+
+            </label>
+
+            <input
+              class="form-control"
+              [(ngModel)]="profileForm.passengerName">
+
+          </div>
+
+          <div class="mb-3">
+
+            <label class="form-label fw-semibold">
+
+              Date of Birth
+
+            </label>
+
+            <input
+              type="date"
+              class="form-control"
+              [(ngModel)]="profileForm.dateOfBirth">
+
+          </div>
+
+          <div class="mb-3">
+
+            <label class="form-label fw-semibold">
+
+              Gender
+
+            </label>
+
+            <select
+              class="form-select"
+              [(ngModel)]="profileForm.gender">
+
+              <option value="MALE">
+
+                Male
+
+              </option>
+
+              <option value="FEMALE">
+
+                Female
+
+              </option>
+
+              <option value="OTHER">
+
+                Other
+
+              </option>
+
+            </select>
+
+          </div>
+
+          <div class="mb-3">
+
+            <label class="form-label fw-semibold">
+
+              Contact Number
+
+            </label>
+
+            <input
+              class="form-control"
+              [(ngModel)]="profileForm.contactNo">
+
+          </div>
+
+          <div class="mb-3">
+
+            <label class="form-label fw-semibold">
+
+              Email Address
+
+            </label>
+
+            <input
+              type="email"
+              class="form-control"
+              [(ngModel)]="profileForm.emailAddress">
+
+          </div>
+
+          <div class="mb-3">
+
+            <label class="form-label fw-semibold">
+
+              Nationality
+
+            </label>
+
+            <select
+              class="form-select"
+              [(ngModel)]="profileForm.nationality">
+
+              <option value="INDIAN">
+
+                Indian
+
+              </option>
+
+              <option value="FOREIGN">
+
+                Foreign
+
+              </option>
+
+            </select>
+
+          </div>
+
+          <div class="mb-3">
+
+            <label class="form-label fw-semibold">
+
+              Identification Type
+
+            </label>
+
+            <select
+              class="form-select"
+              [(ngModel)]="profileForm.identificationType">
+
+              <option value="PASSPORT">
+
+                Passport
+
+              </option>
+
+              <option value="AADHAAR">
+
+                Aadhaar
+
+              </option>
+
+              <option value="PAN">
+
+                PAN
+
+              </option>
+
+              <option value="DRIVING_LICENSE">
+
+                Driving License
+
+              </option>
+
+            </select>
+
+          </div>
+
+          <!-- Debug -->
+          <div class="text-danger small mb-3">
+
+            Selected: {{ profileForm.identificationType }}
+
+          </div>
+
+          <div class="mb-4">
+
+            <label class="form-label fw-semibold">
+
+              Identification Number
+
+            </label>
+
+            <input
+              class="form-control"
+              [(ngModel)]="profileForm.identificationNumber">
+
+          </div>
+
+          <button
+            class="btn btn-primary w-100"
+            (click)="addProfile()">
+
+            <i class="bi bi-check-circle-fill me-2"></i>
+
+            Save Passenger
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

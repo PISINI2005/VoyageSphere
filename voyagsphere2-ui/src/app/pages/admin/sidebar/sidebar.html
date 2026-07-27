@@ -1,0 +1,262 @@
+﻿<div
+  id="sidebar-wrapper"
+  class="bg-dark text-white border-end shadow d-flex flex-column"
+  style="width: 280px; position:fixed; height: 100vh;"
+>
+
+  <!-- Header -->
+  <div class="px-4 py-4 border-bottom border-secondary">
+    <h4 class="fw-bold mb-1">
+      🌍 Travel360
+    </h4>
+
+    <small class="text-white-50">
+      {{ role || 'Administrator' }}
+    </small>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="flex-grow-1 overflow-auto px-3 py-3">
+
+    <!-- Dashboard -->
+    <a
+      routerLink="/admin"
+      routerLinkActive="active bg-primary text-white border-0"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="list-group-item list-group-item-action bg-dark text-white rounded mb-2 border-0">
+      🏠 Dashboard
+    </a>
+
+    <!-- Users -->
+    <button
+      class="btn btn-outline-light w-100 text-start mb-2"
+      (click)="showUsers = !showUsers">
+      👥 Users
+    </button>
+
+    @if(showUsers){
+    <div class="ps-3 mb-3">
+
+      <a
+        routerLink="/admin/user/add"
+        class="d-block text-decoration-none text-light py-2">
+        ➕ Add User
+      </a>
+
+      <a
+        routerLink="/admin/user/view"
+        class="d-block text-decoration-none text-light py-2">
+        📋 View Users
+      </a>
+
+    </div>
+    }
+
+    <!-- Bookings -->
+    <button
+      class="btn btn-outline-light w-100 text-start mb-2"
+      (click)="showBookings = !showBookings">
+      📖 Bookings
+    </button>
+
+    @if(showBookings){
+    <div class="ps-3 mb-3">
+
+      <a
+        routerLink="/admin/booking"
+        class="d-block text-decoration-none text-light py-2">
+        📋 View Bookings
+      </a>
+
+    </div>
+    }
+
+    <!-- KPI Reports -->
+<a
+  routerLink="/admin/finance"
+  class="btn btn-outline-light w-100 text-start mb-2">
+  <i class="bi bi-graph-up-arrow me-2"></i>
+  Finance Dashboard
+</a>
+
+
+
+<a
+  routerLink="/admin/payments"
+  class="btn btn-outline-light w-100 text-start mb-2">
+  <i class="bi bi-receipt me-2"></i>
+  Review Payments
+</a>
+
+<a
+  routerLink="/admin/complaints"
+  class="btn btn-outline-light w-100 text-start mb-2">
+  <i class="bi bi-info-circle me-2"></i>
+  Review Complaints
+</a>
+
+
+
+
+    <!-- Partners -->
+    <button
+      class="btn btn-outline-light w-100 text-start mb-2"
+      (click)="showPartners = !showPartners">
+      🤝 Partners
+    </button>
+
+    @if(showPartners){
+    <div class="ps-3 mb-3">
+
+      <a
+        routerLink="/admin/partners/add"
+        class="d-block text-decoration-none text-light py-2">
+        ➕ Add Partner
+      </a>
+
+      <a
+        routerLink="/admin/partners/view"
+        class="d-block text-decoration-none text-light py-2">
+        📋 View Partners
+      </a>
+
+      <a
+        routerLink="/admin/partners/update"
+        class="d-block text-decoration-none text-light py-2">
+        ✏️ Update Partner
+      </a>
+
+    </div>
+    }
+
+    <!-- Manage Services -->
+    <button
+      class="btn btn-outline-light w-100 text-start mb-2"
+      (click)="showManagePartners = !showManagePartners">
+      ⚙️ Manage Services
+    </button>
+
+    @if(showManagePartners){
+
+    <div class="ps-2">
+
+      <!-- Flights -->
+      <button
+        class="btn btn-secondary btn-sm w-100 text-start mb-2"
+        (click)="showFlights = !showFlights">
+        ✈️ Flights
+      </button>
+
+      @if(showFlights){
+      <div class="ps-3 mb-3">
+
+        <a routerLink="/admin/flight/add" class="d-block text-light text-decoration-none py-1">
+          Add Flight
+        </a>
+
+        <a routerLink="/admin/flight/view" class="d-block text-light text-decoration-none py-1">
+          View Flights
+        </a>
+
+        <a routerLink="/admin/flight/update" class="d-block text-light text-decoration-none py-1">
+          Update Flight
+        </a>
+
+      </div>
+      }
+
+      <!-- Hotels -->
+      <button
+        class="btn btn-secondary btn-sm w-100 text-start mb-2"
+        (click)="showHotels = !showHotels">
+        🏨 Hotels
+      </button>
+
+      @if(showHotels){
+      <div class="ps-3 mb-3">
+
+        <a routerLink="/admin/hotel/add" class="d-block text-light text-decoration-none py-1">
+          Add Hotel
+        </a>
+
+        <a routerLink="/admin/hotel/view" class="d-block text-light text-decoration-none py-1">
+          View Hotels
+        </a>
+
+        <a routerLink="/admin/hotel/update" class="d-block text-light text-decoration-none py-1">
+          Update Hotel
+        </a>
+
+      </div>
+      }
+
+      <!-- Transport -->
+      <button
+        class="btn btn-secondary btn-sm w-100 text-start mb-2"
+        (click)="showTransports = !showTransports">
+        🚌 Transport
+      </button>
+
+      @if(showTransports){
+      <div class="ps-3 mb-3">
+
+        <a routerLink="/admin/transport/add" class="d-block text-light text-decoration-none py-1">
+          Add Transport
+        </a>
+
+        <a routerLink="/admin/transport/view" class="d-block text-light text-decoration-none py-1">
+          View Transport
+        </a>
+
+        <a routerLink="/admin/transport/update" class="d-block text-light text-decoration-none py-1">
+          Update Transport
+        </a>
+
+      </div>
+      }
+
+      <!-- Travel Packages -->
+      <button
+        class="btn btn-secondary btn-sm w-100 text-start mb-2"
+        (click)="showPackages = !showPackages">
+        🎒 Travel Packages
+      </button>
+
+      @if(showPackages){
+      <div class="ps-3 mb-3">
+
+        <a routerLink="/admin/package/add" class="d-block text-light text-decoration-none py-1">
+          Add Package
+        </a>
+
+        <a routerLink="/admin/package/view" class="d-block text-light text-decoration-none py-1">
+          View Packages
+        </a>
+
+        <a routerLink="/admin/package/update" class="d-block text-light text-decoration-none py-1">
+          Update Package
+        </a>
+
+      </div>
+      }
+
+    </div>
+    }
+
+  </nav>
+
+  <!-- Footer -->
+  <div class="p-3 border-top border-secondary mt-auto">
+
+    <button
+      class="btn btn-danger w-100"
+      (click)="logout()">
+
+      <i class="bi bi-box-arrow-right me-2"></i>
+      Logout
+
+    </button>
+
+  </div>
+
+</div>

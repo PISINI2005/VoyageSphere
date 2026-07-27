@@ -1,0 +1,10 @@
+#wrapper {
+  display: flex;
+  width: 100%;
+}
+
+#page-content-wrapper {
+  flex-grow: 1;
+  height: 100vh;
+  overflow-y: auto;
+}

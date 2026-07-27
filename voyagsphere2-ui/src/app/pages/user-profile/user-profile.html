@@ -1,0 +1,224 @@
+<app-navbar></app-navbar>
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+
+      <!-- Page Heading -->
+      <div class="mb-4 text-center">
+        <h2 class="fw-bold text-dark mb-1">
+          <i class="bi bi-person-gear me-2 text-primary"></i>
+          Account Settings
+        </h2>
+        <p class="text-muted">
+          Manage your personal information and security settings.
+        </p>
+      </div>
+
+      <!-- ================= Profile Card ================= -->
+
+      <div class="card border-0 shadow-lg rounded-4 mb-4">
+
+        <div class="card-header bg-primary text-white rounded-top-4 py-3 border-0">
+          <h5 class="mb-0 fw-semibold">
+            <i class="bi bi-person-circle me-2"></i>
+            Profile Information
+          </h5>
+        </div>
+
+        <div class="card-body p-4 p-lg-5">
+
+          <form (ngSubmit)="saveProfile()" #profileFormDir="ngForm">
+
+            <div class="row g-4">
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">
+                  First Name
+                </label>
+
+                <div class="input-group">
+                  <span class="input-group-text bg-light">
+                    <i class="bi bi-person"></i>
+                  </span>
+
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="profileForm.firstName"
+                    name="firstName"
+                    required>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+
+                <label class="form-label fw-semibold">
+                  Last Name
+                </label>
+
+                <div class="input-group">
+                  <span class="input-group-text bg-light">
+                    <i class="bi bi-person"></i>
+                  </span>
+
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="profileForm.lastName"
+                    name="lastName"
+                    required>
+                </div>
+
+              </div>
+
+              <div class="col-12">
+
+                <label class="form-label fw-semibold">
+                  Phone Number
+                </label>
+
+                <div class="input-group">
+
+                  <span class="input-group-text bg-light">
+                    <i class="bi bi-telephone"></i>
+                  </span>
+
+                  <input
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="profileForm.phoneNo"
+                    name="phoneNo">
+
+                </div>
+
+              </div>
+
+              <div class="col-12 text-end mt-2">
+
+                <button class="btn btn-primary px-5 py-2 rounded-pill shadow-sm">
+                  <i class="bi bi-check-circle me-2"></i>
+                  Save Changes
+                </button>
+
+              </div>
+
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+
+      <!-- ================= Password Card ================= -->
+
+      <div class="card border-0 shadow-lg rounded-4">
+
+        <div class="card-header bg-dark text-white rounded-top-4 py-3 border-0">
+
+          <h5 class="mb-0 fw-semibold">
+            <i class="bi bi-shield-lock me-2"></i>
+            Security
+          </h5>
+
+        </div>
+
+        <div class="card-body p-4 p-lg-5">
+
+          <form (ngSubmit)="updatePassword()" #passwordFormDir="ngForm">
+
+            <div class="row g-4">
+
+              <div class="col-12">
+
+                <label class="form-label fw-semibold">
+                  Current Password
+                </label>
+
+                <div class="input-group">
+
+                  <span class="input-group-text bg-light">
+                    <i class="bi bi-lock"></i>
+                  </span>
+
+                  <input
+                    type="password"
+                    class="form-control"
+                    [(ngModel)]="passwordForm.oldPassword"
+                    name="oldPassword"
+                    required>
+
+                </div>
+
+              </div>
+
+              <div class="col-md-6">
+
+                <label class="form-label fw-semibold">
+                  New Password
+                </label>
+
+                <div class="input-group">
+
+                  <span class="input-group-text bg-light">
+                    <i class="bi bi-key"></i>
+                  </span>
+
+                  <input
+                    type="password"
+                    class="form-control"
+                    [(ngModel)]="passwordForm.newPassword"
+                    name="newPassword"
+                    required>
+
+                </div>
+
+              </div>
+
+              <div class="col-md-6">
+
+                <label class="form-label fw-semibold">
+                  Confirm Password
+                </label>
+
+                <div class="input-group">
+
+                  <span class="input-group-text bg-light">
+                    <i class="bi bi-key-fill"></i>
+                  </span>
+
+                  <input
+                    type="password"
+                    class="form-control"
+                    [(ngModel)]="confirmPassword"
+                    name="confirmPassword"
+                    required>
+
+                </div>
+
+              </div>
+
+              <div class="col-12 text-end">
+
+                <button
+                  class="btn btn-dark px-5 py-2 rounded-pill shadow-sm">
+
+                  <i class="bi bi-shield-check me-2"></i>
+
+                  Update Password
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

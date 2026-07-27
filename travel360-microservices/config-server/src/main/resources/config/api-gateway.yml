@@ -1,0 +1,75 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          # Enable service discovery but keep explicit routes below as the contract.
+          enabled: false
+      routes:
+        # ---------------- user-service ----------------
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/api/v1/users/**
+
+        # ---------------- catalog-service ----------------
+        - id: catalog-service
+          uri: lb://CATALOG-SERVICE
+          predicates:
+            - Path=/api/v1/flights/**,/api/v1/hotels/**,/api/v1/transports/**,/api/v1/packages/**,/api/v1/partners/**,/api/v1/package/itineraries/**,/api/v1/search/**
+
+        # ---------------- booking-service (owns booking + billing: invoices & payments) ----------------
+        - id: booking-service
+          uri: lb://BOOKING-SERVICE
+          predicates:
+            - Path=/api/v1/bookings/**,/api/v1/itineraries/**,/api/v1/reports/**,/api/v1/invoices/**,/api/v1/payments/**,/api/v1/passengers/**,/api/v1/complaints/**
+
+        # ---------------- notification-service ----------------
+        - id: notification-service
+          uri: lb://NOTIFICATION-SERVICE
+          predicates:
+            - Path=/api/v1/notifications/**,/api/v1/auditLogs/**
+
+        # ---------------- aggregated OpenAPI docs (one route per service) ----------------
+        # Each service serves its spec at /v3/api-docs; we expose them under distinct
+        # gateway paths and rewrite back to /v3/api-docs so they don't collide.
+        - id: user-service-docs
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/v3/api-docs/user-service
+          filters:
+            - RewritePath=/v3/api-docs/user-service, /v3/api-docs
+        - id: catalog-service-docs
+          uri: lb://CATALOG-SERVICE
+          predicates:
+            - Path=/v3/api-docs/catalog-service
+          filters:
+            - RewritePath=/v3/api-docs/catalog-service, /v3/api-docs
+        - id: booking-service-docs
+          uri: lb://BOOKING-SERVICE
+          predicates:
+            - Path=/v3/api-docs/booking-service
+          filters:
+            - RewritePath=/v3/api-docs/booking-service, /v3/api-docs
+        - id: notification-service-docs
+          uri: lb://NOTIFICATION-SERVICE
+          predicates:
+            - Path=/v3/api-docs/notification-service
+          filters:
+            - RewritePath=/v3/api-docs/notification-service, /v3/api-docs
+
+springdoc:
+  swagger-ui:
+    use-root-path: true
+    urls:
+      - name: user-service
+        url: /v3/api-docs/user-service
+      - name: catalog-service
+        url: /v3/api-docs/catalog-service
+      - name: booking-service
+        url: /v3/api-docs/booking-service
+      - name: notification-service
+        url: /v3/api-docs/notification-service

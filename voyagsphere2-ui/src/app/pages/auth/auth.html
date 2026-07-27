@@ -1,0 +1,559 @@
+<div class="auth-page">
+
+  <div class="container">
+
+    <div class="row min-vh-100 align-items-center">
+
+      <div class="col-lg-7 d-none d-lg-block">
+
+        <div class="hero-content">
+
+          <h1 style="font-family: 'Times New Roman', Times, serif;">
+            Explore the World with VoyageSphere
+          </h1>
+
+          <p>
+            Flights, Hotels, Holiday Packages and Transportation
+            in one intelligent travel platform.
+          </p>
+
+          <div class="hero-cards">
+
+            <div class="feature-card">
+              ✈ Flights
+            </div>
+
+            <div class="feature-card">
+              🏨 Hotels
+            </div>
+
+            <div class="feature-card">
+              🌍 Packages
+            </div>
+
+            <div class="feature-card">
+              🚗 Transport
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="col-lg-5">
+
+        <div class="auth-card">
+
+          <div class="text-center mb-4">
+
+            <h2 class="fw-bold text-primary">
+              VoyageSphere
+            </h2>
+
+            <p class="text-muted">
+              Travel Smarter
+            </p>
+
+          </div>
+
+          @if(view === 'LOGIN') {
+
+  @if(view === 'LOGIN') {
+
+<form (ngSubmit)="login()" #loginNgForm="ngForm">
+
+  <h4 class="mb-4">Sign In</h4>
+
+  <div class="mb-3">
+    <label>Email</label>
+    <input
+      type="email"
+      name="email"
+      required
+      email
+      #loginEmail="ngModel"
+      class="form-control"
+      [class.is-invalid]="loginEmail.invalid && (loginEmail.dirty || loginEmail.touched)"
+      [(ngModel)]="loginForm.email">
+
+    @if(loginEmail.invalid && (loginEmail.dirty || loginEmail.touched)) {
+      <div class="text-danger small mt-1">
+        @if(loginEmail.errors?.['required']) {
+          <span>Email is required.</span>
+        }
+        @if(loginEmail.errors?.['email']) {
+          <span>Please enter a valid email address.</span>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="mb-4">
+    <label>Password</label>
+    <input
+      type="password"
+      name="password"
+      required
+      #loginPassword="ngModel"
+      class="form-control"
+      [class.is-invalid]="loginPassword.invalid && (loginPassword.dirty || loginPassword.touched)"
+      [(ngModel)]="loginForm.password">
+
+    @if(loginPassword.invalid && (loginPassword.dirty || loginPassword.touched)) {
+      <div class="text-danger small mt-1">
+        Password is required.
+      </div>
+    }
+  </div>
+
+  <button
+    type="submit"
+    class="btn btn-primary w-100"
+    [disabled]="loginEmail.invalid || loginPassword.invalid">
+    Login
+  </button>
+
+  <div class="text-center mt-3">
+    <button
+      type="button"
+      class="btn btn-link"
+      (click)="view='REGISTER'">
+      Create Account
+    </button>
+  </div>
+
+</form>
+
+}
+}
+
+@if(view === 'REGISTER') {
+
+  <h4 class="mb-4">Create Account</h4>
+  <div class="mb-3">
+  <label>First Name</label>
+  <input
+    type="text"
+    required
+    #firstName="ngModel"
+    class="form-control"
+    [(ngModel)]="registerForm.firstName"
+    name="firstName">
+</div>
+
+<div class="mb-3">
+  <label>Last Name</label>
+  <input
+    type="text"
+    required
+    #lastName="ngModel"
+    class="form-control"
+    [(ngModel)]="registerForm.lastName"
+    name="lastName">
+</div>
+
+  <div class="mb-3">
+    <label>Email</label>
+    <input
+      type="email"
+      required
+      email
+      #regEmail="ngModel"
+      class="form-control"
+      [class.is-invalid]="regEmail.invalid && (regEmail.dirty || regEmail.touched)"
+      [(ngModel)]="registerForm.email">
+    
+    @if(regEmail.invalid && (regEmail.dirty || regEmail.touched)) {
+      <div class="text-danger small mt-1">
+        @if(regEmail.errors?.['required']) { <span>Email is required.</span> }
+        @if(regEmail.errors?.['email']) { <span>Please enter a valid email address.</span> }
+      </div>
+    }
+  </div>
+
+  <div class="mb-3">
+    <label>Password</label>
+    <input
+      type="password"
+      required
+      minlength="6"
+      #regPassword="ngModel"
+      class="form-control"
+      [class.is-invalid]="regPassword.invalid && (regPassword.dirty || regPassword.touched)"
+      [(ngModel)]="registerForm.password">
+    
+    @if(regPassword.invalid && (regPassword.dirty || regPassword.touched)) {
+      <div class="text-danger small mt-1">
+        @if(regPassword.errors?.['required']) { <span>Password is required.</span> }
+        @if(regPassword.errors?.['minlength']) { <span>Password must be at least 6 characters long.</span> }
+      </div>
+    }
+  </div>
+
+  <div class="mb-4">
+    <label>Mobile Number</label>
+    <input
+      type="text"
+      required
+      pattern="^[0-9]{10}$"
+      #regPhone="ngModel"
+      class="form-control"
+      [class.is-invalid]="regPhone.invalid && (regPhone.dirty || regPhone.touched)"
+      [(ngModel)]="registerForm.phoneNo">
+    
+    @if(regPhone.invalid && (regPhone.dirty || regPhone.touched)) {
+      <div class="text-danger small mt-1">
+        @if(regPhone.errors?.['required']) { <span>Mobile number is required.</span> }
+        @if(regPhone.errors?.['pattern']) { <span>Please enter a valid 10-digit mobile number.</span> }
+      </div>
+    }
+  </div>
+
+  <button
+  class="btn btn-primary w-100"
+  [disabled]="
+      firstName.invalid ||
+      lastName.invalid ||
+      regEmail.invalid ||
+      regPassword.invalid ||
+      regPhone.invalid"
+  (click)="register()">
+  Register
+</button>
+  <div class="text-center mt-3">
+    <button
+      class="btn btn-link"
+      (click)="view='LOGIN'">
+      Back to Login
+    </button>
+  </div>
+
+}
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+<!-- ================= SERVICES ================= -->
+<section class="py-5 bg-light">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <span class="badge bg-primary px-3 py-2 rounded-pill">
+                OUR SERVICES
+            </span>
+
+            <h2 class="fw-bold display-5 mt-3">
+                Complete Travel Management Solutions
+            </h2>
+
+            <p class="text-muted fs-5">
+                Everything you need to plan, manage and book your travel.
+            </p>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-lg-4 col-md-6">
+                <div class="card border-0 shadow-lg rounded-4 h-100">
+                    <div class="card-body p-4">
+                        <div class="text-primary fs-1 mb-3">✈</div>
+                        <h4 class="fw-bold">Flight Booking</h4>
+                        <p class="text-muted">
+                            Search and book domestic and international flights with real-time availability and competitive pricing.
+                        </p>
+                        <a href="#" class="btn btn-outline-primary rounded-pill">
+                            Learn More →
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="card border-0 shadow-lg rounded-4 h-100">
+                    <div class="card-body p-4">
+                        <div class="text-success fs-1 mb-3">🏨</div>
+                        <h4 class="fw-bold">Hotel Reservations</h4>
+                        <p class="text-muted">
+                            Access thousands of hotels worldwide with instant confirmation and flexible cancellation policies.
+                        </p>
+                        <a href="#" class="btn btn-outline-success rounded-pill">
+                            Learn More →
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="card border-0 shadow-lg rounded-4 h-100">
+                    <div class="card-body p-4">
+                        <div class="text-warning fs-1 mb-3">🚗</div>
+                        <h4 class="fw-bold">Transport Services</h4>
+                        <p class="text-muted">
+                            Book airport transfers, car rentals and corporate transportation with reliable partners.
+                        </p>
+                        <a href="#" class="btn btn-outline-warning rounded-pill">
+                            Learn More →
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="card border-0 shadow-lg rounded-4 h-100">
+                    <div class="card-body p-4">
+                        <div class="text-info fs-1 mb-3">🌍</div>
+                        <h4 class="fw-bold">Holiday Packages</h4>
+                        <p class="text-muted">
+                            Pre-designed and customizable travel packages combining flights, hotels and activities.
+                        </p>
+                        <a href="#" class="btn btn-outline-info rounded-pill">
+                            Learn More →
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="card border-0 shadow-lg rounded-4 h-100">
+                    <div class="card-body p-4">
+                        <div class="text-danger fs-1 mb-3">📅</div>
+                        <h4 class="fw-bold">Itinerary Management</h4>
+                        <p class="text-muted">
+                            Create, manage and share detailed travel itineraries with automated updates and notifications.
+                        </p>
+                        <a href="#" class="btn btn-outline-danger rounded-pill">
+                            Learn More →
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="card border-0 shadow-lg rounded-4 h-100">
+                    <div class="card-body p-4">
+                        <div class="text-secondary fs-1 mb-3">💳</div>
+                        <h4 class="fw-bold">Billing & Payments</h4>
+                        <p class="text-muted">
+                            Integrated invoice generation, payment processing and financial reporting for every booking.
+                        </p>
+                        <a href="#" class="btn btn-outline-secondary rounded-pill">
+                            Learn More →
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<!-- ================= PARTNERS ================= -->
+<section class="py-5">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <span class="badge bg-success rounded-pill px-3 py-2">
+                TRUSTED NETWORK
+            </span>
+
+            <h2 class="fw-bold display-5 mt-3">
+                Trusted Partners
+            </h2>
+
+            <p class="text-muted fs-5">
+                Working with leading travel providers across the globe.
+            </p>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-3">
+                <div class="card text-center shadow border-0 rounded-4 h-100">
+                    <div class="card-body">
+                        <h4>✈ Airlines</h4>
+                        <hr>
+                        <p>Delta Airlines</p>
+                        <p>United Airlines</p>
+                        <p>Emirates</p>
+                        <p>British Airways</p>
+                        <p>Lufthansa</p>
+                        <p>Air France</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card text-center shadow border-0 rounded-4 h-100">
+                    <div class="card-body">
+                        <h4>🏨 Hotels</h4>
+                        <hr>
+                        <p>Marriott</p>
+                        <p>Hilton</p>
+                        <p>Hyatt</p>
+                        <p>InterContinental</p>
+                        <p>Radisson</p>
+                        <p>Accor</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card text-center shadow border-0 rounded-4 h-100">
+                    <div class="card-body">
+                        <h4>🚗 Transport</h4>
+                        <hr>
+                        <p>Enterprise</p>
+                        <p>Hertz</p>
+                        <p>Avis</p>
+                        <p>Uber for Business</p>
+                        <p>Lyft</p>
+                        <p>Sixt</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card text-center shadow border-0 rounded-4 h-100">
+                    <div class="card-body">
+                        <h4>🌍 Packages</h4>
+                        <hr>
+                        <p>Expedia</p>
+                        <p>Booking.com</p>
+                        <p>TripAdvisor</p>
+                        <p>Viator</p>
+                        <p>GetYourGuide</p>
+                        <p>Klook</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<!-- ================= TESTIMONIALS ================= -->
+<section class="py-5 bg-light">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <span class="badge bg-warning text-dark rounded-pill px-3 py-2">
+                TESTIMONIALS
+            </span>
+
+            <h2 class="fw-bold display-5 mt-3">
+                What Our Clients Say
+            </h2>
+
+            <p class="text-muted">
+                Trusted by businesses worldwide.
+            </p>
+
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-lg-4">
+
+                <div class="card shadow-lg border-0 rounded-4 h-100">
+
+                    <div class="card-body p-4">
+
+                        <div class="text-warning fs-4">
+                            ★★★★★
+                        </div>
+
+                        <p class="mt-3 fst-italic">
+                            "Travel360 transformed how we manage corporate travel. The integrated platform saves us hours every week."
+                        </p>
+
+                        <hr>
+
+                        <h6 class="mb-1 fw-bold">
+                            Sarah Johnson
+                        </h6>
+
+                        <small class="text-muted">
+                            Travel Manager
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+
+                <div class="card shadow-lg border-0 rounded-4 h-100">
+
+                    <div class="card-body p-4">
+
+                        <div class="text-warning fs-4">
+                            ★★★★★
+                        </div>
+
+                        <p class="mt-3 fst-italic">
+                            "The invoice management and reporting features have streamlined our entire business travel process."
+                        </p>
+
+                        <hr>
+
+                        <h6 class="mb-1 fw-bold">
+                            Michael Chen
+                        </h6>
+
+                        <small class="text-muted">
+                            CFO
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+
+                <div class="card shadow-lg border-0 rounded-4 h-100">
+
+                    <div class="card-body p-4">
+
+                        <div class="text-warning fs-4">
+                            ★★★★★
+                        </div>
+
+                        <p class="mt-3 fst-italic">
+                            "Outstanding booking experience with excellent customer support and real-time travel updates."
+                        </p>
+
+                        <hr>
+
+                        <h6 class="mb-1 fw-bold">
+                            Emily Rodriguez
+                        </h6>
+
+                        <small class="text-muted">
+                            Operations Director
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

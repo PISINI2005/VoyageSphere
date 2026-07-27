@@ -1,0 +1,245 @@
+<div class="container-fluid py-4 bg-light min-vh-100" style="margin-left: 280px; width: calc(100% - 280px)">
+  <div class="container-fluid dashboard-wrapper">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+      <div>
+        <h2 class="fw-bold text-primary mb-1">
+          <i class="bi bi-globe2 me-2"></i>
+          Travel Management Dashboard
+        </h2>
+        <p class="text-muted mb-0">
+          Welcome back, <span class="fw-semibold text-dark">Administrator</span>. Here's what's happening today.
+        </p>
+      </div>
+
+      <div class="d-flex align-items-center gap-3">
+        <div class="card admin-card shadow-sm border-0 px-3 py-2 bg-white">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-person-circle fs-5 text-primary"></i>
+            <span class="fw-medium text-dark">Admin Panel</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="row g-4 mb-5">
+      <div class="col-xl-3 col-md-6">
+        <div class="card dash-card h-100" routerLink="/admin/flight/view">
+          <div class="card-body p-4 d-flex align-items-center justify-content-between">
+            <div>
+              <p class="text-muted mb-1 small fw-bold text-uppercase">Total Flights</p>
+              <h2 class="fw-bold text-dark mb-0">{{ flightCount }}</h2>
+            </div>
+            <div class="icon-shape" style="background-color: rgba(13, 110, 253, 0.1); color: #0d6efd;">
+              <i class="bi bi-airplane fs-3"></i>
+            </div>
+          </div>
+          <div style="height: 4px; background: #0d6efd; width: 100%"></div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-md-6">
+        <div class="card dash-card h-100" routerLink="/admin/hotel/view">
+          <div class="card-body p-4 d-flex align-items-center justify-content-between">
+            <div>
+              <p class="text-muted mb-1 small fw-bold text-uppercase">Total Hotels</p>
+              <h2 class="fw-bold text-dark mb-0">{{ hotelCount }}</h2>
+            </div>
+            <div class="icon-shape" style="background-color: rgba(13, 202, 240, 0.1); color: #0dcaf0;">
+              <i class="bi bi-building fs-3"></i>
+            </div>
+          </div>
+          <div style="height: 4px; background: #0dcaf0; width: 100%"></div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-md-6">
+        <div class="card dash-card h-100" routerLink="/admin/transport/view">
+          <div class="card-body p-4 d-flex align-items-center justify-content-between">
+            <div>
+              <p class="text-muted mb-1 small fw-bold text-uppercase">Total Transports</p>
+              <h2 class="fw-bold text-dark mb-0">{{ transportCount }}</h2>
+            </div>
+            <div class="icon-shape" style="background-color: rgba(102, 16, 242, 0.1); color: #6610f2;">
+              <i class="bi bi-bus-front fs-3"></i>
+            </div>
+          </div>
+          <div style="height: 4px; background: #6610f2; width: 100%"></div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-md-6">
+        <div class="card dash-card h-100" routerLink="/admin/package/view">
+          <div class="card-body p-4 d-flex align-items-center justify-content-between">
+            <div>
+              <p class="text-muted mb-1 small fw-bold text-uppercase">Total Packages</p>
+              <h2 class="fw-bold text-dark mb-0">{{ packageCount }}</h2>
+            </div>
+            <div class="icon-shape" style="background-color: rgba(10, 88, 202, 0.1); color: #0a58ca;">
+              <i class="bi bi-backpack2 fs-3"></i>
+            </div>
+          </div>
+          <div style="height: 4px; background: #0a58ca; width: 100%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="mb-5">
+      <div class="section-header">
+        <h5 class="fw-bold"><i class="bi bi-lightning-charge-fill text-primary me-2"></i>Quick Actions</h5>
+      </div>
+      <div class="row g-3">
+        <div class="col-6 col-md-4 col-lg-2">
+          <a routerLink="/admin/flight/add" class="action-tile">
+            <i class="bi bi-airplane"></i>
+            <span class="fw-medium">Flight</span>
+          </a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+          <a routerLink="/admin/hotel/add" class="action-tile">
+            <i class="bi bi-building"></i>
+            <span class="fw-medium">Hotel</span>
+          </a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+          <a routerLink="/admin/transport/add" class="action-tile">
+            <i class="bi bi-bus-front"></i>
+            <span class="fw-medium">Transport</span>
+          </a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+          <a routerLink="/admin/package/add" class="action-tile">
+            <i class="bi bi-backpack2"></i>
+            <span class="fw-medium">Package</span>
+          </a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+          <a routerLink="/admin/partners/add" class="action-tile">
+            <i class="bi bi-people-fill"></i>
+            <span class="fw-medium">Partner</span>
+          </a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+          <a routerLink="/admin/user/add" class="action-tile">
+            <i class="bi bi-person-plus-fill"></i>
+            <span class="fw-medium">User</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tables -->
+    <div class="row g-4">
+      <!-- Recent Bookings -->
+      <div class="col-lg-6">
+        <div class="card dash-card border-0 shadow-sm h-100">
+          <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
+            <h5 class="mb-0 fw-bold text-dark">
+              <i class="bi bi-receipt text-primary me-2"></i>Recent Bookings
+            </h5>
+            <a routerLink="/admin/booking" class="btn btn-sm btn-outline-primary rounded-pill px-3">View All</a>
+          </div>
+          <div class="table-responsive">
+            @if (recentBookings.length > 0) {
+              <table class="table prof-table align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Booking ID</th>
+                    <th>User ID</th>
+                    <th>Details</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody >
+                  @for (booking of recentBookings; track booking.bookingId) {
+                    <tr>
+                      <td>{{ booking.bookingDate }}</td>
+                      <td class="fw-medium">{{ booking.bookingId }}</td>
+                      <td>{{ booking.userId }}</td>
+                      <td>
+                        @if (booking.flightId) {
+                          <span class="badge badge-soft-primary mb-1">Flight</span>
+                          <div class="small">{{ booking.flightNumber }} <br> <span class="text-muted">ID: {{ booking.flightId }}</span></div >
+                        } @else if (booking.hotelId) {
+                          <span class="badge badge-soft-primary mb-1">Hotel</span>
+                          <div class="small">{{ booking.hotelName }} <br> <span class="text-muted">ID: {{ booking.hotelId }}</span></div >
+                        } @else if (booking.transportId) {
+                          <span class="badge badge-soft-primary mb-1">Transport</span>
+                          <div class="small">{{ booking.transportType }} <br> <span class="text-muted">ID: {{ booking.transportId }}</span></div >
+                        } @else if (booking.packageId) {
+                          <span class="badge badge-soft-primary mb-1">Package</span>
+                          <div class="small">{{ booking.packageName }} <br> <span class="text-muted">ID: {{ booking.packageId }}</span></div >
+                        } @else {
+                          <span class="text-muted small">N/A</span>
+                        }
+                      </td >
+                      <td >
+                        <span class="badge badge-soft-success">
+                          {{ booking.status }}
+                        </span >
+                      </td >
+                    </tr>
+                  }
+                </tbody >
+              </table >
+            } @else {
+              <div class="p-5 text-center text-muted">
+                <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+                No recent bookings available.
+              </div >
+            }
+          </div >
+        </div >
+      </div >
+
+      <!-- Recent Partners -->
+      <div class="col-lg-6">
+        <div class="card dash-card border-0 shadow-sm h-100">
+          <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
+            <h5 class="mb-0 fw-bold text-dark">
+              <i class="bi bi-people-fill text-primary me-2"></i>Recent Partners
+            </h5>
+            <a routerLink="/admin/partners/view" class="btn btn-sm btn-outline-primary rounded-pill px-3">View All</a>
+          </div >
+          <div class="table-responsive">
+            @if (recentPartners.length > 0) {
+              <table class="table prof-table align-middle mb-0">
+                <thead >
+                  <tr >
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                  </tr >
+                </thead >
+                <tbody >
+                  @for (partner of recentPartners; track partner.partnerId) {
+                    <tr >
+                      <td>{{ partner.partnerId }}</td>
+                      <td class="fw-medium">{{ partner.name }}</td>
+                      <td>{{ partner.type }}</td>
+                      <td >
+                        <span class="badge badge-soft-success">
+                          {{ partner.status }}
+                        </span >
+                      </td >
+                    </tr>
+                  }
+                </tbody >
+              </table >
+            } @else {
+              <div class="p-5 text-center text-muted">
+                <i class="bi bi-people fs-2 d-block mb-2"></i>
+                No recent partners available.
+              </div >
+            }
+          </div >
+        </div >
+      </div >
+    </div >
+  </div >
+</div >

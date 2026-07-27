@@ -1,0 +1,59 @@
+<div class="dropdown-menu dropdown-menu-end p-0 shadow border-0" style="min-width: 300px; max-height: 450px; overflow-y: auto;">
+
+  <div class="p-3 border-bottom d-flex justify-content-between align-items-center bg-light">
+    <strong class="mb-0">Notifications</strong>
+    @if ((notifications$ | async)?.length) {
+      <button (click)="markAllAsRead()" class="btn btn-sm btn-link text-decoration-none p-0">
+        Mark all as read
+      </button>
+    }
+  </div>
+
+  @if (isLoading) {
+    <div class="p-3 text-center">
+      <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+      <span class="ms-2">Loading...</span>
+    </div>
+  } @else {
+    @for(n of (notifications$ | async); track n.notificationId){
+      <div
+        class="p-3 border-bottom notification-item"
+        [class.bg-light-unread]="n.status === 'UNREAD'"
+        (click)="markAsRead(n.notificationId)"
+        style="cursor: pointer; transition: background 0.2s;"
+      >
+        <div class="d-flex justify-content-between align-items-start mb-1">
+          <span class="badge bg-secondary me-2" style="font-size: 0.7rem;">#{{ n.notificationId }}</span>
+          <span class="text-muted" style="font-size: 0.7rem;">
+            {{ n.createdDate | date:'short' }}
+          </span>
+        </div>
+        <div class="d-flex align-items-center">
+          @if(n.status === 'UNREAD') {
+            <span class="bg-primary rounded-circle d-inline-block me-2" style="width: 8px; height: 8px;"></span>
+          }
+          <span class="text-wrap" [class.fw-bold]="n.status === 'UNREAD'">
+            {{ n.message }}
+          </span>
+        </div>
+        <div class="mt-1">
+          <span class="badge bg-light text-dark border" style="font-size: 0.65rem;">{{ n.category }}</span>
+        </div>
+      </div>
+    } @empty {
+      <div class="p-4 text-center text-muted">
+        No notifications available.
+      </div>
+    }
+  }
+
+</div>
+
+<style>
+  .bg-light-unread {
+    background-color: #f8f9ff !important;
+  }
+  .notification-item:hover {
+    background-color: #f0f2f5 !important;
+  }
+</style>

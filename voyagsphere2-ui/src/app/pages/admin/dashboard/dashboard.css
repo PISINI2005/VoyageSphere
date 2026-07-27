@@ -1,0 +1,125 @@
+/* Professional Admin Dashboard Styles */
+.dashboard-wrapper {
+    transition: all 0.3s ease;
+}
+
+/* KPI Cards */
+.dash-card {
+    border: none !important;
+    border-radius: 12px !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    background: #fff !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.dash-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1) !important;
+}
+
+.icon-shape {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+/* Quick Action Tiles */
+.action-tile {
+    background: #fff;
+    border: 1px solid #eef2f7;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #495057;
+    text-decoration: none;
+}
+
+.action-tile:hover {
+    border-color: #0d6efd;
+    background-color: #f8faff;
+    color: #0d6efd;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.1);
+}
+
+.action-tile i {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    transition: transform 0.2s ease;
+}
+
+.action-tile:hover i {
+    transform: scale(1.2);
+}
+
+/* Professional Table Styling */
+.prof-table {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+}
+
+.prof-table thead th {
+    background-color: #f8f9fa !important;
+    color: #6c757d !important;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    font-weight: 600 !important;
+    border-bottom: 2px solid #eef2f7 !important;
+    padding: 12px 15px !important;
+}
+
+.prof-table tbody td {
+    padding: 15px !important;
+    border-bottom: 1px solid #f1f3f5 !important;
+    font-size: 0.9rem;
+    color: #495057;
+}
+
+.prof-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.prof-table tbody tr:hover {
+    background-color: #fbfcfd !important;
+}
+
+/* Refined Badges */
+.badge-soft-primary {
+    background-color: #e7f1ff !important;
+    color: #0d6efd !important;
+    font-weight: 500;
+}
+
+.badge-soft-success {
+    background-color: #e6fcf5 !important;
+    color: #0ca678 !important;
+    font-weight: 500;
+}
+
+/* Section Headers */
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.section-header h5 {
+    font-weight: 700;
+    color: #212529;
+    margin: 0;
+}

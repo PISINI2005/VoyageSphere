@@ -1,0 +1,89 @@
+export enum SeatType {
+  ECONOMY = 'ECONOMY',
+  PREMIUM = 'PREMIUM',
+  BUSINESS = 'BUSINESS',
+  FIRST = 'FIRST'
+}
+
+export enum FlightStatus {
+  SCHEDULED = 'SCHEDULED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum HotelRoomType {
+  STANDARD = 'STANDARD',
+  DELUXE = 'DELUXE',
+  SUITE = 'SUITE'
+}
+
+export enum HotelStatus {
+  AVAILABLE = 'AVAILABLE',
+  FULLY_BOOKED = 'FULLY_BOOKED',
+  UNDER_MAINTENANCE = 'UNDER_MAINTENANCE',
+  CLOSED = 'CLOSED',
+  INACTIVE = 'INACTIVE'
+}
+
+export enum PartnerStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  SUSPENDED = 'SUSPENDED',
+  UNDER_REVIEW = 'UNDER_REVIEW',
+  TERMINATED = 'TERMINATED'
+}
+
+export enum PartnerType {
+  FLIGHT = 'FLIGHT',
+  HOTEL = 'HOTEL',
+  BUS = 'BUS',
+  PACKAGE = 'PACKAGE'
+}
+
+export enum Role {
+  ADMIN = 'ADMIN',
+  CUSTOMER = 'CUSTOMER',
+  TRAVEL_AGENT = 'TRAVEL_AGENT',
+  FINANCE_OFFICER = 'FINANCE_OFFICER',
+  COMPLIANCE_OFFICER = 'COMPLIANCE_OFFICER'
+}
+
+export enum TransportSeatType {
+  SEATER = 'SEATER',
+  SLEEPER = 'SLEEPER',
+  AC_SEATER = 'AC_SEATER',
+  AC_SLEEPER = 'AC_SLEEPER'
+}
+
+export enum TransportStatus {
+  AVAILABLE = 'AVAILABLE',
+  FULLY_BOOKED = 'FULLY_BOOKED',
+  SCHEDULED = 'SCHEDULED',
+  DEPARTED = 'DEPARTED',
+  ARRIVED = 'ARRIVED',
+  DELAYED = 'DELAYED',
+  CANCELLED = 'CANCELLED',
+  OUT_OF_SERVICE = 'OUT_OF_SERVICE'
+}
+
+export enum TravelPackageCategory {
+  ADVENTURE = 'ADVENTURE',
+  FAMILY = 'FAMILY',
+  HONEYMOON = 'HONEYMOON',
+  LUXURY = 'LUXURY',
+  BUDGET = 'BUDGET',
+  WEEKEND_GETAWAY = 'WEEKEND_GETAWAY'
+}
+
+export enum PackageStatus {
+  AVAILABLE = 'AVAILABLE',
+  FULLY_BOOKED = 'FULLY_BOOKED',
+  CANCELLED = 'CANCELLED',
+  INACTIVE = 'INACTIVE'
+}
+
+export enum UserStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  SUSPENDED = 'SUSPENDED',
+  BLOCKED = 'BLOCKED'
+}

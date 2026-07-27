@@ -1,0 +1,216 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm border-bottom sticky-top">
+
+    <div class="container">
+
+        <!-- Brand -->
+        <a
+            routerLink="/search"
+            class="navbar-brand fw-bold text-primary fs-4 d-flex align-items-center">
+
+            <i class="bi bi-globe2 me-2"></i>
+
+            VoyageSphere
+
+        </a>
+
+        <!-- Mobile Toggle -->
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarContent">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <div
+            class="collapse navbar-collapse"
+            id="navbarContent">
+
+            <!-- Navigation -->
+
+            <ul class="navbar-nav mx-auto gap-lg-3">
+
+                <li class="nav-item">
+                    <a
+                        routerLink="/search"
+                        routerLinkActive="active"
+                        [routerLinkActiveOptions]="{exact:true}"
+                        class="nav-link fw-semibold">
+                        Search
+                    </a>
+                </li>
+
+                @if (authService.isTravelAgent()) {
+                <li class="nav-item">
+                    <a
+                        routerLink="/agent"
+                        routerLinkActive="active"
+                        class="nav-link fw-semibold">
+                        Agent Dashboard
+                    </a>
+                </li>
+                }
+
+                @if (!authService.isTravelAgent()) {
+                <li
+                    class="nav-item">
+                    <a
+                        routerLink="/trips"
+                        routerLinkActive="active"
+                        class="nav-link fw-semibold">
+                        My Trips
+                    </a>
+                </li>
+                }
+
+                <li class="nav-item">
+                    <a
+                        routerLink="/profiles"
+                        routerLinkActive="active"
+                        class="nav-link fw-semibold">
+                        Profiles
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a
+                        routerLink="/itineraries"
+                        routerLinkActive="active"
+                        class="nav-link fw-semibold">
+                        Itineraries
+                    </a>
+                </li>
+
+                @if (!authService.isTravelAgent()) {
+                <li
+                    class="nav-item">
+                    <a
+                        routerLink="/invoices"
+                        routerLinkActive="active"
+                        class="nav-link fw-semibold">
+                        Invoices
+                    </a>
+                </li>
+                }
+
+                @if (!authService.isTravelAgent()) {
+                <li
+                    class="nav-item">
+                    <a
+                        routerLink="/support"
+                        routerLinkActive="active"
+                        class="nav-link fw-semibold">
+                        Support
+                    </a>
+                </li>
+                }
+                @if (!authService.isTravelAgent()) {
+                <li
+                    class="nav-item">
+                    <a
+                        routerLink="/booking-request/my-requests"
+                        routerLinkActive="active"
+                        [routerLinkActiveOptions]="{exact:true}"
+                        class="nav-link fw-semibold">
+                        Requests
+                    </a>
+                </li>
+                }
+
+            </ul>
+
+            <!-- Right Side -->
+
+            <div class="d-flex align-items-center gap-2">
+
+                <!-- Notifications -->
+
+                @if (!authService.isTravelAgent()) {
+                <div class="dropdown">
+
+                    <button
+                        class="btn btn-light rounded-circle position-relative"
+                        data-bs-toggle="dropdown">
+
+                        <i class="bi bi-bell fs-5"></i>
+
+                        @if (unreadNotifications > 0) {
+                            <span
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ unreadNotifications }}
+                            </span>
+                        }
+
+                    </button>
+
+                    <app-notification-dropdown></app-notification-dropdown>
+
+                </div>
+                }
+
+                <!-- User -->
+
+                @if (!authService.isTravelAgent()) {
+                <div class="dropdown">
+
+                    <button
+                        class="btn btn-outline-primary rounded-pill px-3 dropdown-toggle"
+                        data-bs-toggle="dropdown">
+
+                        <i class="bi bi-person-circle me-2"></i>
+
+                        User
+
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end shadow">
+
+                        <li>
+                            <a
+                                routerLink="/user-profile"
+                                class="dropdown-item">
+                                <i class="bi bi-person me-2"></i>
+                                My Profile
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                routerLink="/profiles"
+                                class="dropdown-item">
+                                <i class="bi bi-people me-2"></i>
+                                Passenger Profiles
+                            </a>
+                        </li>
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li>
+
+                            <a
+                                class="dropdown-item text-danger"
+                                (click)="logout()">
+
+                                <i class="bi bi-box-arrow-right me-2"></i>
+
+                                Logout
+
+                            </a>
+
+                        </li>
+
+                    </ul>
+
+                </div>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>

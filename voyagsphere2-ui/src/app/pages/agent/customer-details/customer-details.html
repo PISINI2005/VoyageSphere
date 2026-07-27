@@ -1,0 +1,89 @@
+<app-agent-navbar></app-agent-navbar>
+
+<div class="container py-5">
+
+  <div class="d-flex align-items-center mb-4">
+    <h2 class="fw-bold mb-0">Customer Workspace</h2>
+    <span class="badge bg-primary ms-3">Agent Portal</span>
+  </div>
+
+  <div class="card bg-light border-0 shadow-sm mb-4">
+    <div class="card-body p-4">
+      <div class="row align-items-center">
+        <div class="col-auto">
+          <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; font-size: 24px;">
+            👤
+          </div>
+        </div>
+        <div class="col">
+          <h4 class="mb-0 fw-bold">{{ agentContext.selectedCustomerEmail }}</h4>
+          <p class="text-muted mb-0">Customer ID: {{ agentContext.selectedCustomerId }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="text-muted mb-4">
+    Managing travel services and profiles for this customer.
+  </p>
+
+  <div class="row g-4 mt-4">
+
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body text-center">
+          <h1 class="display-4">👤</h1>
+          <h5 class="fw-bold">Passenger Profiles</h5>
+          <a
+            routerLink="/agent/passengers"
+            class="btn btn-primary rounded-pill">
+            Manage Profiles
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body text-center">
+          <h1 class="display-4">✈</h1>
+          <h5 class="fw-bold">Create Booking</h5>
+          <a
+            routerLink="/search"
+            class="btn btn-success rounded-pill">
+            Search Services
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body text-center">
+          <h1 class="display-4">🗓</h1>
+          <h5 class="fw-bold">Itineraries</h5>
+          <a
+            routerLink="/agent/itineraries"
+            class="btn btn-warning rounded-pill">
+            Manage Itineraries
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body text-center">
+          <h1 class="display-4">📑</h1>
+          <h5 class="fw-bold">Customer Bookings</h5>
+          <a
+            routerLink="/agent/customer-bookings"
+            class="btn btn-info rounded-pill text-white">
+            View Bookings
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

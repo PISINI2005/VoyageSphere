@@ -1,0 +1,43 @@
+@if(show){
+
+<div class="modal-overlay">
+
+  <div class="custom-modal">
+
+    <h4 class="fw-bold mb-3">
+
+      {{ title }}
+
+    </h4>
+
+    <p class="text-muted">
+
+      {{ message }}
+
+    </p>
+
+    <div class="d-flex justify-content-end gap-2">
+
+      <button
+        class="btn btn-secondary"
+        (click)="cancelled.emit()">
+
+        Cancel
+
+      </button>
+
+      <button
+        class="btn btn-danger"
+        (click)="confirmed.emit()">
+
+        Confirm
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+}

@@ -1,0 +1,180 @@
+package com.cts.controller;
+
+import com.cts.config.AuthenticatedUserProvider;
+import com.cts.constants.AuditActions;
+import com.cts.dto.FlightDTO;
+import com.cts.dto.FlightResponseDTO;
+import com.cts.dto.PriceDateDTO;
+import com.cts.dto.FlightStatusUpdateDTO;
+import com.cts.entity.Flight;
+import com.cts.enums.AuditEntity;
+import com.cts.enums.LogType;
+import com.cts.service.AuditLogService;
+import com.cts.service.FlightService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Max;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v1/flights")
+@AllArgsConstructor
+@Validated
+@Tag(name = "Flight Controller", description = "Manage flight inventory and search/filter available flights")
+@Slf4j
+public class FlightController {
+
+	private final FlightService service;
+	private final AuthenticatedUserProvider authUser;
+	private final AuditLogService auditLogService;
+
+	@Operation(summary = "Add a new flight to the inventory")
+	@PostMapping
+	@PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
+	public ResponseEntity<Flight> addFlight(@RequestBody @Valid FlightDTO dto) {
+
+		log.info("Received request to add flight: {}", dto);
+		auditLogService.logAction(AuditActions.CREATE_FLIGHT, AuditEntity.FLIGHT, null, authUser.currentOrNull(),
+				LogType.INFO);
+
+		Flight flight = service.addFlight(dto);
+
+		log.info("Flight created successfully with ID: {}", flight.getFlightId());
+
+		return new ResponseEntity<>(flight, HttpStatus.CREATED);
+	}
+
+	@Operation(summary = "Update an existing flight by ID")
+	@PutMapping("/{id}")
+	@PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
+	public ResponseEntity<Flight> updateFlight(@PathVariable Long id, @RequestBody @Valid FlightDTO dto) {
+
+		log.info("Received request to update flight with ID: {}", id);
+		auditLogService.logAction(AuditActions.UPDATE_FLIGHT, AuditEntity.FLIGHT, id, authUser.currentOrNull(),
+				LogType.INFO);
+
+		Flight updatedFlight = service.updateFlight(id, dto);
+
+		log.info("Flight updated successfully with ID: {}", id);
+
+		return new ResponseEntity<>(updatedFlight, HttpStatus.OK);
+	}
+
+	@Operation(summary = "Update only a flight's status")
+	@PatchMapping("/{id}/status")
+	@PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
+	public ResponseEntity<Flight> updateFlightStatus(@PathVariable Long id,
+			@RequestBody @Valid FlightStatusUpdateDTO dto) {
+
+		log.info("Received request to update status for flight with ID: {}", id);
+		auditLogService.logAction(AuditActions.UPDATE_FLIGHT, AuditEntity.FLIGHT, id, authUser.currentOrNull(),
+				LogType.INFO);
+
+		Flight updated = service.updateFlightStatus(id, dto.getStatus());
+
+		log.info("Flight status updated successfully with ID: {}", id);
+
+		return new ResponseEntity<>(updated, HttpStatus.OK);
+	}
+
+	@Operation(summary = "Get all flights (paginated)")
+	@GetMapping
+	public ResponseEntity<Page<FlightResponseDTO>> getAll(
+			@RequestParam(defaultValue = "0") @Min(0) int page,
+			@RequestParam(defaultValue = "5") @Min(1) @Max(100) int size) {
+
+		log.info("Fetching all flights (page={}, size={})", page, size);
+
+		Pageable pageable = PageRequest.of(page, size);
+
+		Page<FlightResponseDTO> flights =
+				service.getAllFlights(pageable);
+
+		return ResponseEntity.ok(flights);
+	}
+
+	@Operation(summary = "Search and filter flights by route with optional price range")
+	@GetMapping("/search")
+	public ResponseEntity<List<FlightResponseDTO>> search(
+			@RequestParam String source,
+			@RequestParam String destination,
+			@RequestParam(required = false) Double min,
+			@RequestParam(required = false) Double max,
+			@RequestParam(defaultValue = "0") @Min(0) int page,
+			@RequestParam(defaultValue = "5") @Min(1) @Max(100) int size) {
+
+		log.info("Searching flights from '{}' to '{}' with price min={}, max={}, page={}, size={}",
+				source, destination, min, max, page, size);
+
+		List<FlightResponseDTO> flights = service.filterFlights(source, destination, min, max, page, size);
+
+		log.info("Found {} flights", flights.size());
+
+		return new ResponseEntity<>(flights, HttpStatus.OK);
+	}
+
+	@Operation(summary = "Get a flight by ID with optional live seat availability")
+	@GetMapping("/{id}")
+	public ResponseEntity<FlightResponseDTO> getById(
+			@PathVariable Long id,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+
+		log.info("Fetching flight with ID: {} on date: {}", id, date);
+
+		FlightResponseDTO flight = service.getFlightById(id, date);
+
+		log.info("Flight fetched successfully: ID={}", id);
+
+		return new ResponseEntity<>(flight, HttpStatus.OK);
+	}
+
+	@Operation(summary = "Get dynamic price calendar for a specific seat type")
+	@GetMapping("/{id}/calendar")
+	public ResponseEntity<List<PriceDateDTO>> getPriceCalendar(
+			@PathVariable Long id,
+			@RequestParam String seatType,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+
+		log.info("Fetching price calendar for flight ID: {}, seatType: {}, range: {} to {}", id, seatType, startDate, endDate);
+
+		LocalDate start = (startDate == null) ? LocalDate.now() : startDate;
+		LocalDate end = (endDate == null) ? LocalDate.now().plusDays(30) : endDate;
+
+		List<PriceDateDTO> calendar = service.getPriceCalendar(id, seatType, start, end);
+
+		return ResponseEntity.ok(calendar);
+	}
+
+	@Operation(summary = "Soft-delete a flight by setting its status to CANCELLED")
+	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<String> deleteFlight(@PathVariable Long id) {
+
+		log.info("Received request to delete flight with ID: {}", id);
+		auditLogService.logAction(AuditActions.DELETE_FLIGHT, AuditEntity.FLIGHT, id, authUser.currentOrNull(), LogType.WARN);
+
+		service.deleteFlight(id);
+
+		log.info("Flight {} deleted (deactivated) successfully", id);
+
+		return new ResponseEntity<>("Flight deactivated successfully", HttpStatus.OK);
+	}
+}

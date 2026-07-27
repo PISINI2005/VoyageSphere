@@ -1,0 +1,93 @@
+<app-navbar></app-navbar>
+
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>My Booking Requests</h2>
+    <button class="btn btn-primary" [routerLink]="['/booking-request/new']">
+      <i class="bi bi-plus-circle me-2"></i>New Request
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center my-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div class="card shadow-sm" *ngIf="!isLoading">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Type</th>
+              <th>Request Details</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let req of requests">
+              <td>#{{ req.bookingRequestId }}</td>
+              <td>{{ req.type }}</td>
+              <td>{{ req.requestDetails }}</td>
+              <td>
+                <span class="badge rounded-pill" [ngClass]="getStatusBadgeClass(req.status)">
+                  {{ req.status }}
+                </span>
+              </td>
+              <td>{{ req.createdAt | date:'mediumDate' }}</td>
+              <td class="text-center">
+                <button
+                  *ngIf="req.status === 'AWAITING_FEEDBACK'"
+                  class="btn btn-sm btn-outline-primary"
+                  (click)="openFeedbackModal(req)">
+                  <i class="bi bi-chat-left-text me-1"></i>Feedback
+                </button>
+                <span *ngIf="req.status !== 'AWAITING_FEEDBACK'" class="text-muted small">
+                  No actions available
+                </span>
+              </td>
+            </tr>
+            <tr *ngIf="requests.length === 0">
+              <td colspan="6" class="text-center py-4 text-muted">
+                No booking requests found.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback Modal -->
+  <div class="modal fade show" [style.display]="showFeedbackModal ? 'block' : 'none'" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Provide Feedback for Request #{{ selectedRequestId }}</h5>
+          <button type="button" class="btn-close" (click)="closeFeedbackModal()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Are you satisfied with the result?</label>
+            <select class="form-select" [(ngModel)]="feedbackForm.customerStatus" name="customerStatus">
+              <option value="SATISFIED">Yes, I am satisfied</option>
+              <option value="MODIFICATION_REQUIRED">No, modifications are required</option>
+            </select>
+          </div>
+          <div class="mb-3" *ngIf="feedbackForm.customerStatus === 'MODIFICATION_REQUIRED'">
+            <label class="form-label">Modification Details</label>
+            <textarea class="form-control" [(ngModel)]="feedbackForm.modificationDetails" name="modificationDetails" rows="4" placeholder="Please describe the changes needed..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeFeedbackModal()">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="submitFeedback()">Submit Feedback</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

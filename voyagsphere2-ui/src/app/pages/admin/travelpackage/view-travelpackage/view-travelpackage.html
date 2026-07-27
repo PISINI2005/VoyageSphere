@@ -1,0 +1,210 @@
+<div class="container py-4" style="margin-left: 280px; width: calc(100% - 280px);">
+  <div class="card shadow border-0">
+    <div class="card-header bg-primary text-white">
+      <h3 class="mb-0">Travel Packages</h3>
+    </div>
+
+    <div class="card-body">
+      <!-- Search and Actions Section -->
+      <div class="row g-3 align-items-end mb-4">
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Category</label>
+          <select class="form-select" [(ngModel)]="category">
+            <option value="">ALL</option>
+            <option value="ADVENTURE">ADVENTURE</option>
+            <option value="FAMILY">FAMILY</option>
+            <option value="HONEYMOON">HONEYMOON</option>
+            <option value="LUXURY">LUXURY</option>
+            <option value="BUDGET">BUDGET</option>
+            <option value="WEEKEND_GETAWAY">WEEKEND_GETAWAY</option>
+          </select>
+        </div>
+        <div class="col-md-auto">
+          <button type="button" class="btn btn-primary me-2" (click)="searchPackages()">
+            <i class="bi bi-search"></i> Search
+          </button>
+          <button type="button" class="btn btn-outline-primary" (click)="resetSearch()">
+            <i class="bi bi-arrow-clockwise"></i> Reset
+          </button>
+        </div>
+        <div class="col-md-auto">
+          <button type="button" class="btn btn-primary me-2" routerLink="/admin/package/add">
+            ➕ Add Package
+          </button>
+          <button type="button" class="btn btn-outline-primary" routerLink="/admin/package/update">
+            🔧 Update Package
+          </button>
+        </div>
+      </div>
+
+      <hr class="mb-4">
+
+      @if (loading) {
+        <div class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="mt-2 text-muted">Loading Packages...</p>
+        </div>
+      } @else {
+        @if (packages.length > 0) {
+          <div class="table-responsive">
+            <table class="table table-hover table-bordered align-middle">
+              <thead class="table-primary">
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Source</th>
+                  <th>Destination</th>
+                  <th>Price</th>
+                  <th>Days</th>
+                  <th>Slots</th>
+                  <th>Category</th>
+                  <th>Status</th>
+                  <th>Day Plan</th>
+                  <th>Update Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (pkg of packages; track pkg.packageId) {
+                  <tr>
+                    <td class="fw-semibold">{{ pkg.packageId }}</td>
+                    <td>{{ pkg.packageName }}</td>
+                    <td>{{ pkg.source }}</td>
+                    <td>{{ pkg.destination }}</td>
+                    <td class="text-success fw-bold">₹{{ pkg.price }}</td>
+                    <td>{{ pkg.durationDays }}</td>
+                    <td>{{ pkg.totalSlots }}</td>
+                    <td>{{ pkg.category }}</td>
+                    <td>
+                      <span class="badge" [ngClass]="{
+                        'bg-success': pkg.status === 'AVAILABLE',
+                        'bg-warning text-dark': pkg.status === 'FULLY_BOOKED',
+                        'bg-danger': pkg.status === 'CANCELLED' || pkg.status === 'INACTIVE'
+                      }">
+                        {{ pkg.status }}
+                      </span>
+                    </td>
+                    <td>
+                      <button type="button" class="btn btn-sm btn-outline-primary" (click)="viewPlan(pkg)">
+                        📅 View Plan
+                      </button>
+                    </td>
+                    <td>
+                      <div class="d-flex align-items-center gap-2">
+                        <select #statusSelect class="form-select form-select-sm">
+                          <option value="AVAILABLE" [selected]="pkg.status === 'AVAILABLE'">AVAILABLE</option>
+                          <option value="FULLY_BOOKED" [selected]="pkg.status === 'FULLY_BOOKED'">FULLY_BOOKED</option>
+                          <option value="CANCELLED" [selected]="pkg.status === 'CANCELLED'">CANCELLED</option>
+                          <option value="INACTIVE" [selected]="pkg.status === 'INACTIVE'">INACTIVE</option>
+                        </select>
+                        <button type="button" class="btn btn-sm btn-primary" (click)="updateStatus(pkg, statusSelect.value)">
+                          ✅ Update
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="11" class="text-center text-muted py-4">No packages found.</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <div class="text-center py-5 text-muted">
+            <i class="bi bi-briefcase fs-1"></i>
+            <p>No packages found.</p>
+          </div>
+        }
+      }
+    </div>
+  </div>
+
+  <!-- Generic Popup -->
+  @if (showPopup) {
+    <div class="popup-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 999999;">
+      <div class="popup card shadow-lg border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">{{ popupTitle }}</h4>
+          <button type="button" class="btn-close btn-close-white" (click)="closePopup()"></button>
+        </div>
+        <div class="card-body text-center py-4">
+          <p class="mb-4">{{ popupMessage }}</p>
+          <button type="button" class="btn btn-primary px-4" (click)="closePopup()">OK</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Day Plan Popup -->
+  @if (showPlanPopup) {
+    <div class="popup-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 999999;">
+      <div class="popup card shadow-lg border-0" style="max-width: 700px; width: 90%;">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">📅 Day Wise Travel Plan</h4>
+          <button type="button" class="btn-close btn-close-white" (click)="closePlanPopup()"></button>
+        </div>
+        <div class="card-body">
+          <div class="bg-light p-3 rounded border" style="max-height: 60vh; overflow-y: auto;">
+            <pre style="white-space: pre-wrap; font-family: inherit; line-height: 1.6; margin-bottom: 0;">{{ selectedPlan }}</pre>
+          </div>
+          <div class="text-end mt-3">
+            <button type="button" class="btn btn-primary" (click)="closePlanPopup()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+
+  @if (totalPages > 1) {
+  <div class="d-flex flex-column align-items-center gap-3 mt-5">
+    <div class="d-flex justify-content-center align-items-center gap-2">
+
+      <button
+        class="btn btn-sm btn-outline-primary rounded-pill px-3"
+        [disabled]="isFirst"
+        (click)="previousPage()">
+
+        <i class="bi bi-chevron-left"></i> Previous
+
+      </button>
+
+      @for (page of pages; track page) {
+        <button
+          class="btn btn-sm rounded-circle"
+          [class.btn-primary]="page === currentPage"
+          [class.btn-outline-primary]="page !== currentPage"
+          (click)="goToPage(page)"
+          style="width:32px;height:32px;">
+
+          {{ page + 1 }}
+
+        </button>
+      }
+
+      <button
+        class="btn btn-sm btn-outline-primary rounded-pill px-3"
+        [disabled]="isLast"
+        (click)="nextPage()">
+
+        Next <i class="bi bi-chevron-right"></i>
+
+      </button>
+
+    </div>
+
+    <div class="text-center text-muted small">
+      Showing page
+      <strong>{{ currentPage + 1 }}</strong>
+      of
+      <strong>{{ totalPages }}</strong>
+      ({{ totalElements }} flights)
+    </div>
+  </div>
+}
+</div>
+
+ 

@@ -1,0 +1,355 @@
+<app-navbar></app-navbar>
+
+<!-- Hero Section -->
+<section
+  class="vh-100 d-flex align-items-center text-white"
+  style="
+    background:
+      linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.55)),
+      url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1800&q=80')
+      center center/cover no-repeat;
+">
+
+  <div class="container">
+
+    <div class="row justify-content-center">
+
+      <div class="col-lg-11">
+
+        <div class="text-center mb-5">
+
+          <h1 class="display-3 fw-bold">
+            Discover Your Next Adventure
+          </h1>
+
+          <p class="lead fs-4">
+            Flights • Hotels • Holiday Packages • Transport
+          </p>
+
+        </div>
+
+        @if(authService.isTravelAgent() &&
+        agentContext.selectedCustomerEmail){
+
+        <div class="alert alert-info shadow text-center">
+
+          <i class="bi bi-person-check-fill me-2"></i>
+
+          Booking for
+
+          <strong>
+
+            {{agentContext.selectedCustomerEmail}}
+
+          </strong>
+
+        </div>
+
+        }
+
+        <!-- Search Card -->
+
+        <div class="card shadow-lg border-0 rounded-4">
+
+          <div class="card-body p-4">
+
+            <!-- Navigation -->
+
+            <ul class="nav nav-pills nav-fill mb-4">
+
+              <li class="nav-item">
+
+                <button
+                  class="nav-link"
+                  [class.active]="selectedType==='FLIGHT'"
+                  (click)="switchType('FLIGHT')">
+
+                  <i class="bi bi-airplane-fill me-2"></i>
+
+                  Flights
+
+                </button>
+
+              </li>
+
+              <li class="nav-item">
+
+                <button
+                  class="nav-link"
+                  [class.active]="selectedType==='HOTEL'"
+                  (click)="switchType('HOTEL')">
+
+                  <i class="bi bi-building me-2"></i>
+
+                  Hotels
+
+                </button>
+
+              </li>
+
+              <li class="nav-item">
+
+                <button
+                  class="nav-link"
+                  [class.active]="selectedType==='PACKAGE'"
+                  (click)="switchType('PACKAGE')">
+
+                  <i class="bi bi-globe me-2"></i>
+
+                  Packages
+
+                </button>
+
+              </li>
+
+              <li class="nav-item">
+
+                <button
+                  class="nav-link"
+                  [class.active]="selectedType==='TRANSPORT'"
+                  (click)="switchType('TRANSPORT')">
+
+                  <i class="bi bi-car-front-fill me-2"></i>
+
+                  Transport
+
+                </button>
+
+              </li>
+
+            </ul>
+
+            <div class="row g-3">
+
+              <!-- Flight & Transport -->
+
+              @if(selectedType==='FLIGHT' ||
+              selectedType==='TRANSPORT'){
+
+              <div class="col-md-4">
+
+                <label class="form-label fw-semibold">
+
+                  From
+
+                </label>
+
+                <input
+                  class="form-control form-control-lg"
+                  placeholder="Chennai"
+                  [(ngModel)]="searchForm.source">
+
+              </div>
+
+              <div class="col-md-4">
+
+                <label class="form-label fw-semibold">
+
+                  To
+
+                </label>
+
+                <input
+                  class="form-control form-control-lg"
+                  placeholder="Dubai"
+                  [(ngModel)]="searchForm.destination">
+
+              </div>
+
+              <div class="col-md-4">
+
+                <label class="form-label fw-semibold">
+
+                  Departure
+
+                </label>
+
+                <input
+                  type="date"
+                  class="form-control form-control-lg"
+                  [(ngModel)]="searchForm.startDate">
+
+              </div>
+
+              }
+
+              <!-- Hotels -->
+
+              @if(selectedType==='HOTEL'){
+
+<div class="col-md-4">
+
+  <label class="form-label fw-semibold">
+    City
+  </label>
+
+  <input
+    class="form-control form-control-lg"
+    placeholder="Mumbai"
+    [(ngModel)]="searchForm.city">
+
+</div>
+
+<div class="col-md-4">
+
+  <label class="form-label fw-semibold">
+    Check In
+  </label>
+
+  <input
+    type="date"
+    class="form-control form-control-lg"
+    [(ngModel)]="searchForm.startDate">
+
+</div>
+
+<div class="col-md-4">
+
+  <label class="form-label fw-semibold">
+    Check Out
+  </label>
+
+  <input
+    type="date"
+    class="form-control form-control-lg"
+    [(ngModel)]="searchForm.endDate">
+
+</div>
+
+}
+
+              <!-- Package -->
+              @if(selectedType==='PACKAGE'){
+                <div class="col-md-4">
+                  <label class="form-label fw-semibold">
+                    From
+                  </label>
+                  <input
+                    class="form-control form-control-lg"
+                    placeholder="Chennai"
+                    [(ngModel)]="searchForm.source">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label fw-semibold">
+                    To
+                  </label>
+                  <input
+                    class="form-control form-control-lg"
+                    placeholder="Dubai"
+                    [(ngModel)]="searchForm.destination">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label fw-semibold">
+                    Travel Date
+                  </label>
+                  <input
+                    type="date"
+                    class="form-control form-control-lg"
+                    [(ngModel)]="searchForm.startDate">
+                </div>
+              }
+
+            </div>
+
+            <div class="d-grid mt-4">
+
+              <button
+                class="btn btn-primary btn-lg"
+                (click)="search()">
+
+                <i class="bi bi-search me-2"></i>
+
+                Search
+
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+<!-- Featured Sections -->
+<section class="py-5 bg-light">
+  <div class="container">
+
+    <div class="text-center mb-5">
+      <h2 class="fw-bold display-6">Explore Featured Deals</h2>
+      <p class="text-muted">
+        Handpicked stays and vacation packages for your next journey
+      </p>
+    </div>
+
+    <div class="row g-4">
+
+      <!-- Hotels -->
+      <div class="col-lg-6">
+        <div class="premium-card" (click)="goToHotels()">
+
+          <img
+            src="hotel.jpg"
+            alt="Luxury Hotels"
+            class="premium-image">
+
+          <div class="premium-overlay">
+            <div>
+              <span class="badge bg-warning text-dark mb-3">
+                PREMIUM STAYS
+              </span>
+
+              <h2>Luxury Hotels</h2>
+
+              <p>
+                Experience world-class comfort and elegance.
+              </p>
+
+              <button class="btn btn-light btn-lg">
+                Explore Hotels
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Packages -->
+      <div class="col-lg-6">
+        <div class="premium-card" (click)="goToPackages()">
+
+          <img
+            src="package.jpg"
+            alt="Holiday Packages"
+            class="premium-image">
+
+          <div class="premium-overlay">
+            <div>
+              <span class="badge bg-info text-dark mb-3">
+                BEST SELLERS
+              </span>
+
+              <h2>Holiday Packages</h2>
+
+              <p>
+                Adventure, Honeymoon, Family and Luxury escapes.
+              </p>
+
+              <button class="btn btn-light btn-lg">
+                Explore Packages
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>

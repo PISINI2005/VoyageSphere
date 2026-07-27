@@ -1,0 +1,36 @@
+.navbar {
+    padding: 0.8rem 0;
+}
+
+.navbar-brand {
+    letter-spacing: 0.4px;
+}
+
+.nav-link {
+    color: #495057;
+    transition: all .2s ease;
+}
+
+.nav-link:hover {
+    color: #0d6efd;
+}
+
+.nav-link.active {
+    color: #0d6efd !important;
+    font-weight: 700;
+    border-bottom: 2px solid #0d6efd;
+}
+
+.dropdown-menu {
+    border: none;
+    border-radius: 12px;
+}
+
+.btn-light {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+}
+
+.btn-light:hover {
+    background: #eef3ff;
+}

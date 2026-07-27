@@ -1,0 +1,48 @@
+package com.cts.dto;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import com.cts.enums.Gender;
+import com.cts.enums.TransportClass;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
+
+@Data
+public class BookingTransportDTO {
+
+    // Optional: If null, will be auto-injected from JWT in service layer
+    private Long userId;
+
+    @NotNull(message = "Transport ID cannot be empty")
+    private Long transportId;
+
+    @NotNull(message = "Number of transport seats/tickets cannot be empty")
+    @Min(value = 1, message = "You must book at least 1 seat")
+    @Max(value = 15, message = "You cannot book more than 15 seats at once")
+    private Integer units;
+
+    @NotBlank(message = "Passenger name is required")
+    @Size(min = 2, max = 70, message = "Passenger name must be between 2 and 70 characters")
+    private String bookingName;
+
+    @NotNull(message = "Gender is required")
+    private Gender gender;
+
+    @NotNull(message = "Transport class is required")
+    private TransportClass transportClass;
+
+    @NotNull(message = "Travel date is required")
+    @Future(message = "Travel date must be in the future")
+    private LocalDate travelDate;
+
+    @NotEmpty(message = "At least one passenger is required")
+    @Size(max = 15, message = "You cannot add more than 15 passengers at once")
+    private List<@NotNull(message = "Passenger profile ID is required") Long> passengerProfileIds;
+}

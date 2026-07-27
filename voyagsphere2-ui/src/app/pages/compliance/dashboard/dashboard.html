@@ -1,0 +1,189 @@
+<div class="container-fluid">
+
+  <!-- Welcome Banner -->
+  <div class="card border-0 shadow-lg mb-5 bg-primary text-white">
+
+    <div class="card-body p-5">
+
+      <div class="d-flex justify-content-between align-items-center flex-wrap">
+
+        <div>
+          <h2 class="fw-bold mb-2">
+            <i class="bi bi-shield-check me-2"></i>
+            Compliance Officer Dashboard
+          </h2>
+
+          <p class="mb-0 opacity-75 fs-5">
+            Monitor complaints, review audit logs and ensure regulatory compliance.
+          </p>
+        </div>
+
+        <div class="text-center">
+          <i class="bi bi-clipboard2-check display-1 opacity-50"></i>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Stats -->
+  <div class="row g-4 mb-5">
+
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm text-center h-100">
+
+        <div class="card-body">
+          <i class="bi bi-exclamation-triangle-fill text-danger display-5"></i>
+
+          <h3 class="fw-bold mt-3">
+            {{ recentComplaints.length }}
+          </h3>
+
+          <p class="text-muted mb-0">
+            Recent Complaints
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm text-center h-100">
+
+        <div class="card-body">
+          <i class="bi bi-journal-text text-success display-5"></i>
+
+          <h3 class="fw-bold mt-3">
+            {{ recentLogs.length }}
+          </h3>
+
+          <p class="text-muted mb-0">
+            Recent Audit Logs
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm text-center h-100">
+
+        <div class="card-body">
+          <i class="bi bi-shield-lock-fill text-primary display-5"></i>
+
+          <h3 class="fw-bold mt-3">Active</h3>
+
+          <p class="text-muted mb-0">
+            Compliance Monitoring
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Recent Records -->
+  <div class="row g-4">
+
+    <!-- Recent Complaints -->
+    <div class="col-lg-6">
+
+      <div class="card border-0 shadow-sm h-100">
+
+        <div class="card-header bg-white">
+          <h5 class="mb-0">
+            <i class="bi bi-exclamation-circle-fill text-danger me-2"></i>
+            Recent 5 Complaints
+          </h5>
+        </div>
+
+        <div class="card-body">
+
+          <div
+            *ngFor="let complaint of recentComplaints"
+            class="border-bottom pb-3 mb-3"
+          >
+
+            <div class="d-flex justify-content-between">
+
+              <strong>
+                {{ complaint.subject || complaint.title }}
+              </strong>
+
+              <span class="badge bg-warning text-dark">
+                {{ complaint.status }}
+              </span>
+
+            </div>
+
+            <small class="text-muted">
+              {{ complaint.createdAt | date:'medium' }}
+            </small>
+
+          </div>
+
+          <div
+            *ngIf="recentComplaints.length === 0"
+            class="text-center text-muted py-4"
+          >
+            No complaints available
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Recent Logs -->
+    <div class="col-lg-6">
+
+      <div class="card border-0 shadow-sm h-100">
+
+        <div class="card-header bg-white">
+          <h5 class="mb-0">
+            <i class="bi bi-journal-text text-success me-2"></i>
+            Recent 5 Audit Logs
+          </h5>
+        </div>
+
+        <div class="card-body">
+
+          <div
+            *ngFor="let log of recentLogs"
+            class="border-bottom pb-3 mb-3"
+          >
+
+            <strong>
+              {{ log.action }}
+            </strong>
+
+            <div class="text-muted small">
+              {{ log.userName }}
+            </div>
+
+            <small class="text-secondary">
+              {{ log.timestamp | date:'medium' }}
+            </small>
+
+          </div>
+
+          <div
+            *ngIf="recentLogs.length === 0"
+            class="text-center text-muted py-4"
+          >
+            No audit logs available
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

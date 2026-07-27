@@ -1,0 +1,30 @@
+@if(visible){
+
+<div class="toast-wrapper">
+
+  <div
+    class="custom-toast"
+    [ngClass]="{
+      'success': type === 'success',
+      'error': type === 'error',
+      'warning': type === 'warning',
+      'info': type === 'info'
+    }">
+
+    <div class="fw-bold mb-1">
+
+      {{ title }}
+
+    </div>
+
+    <div>
+
+      {{ message }}
+
+    </div>
+
+  </div>
+
+</div>
+
+}

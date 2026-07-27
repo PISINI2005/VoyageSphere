@@ -1,0 +1,34 @@
+<section class="status-card card p-3">
+  <h3 class="card-title">Update complaint status</h3>
+  <p class="description card-text text-muted">Change status and add resolution notes for this complaint.</p>
+
+  <form (ngSubmit)="submit()" *ngIf="complaint; else noComplaint">
+    <div class="field-group mb-3">
+      <label for="status" class="form-label">Status</label>
+      <select id="status" class="form-select" [(ngModel)]="selectedStatus" name="status">
+        <option *ngFor="let status of statusOptions" [value]="status">
+          {{ status }}
+        </option>
+      </select>
+    </div>
+
+    <div class="field-group mb-3">
+      <label for="note" class="form-label">Resolution note</label>
+      <textarea
+        id="note"
+        class="form-control"
+        rows="4"
+        [(ngModel)]="resolutionNote"
+        name="resolutionNote"
+        placeholder="Add context for the update"
+      ></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success" [disabled]="isSaving">Save status update</button>
+    <div *ngIf="error" class="message error alert alert-danger mt-3">{{ error }}</div>
+  </form>
+
+  <ng-template #noComplaint>
+    <div class="message notice alert alert-info">No complaint selected.</div>
+  </ng-template>
+</section>

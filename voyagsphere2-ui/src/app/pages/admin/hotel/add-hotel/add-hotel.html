@@ -1,0 +1,355 @@
+<div class="container py-4" style="margin-left: 280px; width: calc(100% - 280px);">
+  <div class="card shadow border-0">
+    <div class="card-header bg-primary text-white">
+      <h3 class="mb-0">🏨 Add Hotel</h3>
+    </div>
+
+    <div class="card-body p-4">
+      @if (!showRoomSection) {
+     <div class="row g-3">
+
+  <!-- Hotel Name -->
+  <div class="col-md-6">
+    <label class="form-label fw-semibold">Hotel Name</label>
+
+    <input
+      type="text"
+      class="form-control"
+      [(ngModel)]="hotel.hotelName"
+      name="hotelName"
+      #hotelName="ngModel"
+      required>
+
+    @if (hotelName.invalid && (hotelName.dirty || hotelName.touched)) {
+      <div class="text-danger small mt-1">
+        Hotel Name is required
+      </div>
+    }
+  </div>
+
+  <!-- Ratings -->
+  <div class="col-md-6">
+    <label class="form-label fw-semibold">Ratings</label>
+
+    <input
+      type="number"
+      class="form-control"
+      [(ngModel)]="hotel.ratings"
+      name="ratings"
+      #ratings="ngModel"
+      required
+      min="1"
+      max="5">
+
+    @if (ratings.invalid && (ratings.dirty || ratings.touched)) {
+
+      @if (ratings.errors?.['required']) {
+        <div class="text-danger small mt-1">
+          Rating is required
+        </div>
+      }
+
+      @if (ratings.errors?.['min'] || ratings.errors?.['max']) {
+        <div class="text-danger small mt-1">
+          Rating must be between 1 and 5
+        </div>
+      }
+
+    }
+  </div>
+
+  <!-- City -->
+  <div class="col-md-6">
+    <label class="form-label fw-semibold">City</label>
+
+    <input
+      type="text"
+      class="form-control"
+      [(ngModel)]="hotel.city"
+      name="city"
+      #city="ngModel"
+      required>
+
+    @if (city.invalid && (city.dirty || city.touched)) {
+      <div class="text-danger small mt-1">
+        City is required
+      </div>
+    }
+  </div>
+
+  <!-- Contact Number -->
+  <div class="col-md-6">
+    <label class="form-label fw-semibold">Contact Number</label>
+
+    <input
+      type="text"
+      class="form-control"
+      maxlength="10"
+      [(ngModel)]="hotel.contactNo"
+      name="contactNo"
+      #contactNo="ngModel"
+      required
+      pattern="^[0-9]{10}$">
+
+    @if (contactNo.invalid && (contactNo.dirty || contactNo.touched)) {
+
+      @if (contactNo.errors?.['required']) {
+        <div class="text-danger small mt-1">
+          Contact Number is required
+        </div>
+      }
+
+      @if (contactNo.errors?.['pattern']) {
+        <div class="text-danger small mt-1">
+          Enter valid 10 digit contact number
+        </div>
+      }
+
+    }
+  </div>
+
+  <!-- Email -->
+  <div class="col-md-6">
+    <label class="form-label fw-semibold">Email</label>
+
+    <input
+      type="email"
+      class="form-control"
+      [(ngModel)]="hotel.emailId"
+      name="emailId"
+      #emailId="ngModel"
+      required
+      email>
+
+    @if (emailId.invalid && (emailId.dirty || emailId.touched)) {
+
+      @if (emailId.errors?.['required']) {
+        <div class="text-danger small mt-1">
+          Email is required
+        </div>
+      }
+
+      @if (emailId.errors?.['email']) {
+        <div class="text-danger small mt-1">
+          Enter valid email address
+        </div>
+      }
+
+    }
+  </div>
+
+  <!-- Partner ID -->
+  <div class="col-md-6">
+    <label class="form-label fw-semibold">Partner ID</label>
+
+    <input
+      type="number"
+      class="form-control"
+      [(ngModel)]="hotel.partnerId"
+      name="partnerId"
+      #partnerId="ngModel"
+      required
+      min="1">
+
+    @if (partnerId.invalid && (partnerId.dirty || partnerId.touched)) {
+
+      @if (partnerId.errors?.['required']) {
+        <div class="text-danger small mt-1">
+          Partner ID is required
+        </div>
+      }
+
+      @if (partnerId.errors?.['min']) {
+        <div class="text-danger small mt-1">
+          Partner ID must be greater than 0
+        </div>
+      }
+
+    }
+  </div>
+
+  <!-- Status -->
+  <div class="col-md-12">
+    <label class="form-label fw-semibold">Hotel Status</label>
+
+    <select
+      class="form-select"
+      [(ngModel)]="hotel.status"
+      name="status">
+
+      <option value="AVAILABLE">
+        AVAILABLE
+      </option>
+
+    </select>
+  </div>
+
+  <!-- Address -->
+  <div class="col-md-12">
+    <label class="form-label fw-semibold">Address</label>
+
+    <textarea
+      class="form-control"
+      rows="3"
+      [(ngModel)]="hotel.address"
+      name="address"
+      #address="ngModel"
+      required>
+    </textarea>
+
+    @if (address.invalid && (address.dirty || address.touched)) {
+      <div class="text-danger small mt-1">
+        Address is required
+      </div>
+    }
+  </div>
+
+</div>
+
+<div class="text-end mt-4">
+
+  <button
+    class="btn btn-primary px-4"
+    type="button"
+    [disabled]="
+      !hotel.hotelName ||
+      !hotel.ratings ||
+      hotel.ratings < 1 ||
+      hotel.ratings > 5 ||
+      !hotel.city ||
+      !hotel.contactNo ||
+      hotel.contactNo.length !== 10 ||
+      !hotel.emailId ||
+      !hotel.partnerId ||
+      hotel.partnerId < 1 ||
+      !hotel.address
+    "
+    (click)="proceedToRooms()">
+
+    Next → Add Room Details
+
+  </button>
+
+</div>
+      }
+
+      @if (showRoomSection) {
+        <div class="mb-4">
+          <h4 class="mb-3">Add Room Details</h4>
+
+          @for (room of hotel.rooms; track $index; let i = $index) {
+            <div class="card shadow-sm border mb-3">
+              <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                <strong class="text-primary">Room Type {{ i + 1 }}</strong>
+                <button class="btn btn-outline-danger btn-sm" type="button" (click)="removeRoom(i)">
+                  <i class="bi bi-trash-fill me-1"></i>Remove
+                </button>
+              </div>
+              <div class="card-body">
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <label class="form-label fw-semibold">Room Type</label>
+                    <select class="form-select" [(ngModel)]="room.roomType" [name]="'roomType' + i">
+                      <option value="STANDARD">STANDARD</option>
+                      <option value="DELUXE">DELUXE</option>
+                      <option value="SUITE">SUITE</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label fw-semibold">Price</label>
+                    <input type="number" class="form-control" [(ngModel)]="room.price" [name]="'price' + i">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label fw-semibold">Total Rooms</label>
+                    <input type="number" class="form-control" [(ngModel)]="room.totalRooms" [name]="'totalRooms' + i">
+                  </div>
+                </div>
+              </div>
+            </div>
+          } @empty {
+            <div class="alert alert-warning">
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>No room types added.
+            </div>
+          }
+
+          <div class="d-flex justify-content-between mt-4">
+            <button class="btn btn-outline-primary" type="button" (click)="showRoomSection = false">
+              <i class="bi bi-arrow-left me-1"></i>Back To Hotel Details
+            </button>
+            <button class="btn btn-primary" type="button" (click)="addRoom()">
+              <i class="bi bi-plus-circle-fill me-1"></i>Add Another Room Type
+            </button>
+          </div>
+
+          <div class="text-end mt-4">
+            <button class="btn btn-primary btn-lg px-5" type="button" [disabled]="loading" (click)="addHotel()">
+              {{ loading ? 'Saving Hotel...' : '🏨 Save Hotel' }}
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  
+  </div>
+
+</div>
+
+  <!-- Popup -->
+  
+@if (showPopup) {
+
+<div
+  style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999999;">
+
+  <div
+    class="card shadow-lg border-0"
+    style="
+      width: 500px;
+      max-width: 90%;
+      border-radius: 12px;
+      overflow: hidden;">
+
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+
+      <h4 class="mb-0">
+        {{ popupTitle }}
+      </h4>
+
+      <button
+        type="button"
+        class="btn-close btn-close-white"
+        (click)="closePopup()">
+      </button>
+
+    </div>
+
+    <div class="card-body text-center py-4">
+
+      <p class="mb-4">
+        {{ popupMessage }}
+      </p>
+
+      <button
+        type="button"
+        class="btn btn-primary px-4"
+        (click)="closePopup()">
+        OK
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+}

@@ -1,0 +1,49 @@
+<div class="bg-dark text-white border-end flex-shrink-0 d-flex flex-column" id="sidebar-wrapper" style="width: 260px; height: 100vh; position: sticky; top: 0;">
+  <div class="sidebar-heading px-4 py-4 fs-5 fw-bold text-uppercase border-bottom border-secondary">
+    <i class="bi bi-shield-check text-primary me-2"></i>Finance Core
+  </div>
+
+  <div class="list-group list-group-flush px-2 py-3 gap-1 d-flex flex-column h-100">
+    <!-- Home -->
+    <a routerLink="/finance"
+       routerLinkActive="active bg-primary text-white border-0"
+       class="list-group-item list-group-item-action bg-dark text-white rounded px-3 py-2.5 d-flex align-items-center gap-3">
+      <i class="bi bi-house-door fs-5"></i><span>Home</span>
+    </a>
+
+    <!-- Invoices -->
+    <a routerLink="/finance/invoice"
+       routerLinkActive="active bg-primary text-white border-0"
+       class="list-group-item list-group-item-action bg-dark text-white rounded px-3 py-2.5 d-flex align-items-center gap-3">
+      <i class="bi bi-receipt fs-5"></i><span>Invoice Dashboard</span>
+    </a>
+
+    <!-- KPI Dashboard -->
+    <a routerLink="/finance/kpi"
+       routerLinkActive="active bg-primary text-white border-0"
+       class="list-group-item list-group-item-action bg-dark text-white rounded px-3 py-2.5 d-flex align-items-center gap-3">
+      <i class="bi bi-graph-up-arrow fs-5"></i><span>KPI Dashboard</span>
+    </a>
+
+    <!-- Payment Dashboard -->
+    <a routerLink="/finance/payment"
+       routerLinkActive="active bg-primary text-white border-0"
+       class="list-group-item list-group-item-action bg-dark text-white rounded px-3 py-2.5 d-flex align-items-center gap-3">
+      <i class="bi bi-credit-card fs-5"></i><span>Payment Dashboard</span>
+    </a>
+
+    <!-- Added mt-auto here to push the divider and logout down -->
+    <hr class="border-secondary my-2 mt-auto">
+
+    <!-- Login / Exit -->
+    <a routerLink=""
+      routerLinkActive="active"
+      class="list-group-item list-group-item-action bg-danger text-white rounded px-3 py-2 d-flex align-items-center gap-2 border-0 shadow-sm"
+      style="transition: background-color 0.2s;"
+      onmouseover="this.style.backgroundColor='#bb2d3b'"
+      onmouseout="this.style.backgroundColor='#dc3545'">
+      <i class="bi bi-box-arrow-right fs-5"></i>
+         <span class="fw-medium">Logout</span>
+    </a>
+  </div>
+</div>
