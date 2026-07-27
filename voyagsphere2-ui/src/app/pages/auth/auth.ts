@@ -30,6 +30,7 @@ export class AuthComponent {
     phoneNo: 0,
     password: ''
   };
+  errorMessage: string='';
 
   constructor(
     private authService: AuthService,
@@ -114,7 +115,8 @@ export class AuthComponent {
     },
     error: (err) => {
       console.error('Registration failed:', err);
-      alert('Registration failed. Please try again.');
+      this.errorMessage = err.error?.message || 'Registration failed.';
+      
     }
   });
 }

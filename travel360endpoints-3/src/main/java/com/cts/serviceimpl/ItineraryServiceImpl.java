@@ -11,6 +11,7 @@ import com.cts.entity.User;
 import com.cts.enums.AuditEntity;
 import com.cts.enums.LogType;
 import com.cts.exception.InvalidBookingException;
+import com.cts.exception.PastBookingException;
 import com.cts.exception.ResourceNotFoundException;
 import com.cts.exception.UserNotFoundException;
 import com.cts.mapper.ItineraryMapper;
@@ -25,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +110,10 @@ public class ItineraryServiceImpl implements ItineraryService {
 			log.error("Booking {} already belongs to an itinerary", dto.getBookingId());
 			throw new InvalidBookingException("Booking already belongs to an itinerary");
 		}
-		//------
+		if(booking.getBookingDate().isBefore(LocalDate.now())) {
+			throw new PastBookingException("Past Bookings cannot be added to an itinerary");
+			
+		}
 		
 
 		// Synchronize the bidirectional relationship in-memory

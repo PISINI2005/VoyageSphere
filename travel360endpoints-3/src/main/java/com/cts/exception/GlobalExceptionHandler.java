@@ -87,6 +87,12 @@ public class GlobalExceptionHandler {
         log.warn("User not found: {}", ex.getMessage());
         return build(HttpStatus.NOT_FOUND, ex.getMessage(), request);
     }
+    
+    @ExceptionHandler
+    public ResponseEntity<?> handlePasBooking(PastBookingException ex, HttpServletRequest request){
+    	log.warn("Past Booking",ex.getMessage());
+    	return build(HttpStatus.CONFLICT,ex.getMessage(),request);
+    }
 
     @ExceptionHandler(FlightNotFoundException.class)
     public ResponseEntity<ErrorResponseDTO> handleFlight(FlightNotFoundException ex, HttpServletRequest request) {

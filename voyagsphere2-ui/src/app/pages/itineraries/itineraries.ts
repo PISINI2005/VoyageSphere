@@ -158,7 +158,9 @@ bookingIsLast = true;
         this.selectedItinerary = updated;
         this.loadItineraries();
       },
-      error: (err: any) => console.error('Error adding booking:', err)
+      error: (err: any) => {console.error('Error adding booking:', err);
+        alert(err.error.message);
+      }
     });
   }
 
