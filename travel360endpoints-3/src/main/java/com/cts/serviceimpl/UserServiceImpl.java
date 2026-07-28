@@ -81,10 +81,12 @@ public class UserServiceImpl implements UserService {
 
         User user = repo.findByEmail(email);
 
-        if (user == null || !encoder.matches(password, user.getPassword())) {
+        if (user == null || !encoder.matches(password, user.getPassword())||user.getStatus()!=UserStatus.ACTIVE) {
             log.error("Invalid login attempt for email: {}", email);
             throw new UserNotFoundException("Invalid login");
         }
+        
+        
 
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole(), user.getUserId());
         auditLogService.logAction(AuditActions.LOGIN_USER, AuditEntity.USER, user.getUserId(), user, LogType.INFO);
